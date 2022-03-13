@@ -15,11 +15,12 @@ script = ExtResource( 2 )
 script = ExtResource( 4 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 0, 40 )
 current = true
 zoom = Vector2( 0.3, 0.3 )
 
 [node name="Player" type="Area2D" parent="."]
-position = Vector2( 8, 0 )
+position = Vector2( 8, 8 )
 z_index = 3
 
 [node name="Sprite" type="Sprite" parent="Player"]
@@ -32,7 +33,6 @@ shape = SubResource( 1 )
 cast_to = Vector2( 0, 16 )
 
 [node name="Tilemaps" type="Node2D" parent="."]
-position = Vector2( 0, -40 )
 
 [node name="NonagramTileMap" type="TileMap" parent="Tilemaps"]
 z_index = 2

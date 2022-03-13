@@ -251,3 +251,5 @@ func is_in_board(tilemap_coord):
 func get_selected_tile():
 	return nonagram_tile_map.world_to_map(nonagram_tile_map.get_local_mouse_position())
 	
+func world_to_board(pos: Vector2):
+	return nonagram_tile_map.world_to_map(pos)

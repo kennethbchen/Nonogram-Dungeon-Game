@@ -4,6 +4,8 @@ onready var player = $Player
 
 onready var board_controller = $BoardController
 
+# Raycast 2D used for player collision
+onready var ray = $Player/RayCast2D
 
 # Directions for movement
 const RIGHT = Vector2.RIGHT
@@ -44,5 +46,17 @@ func _process(_delta):
 		
 
 func move(dir):
-	player.position += dir * board_controller.tile_size
+	
+	# Don't move in a direction that is outside the board
+	if not board_controller.is_in_board(board_controller.world_to_board(player.position + dir * board_controller.tile_size)):
+		return
+	
+	# Check for any collisions
+	ray.cast_to = dir * board_controller.tile_size
+	ray.force_raycast_update()
+	
+	if !ray.is_colliding():
+		# Only move if there is no collision
+		player.position += dir * board_controller.tile_size
+	
 
