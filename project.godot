@@ -16,13 +16,13 @@ config/icon="res://Sprites/icon.png"
 
 [display]
 
-window/size/width=640
-window/size/height=640
+window/size/width=700
+window/size/height=500
 window/size/resizable=false
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/terminal/plugin.cfg" )
+enabled=PoolStringArray(  )
 
 [global]
 
