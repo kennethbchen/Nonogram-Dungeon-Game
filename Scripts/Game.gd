@@ -27,9 +27,10 @@ func _input(event):
 
 		# If there is a left or right mouse click in board, process it
 		if event.button_index == BUTTON_LEFT or event.button_index == BUTTON_RIGHT:
-			board_controller.handle_tile_input(selected_tile, event.button_index)
+			if player.use_energy(1):
+				board_controller.handle_tile_input(selected_tile, event.button_index)
 			
-			
+	# Handle mouse hovering visual
 	if event is InputEventMouseMotion and board_controller.is_in_board(board_controller.get_selected_tile()):
 		if hovered_tile != board_controller.get_selected_tile():
 			effect_tilemap.set_cellv(hovered_tile, -1)
@@ -53,6 +54,9 @@ func _process(_delta):
 		move_dir = RIGHT
 	if Input.is_action_just_pressed("move_left"):
 		move_dir = LEFT
+		
+	if Input.is_action_just_pressed("ui_accept"):
+		player.take_damage(1)
 	
 	if move_dir != Vector2.ZERO:
 		player.try_move(move_dir)

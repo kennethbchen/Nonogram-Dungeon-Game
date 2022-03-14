@@ -12,7 +12,7 @@ onready var solution_tile_map = $"../Tilemaps/SolutionTileMap"
 
 onready var world_tile_map = $"../Tilemaps/WorldTileMap"
 
-onready var hint_font = load("res://Font/Font.tres")
+onready var hint_font = load("res://Font/NonagramHint.tres")
 
 # Maps tile type names to tile ID in Tileset
 var tiles = {
@@ -26,13 +26,13 @@ var tile_size = 16
 # The solution to the current board
 # It's assumed that the solution is at least rectangular, if not square
 var solution = [
-	[0, 1, 0, 1, 0, 1],
-	[1, 1, 1, 1, 1, 0],
-	[1, 1, 1, 1, 1, 0],
-	[1, 1, 0, 1, 1, 1],
-	[0, 0, 0, 0, 0, 0],
-	[1, 1, 0, 1, 1, 1],
-	[0, 0, 0, 0, 0, 0]
+	[0, 1, 0, 1, 0, 1, 1],
+	[1, 1, 1, 1, 1, 0, 1],
+	[1, 1, 1, 1, 1, 0, 0],
+	[1, 1, 0, 1, 1, 1, 1],
+	[0, 0, 0, 0, 0, 0, 1],
+	[1, 1, 0, 1, 1, 1, 0],
+	[0, 0, 0, 0, 0, 0, 0]
 ]
 
 # The hints of the current board that are displayed

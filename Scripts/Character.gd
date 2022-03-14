@@ -5,14 +5,20 @@ onready var board_controller = $"../BoardController"
 # Raycast 2D used for character collision
 onready var ray = $RayCast2D
 
+# Tween used for movement animation
 onready var tween = $Tween
-
 export var move_speed = 15
+
+# Stats
+var max_health = 15
+var health = max_health
 
 func _ready():
 	pass
 
-
+func take_damage(damage):
+	health = max(0, health - abs(damage))
+	
 func try_move(direction: Vector2):
 	
 	if tween.is_active():
