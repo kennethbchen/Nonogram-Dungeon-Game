@@ -10,9 +10,9 @@ onready var nonagram_tile_map = $"../Tilemaps/NonagramTileMap"
 # with proper coloring or marking out
 onready var solution_tile_map = $"../Tilemaps/SolutionTileMap"
 
+onready var world_tile_map = $"../Tilemaps/WorldTileMap"
+
 onready var hint_font = load("res://Font/Font.tres")
-
-
 
 # Maps tile type names to tile ID in Tileset
 var tiles = {
@@ -22,7 +22,6 @@ var tiles = {
 }
 
 var tile_size = 16
-
 
 # The solution to the current board
 # It's assumed that the solution is at least rectangular, if not square
@@ -41,12 +40,6 @@ var hint
 
 var columns = 0
 var rows = 0
-
-# Directions for movement
-const RIGHT = Vector2.RIGHT
-const LEFT = Vector2.LEFT
-const UP = Vector2.UP
-const DOWN = Vector2.DOWN
 
 func generateBoard():
 	# Generate the hint to display based on the solution of the board
@@ -204,7 +197,7 @@ func _generate_hint(solution):
 		
 		solution_line.append(line_text)
 		
-	output.append(solution_line)	
+	output.append(solution_line)
 	
 	return output
 
@@ -213,6 +206,7 @@ func set_tile(tilemap_coord, tileset_index):
 	
 # Based on the tile coords and mouse input, make a mark on the nonogram tilemap
 func handle_tile_input(nonagram_tile_map_coords, button_index):
+	
 	# Don't try to change a tile that is not in the board
 	if not is_in_board(nonagram_tile_map_coords):
 		return
@@ -234,7 +228,7 @@ func handle_tile_input(nonagram_tile_map_coords, button_index):
 		
 	elif nonagram_tile_map.get_cellv(nonagram_tile_map_coords) == tile or \
 		nonagram_tile_map.get_cellv(nonagram_tile_map_coords) == -1:
-			
+		
 		# If the tile is already set to what we are trying to color it, then clear it
 		nonagram_tile_map.set_cellv(nonagram_tile_map_coords, 0)
 		
@@ -250,9 +244,20 @@ func is_in_board(tilemap_coord):
 			return true
 	return false
 
+# Takes in a tilemap coordinate and returns if it is a valid more or not
+func is_valid_move(tilemap_coord: Vector2):
+	if world_tile_map.get_cellv(tilemap_coord) >= 0:
+		return false
+	
+	if not is_in_board(tilemap_coord):
+		return false
+		
+	return true
+
 # Returns the position of the closest tile that the mouse is pointing at
 func get_selected_tile():
 	return nonagram_tile_map.world_to_map(nonagram_tile_map.get_local_mouse_position())
 	
+# Converts world space to tilemap space
 func world_to_board(pos: Vector2):
 	return nonagram_tile_map.world_to_map(pos)
