@@ -208,8 +208,11 @@ func _generate_hint(solution):
 	
 	return output
 
+func set_tile(tilemap_coord, tileset_index):
+	nonagram_tile_map.set_cellv(tilemap_coord, tileset_index)
+	
 # Based on the tile coords and mouse input, make a mark on the nonogram tilemap
-func set_tile(nonagram_tile_map_coords, button_index):
+func handle_tile_input(nonagram_tile_map_coords, button_index):
 	# Don't try to change a tile that is not in the board
 	if not is_in_board(nonagram_tile_map_coords):
 		return
@@ -246,7 +249,7 @@ func is_in_board(tilemap_coord):
 		if tilemap_coord[1] >= 0 and tilemap_coord[1] < rows :
 			return true
 	return false
-	
+
 # Returns the position of the closest tile that the mouse is pointing at
 func get_selected_tile():
 	return nonagram_tile_map.world_to_map(nonagram_tile_map.get_local_mouse_position())

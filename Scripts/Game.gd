@@ -7,10 +7,13 @@ onready var board_controller = $BoardController
 # Raycast 2D used for player collision
 onready var ray = $Player/RayCast2D
 
+onready var effect_tilemap = $Tilemaps/EffectTileMap
+
 onready var tween = $Player/Tween
 
 export var move_speed = 15
 
+var hovered_tile = Vector2(-1, -1)
 
 # Directions for movement
 const RIGHT = Vector2.RIGHT
@@ -31,7 +34,18 @@ func _input(event):
 
 		# If there is a left or right mouse click in board, process it
 		if event.button_index == BUTTON_LEFT or event.button_index == BUTTON_RIGHT:
-			board_controller.set_tile(selected_tile, event.button_index)
+			board_controller.handle_tile_input(selected_tile, event.button_index)
+			
+			
+	if event is InputEventMouseMotion and board_controller.is_in_board(board_controller.get_selected_tile()):
+		if hovered_tile != board_controller.get_selected_tile():
+			effect_tilemap.set_cellv(hovered_tile, -1)
+			hovered_tile = board_controller.get_selected_tile()
+			effect_tilemap.set_cellv(hovered_tile, 5)
+	else:
+		effect_tilemap.set_cellv(hovered_tile, -1)
+		hovered_tile = Vector2(-1, -1)
+		
 			
 			
 func _process(_delta):
