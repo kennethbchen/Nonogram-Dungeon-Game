@@ -1,10 +1,12 @@
 extends Node
 
-# Tilemap that represents the nonogram board
-# Correctly marked tiles on the board will hide to reveal the WorldTileMap
-onready var nonogram_tile_map = $"../Tilemaps/nonogramTileMap"
+# Handles all aspects of the game board
 
-# Tilemap that represents the solution of the nonogram board
+# Tilemap that represents the nonagram board
+# Correctly marked tiles on the board will hide to reveal the WorldTileMap
+onready var nonagram_tile_map = $"../Tilemaps/NonagramTileMap"
+
+# Tilemap that represents the solution of the nonagram board
 # with proper coloring or marking out
 onready var solution_tile_map = $"../Tilemaps/SolutionTileMap"
 
@@ -25,13 +27,13 @@ var tile_size = 16
 # The solution to the current board
 # It's assumed that the solution is at least rectangular, if not square
 var solution = [
-	[0, 1, 0, 1, 0],
-	[1, 1, 1, 1, 1],
-	[1, 1, 1, 1, 1],
-	[1, 1, 0, 1, 1],
-	[0, 0, 0, 0, 0],
-	[1, 1, 0, 1, 1],
-	[0, 0, 0, 0, 0]
+	[0, 1, 0, 1, 0, 1],
+	[1, 1, 1, 1, 1, 0],
+	[1, 1, 1, 1, 1, 0],
+	[1, 1, 0, 1, 1, 1],
+	[0, 0, 0, 0, 0, 0],
+	[1, 1, 0, 1, 1, 1],
+	[0, 0, 0, 0, 0, 0]
 ]
 
 # The hints of the current board that are displayed
@@ -48,12 +50,12 @@ const DOWN = Vector2.DOWN
 
 func generateBoard():
 	# Generate the hint to display based on the solution of the board
-	hint = generate_hint(solution)
+	hint = _generate_hint(solution)
 	
 	columns = solution[0].size()
 	rows = solution.size()
 	
-	# Generate nonogramTileMap tiles based on board dimensions
+	# Generate NonogramTileMap tiles based on board dimensions
 	for col in columns:
 		
 		for row in rows:
@@ -64,7 +66,7 @@ func generateBoard():
 				
 				# Do some horrible math to generate label for left side of board
 				label.set_size(Vector2(64, 0))
-				label.set_position(nonogram_tile_map.get_global_position() - Vector2(66, -nonogram_tile_map.map_to_world(Vector2(0,row))[1]))
+				label.set_position(nonagram_tile_map.get_global_position() - Vector2(66, -nonagram_tile_map.map_to_world(Vector2(0,row))[1]))
 				label.add_font_override("font", hint_font)
 				label.align = HALIGN_RIGHT
 				label.valign = VALIGN_BOTTOM
@@ -80,7 +82,7 @@ func generateBoard():
 				
 				# Do some horrible math to generate label for left side of board
 				label.set_size(Vector2(16, 64))
-				label.set_position(nonogram_tile_map.get_global_position() - Vector2(-nonogram_tile_map.map_to_world(Vector2(col, 0))[0], 64))
+				label.set_position(nonagram_tile_map.get_global_position() - Vector2(-nonagram_tile_map.map_to_world(Vector2(col, 0))[0], 64))
 				label.add_font_override("font", hint_font)
 				label.align = HALIGN_CENTER
 				label.valign = VALIGN_BOTTOM
@@ -89,8 +91,8 @@ func generateBoard():
 				add_child(label)
 				pass
 				
-			# Set the nonogram tilemap to a blank tile
-			nonogram_tile_map.set_cell(col, row, 0)
+			# Set the nonagram tilemap to a blank tile
+			nonagram_tile_map.set_cell(col, row, 0)
 			
 			# Set the corresponding solution for the SolutionTileMap based on solution
 			# index is needed because of a bad translation between solution value (0 = not colored, 1 = colored)
@@ -107,7 +109,7 @@ func generateBoard():
 # The returned array is an array[2][x] of strings where:
 # In array[0], x is the hints of the columns (top of board) and
 # In array[1], x is the hints of the rows (left of board)
-func generate_hint(solution):
+func _generate_hint(solution):
 	
 	var output = []
 	
@@ -139,7 +141,7 @@ func generate_hint(solution):
 			
 				if line_text != "":
 					# Don't add a leading space for the first number
-					line_text += " "
+					line_text += "\n"
 					
 				# Record and terminate sequence
 				line_text += str(line_count) 
@@ -206,12 +208,16 @@ func generate_hint(solution):
 	
 	return output
 
-func set_tile(nonogram_tile_map_coords, button_index):
+func set_tile(tilemap_coord, tileset_index):
+	nonagram_tile_map.set_cellv(tilemap_coord, tileset_index)
+	
+# Based on the tile coords and mouse input, make a mark on the nonogram tilemap
+func handle_tile_input(nonagram_tile_map_coords, button_index):
 	# Don't try to change a tile that is not in the board
-	if not is_in_board(nonogram_tile_map_coords):
+	if not is_in_board(nonagram_tile_map_coords):
 		return
 	
-	var tile = 0
+	var tile = -1
 	match (button_index):
 		BUTTON_LEFT:
 			tile = tiles.Colored
@@ -220,26 +226,33 @@ func set_tile(nonogram_tile_map_coords, button_index):
 		
 		
 	# Compare this action with solution tile map to see if it's a correct one
-	if solution_tile_map.get_cellv(nonogram_tile_map_coords) == tile and \
-	not nonogram_tile_map.get_cellv(nonogram_tile_map_coords) == -1:
+	if solution_tile_map.get_cellv(nonagram_tile_map_coords) == tile and \
+	not nonagram_tile_map.get_cellv(nonagram_tile_map_coords) == -1:
 		
 		# If it is correct, then the tile is removed to reveal the tilemaps underneath it
-		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, -1)
+		nonagram_tile_map.set_cellv(nonagram_tile_map_coords, -1)
 		
-	elif nonogram_tile_map.get_cellv(nonogram_tile_map_coords) == tile or \
-		nonogram_tile_map.get_cellv(nonogram_tile_map_coords) == -1:
+	elif nonagram_tile_map.get_cellv(nonagram_tile_map_coords) == tile or \
+		nonagram_tile_map.get_cellv(nonagram_tile_map_coords) == -1:
 			
 		# If the tile is already set to what we are trying to color it, then clear it
-		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, 0)
+		nonagram_tile_map.set_cellv(nonagram_tile_map_coords, 0)
 		
 	else:
 		# Set the tile
-		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, tile)
+		nonagram_tile_map.set_cellv(nonagram_tile_map_coords, tile)
 
-# Gets a nonogram_tile_map coordinate and returns whether or not that is in the board
+# Gets a nonagram_tile_map coordinate and returns whether or not that is in the board
 func is_in_board(tilemap_coord):
 	# If the coordinate is within the bounds of the number of columns and rows, then it is in bounds
 	if tilemap_coord[0] >= 0 and tilemap_coord[0] < columns:
 		if tilemap_coord[1] >= 0 and tilemap_coord[1] < rows :
 			return true
 	return false
+
+# Returns the position of the closest tile that the mouse is pointing at
+func get_selected_tile():
+	return nonagram_tile_map.world_to_map(nonagram_tile_map.get_local_mouse_position())
+	
+func world_to_board(pos: Vector2):
+	return nonagram_tile_map.world_to_map(pos)

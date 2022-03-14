@@ -42,16 +42,13 @@ func _input(event):
 			effect_tilemap.set_cellv(hovered_tile, -1)
 			hovered_tile = board_controller.get_selected_tile()
 			effect_tilemap.set_cellv(hovered_tile, 5)
-	else:
+	elif not board_controller.is_in_board(board_controller.get_selected_tile()):
 		effect_tilemap.set_cellv(hovered_tile, -1)
 		hovered_tile = Vector2(-1, -1)
 		
 			
 			
 func _process(_delta):
-	
-	if tween.is_active():
-		return
 	
 	# Detect player movement
 	var move_dir = Vector2.ZERO
@@ -64,7 +61,7 @@ func _process(_delta):
 	if Input.is_action_just_pressed("move_left"):
 		move_dir = LEFT
 	
-	if move_dir != Vector2.ZERO:
+	if move_dir != Vector2.ZERO and not tween.is_active():
 		move(move_dir)
 		
 
