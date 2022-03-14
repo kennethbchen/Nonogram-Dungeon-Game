@@ -7,6 +7,11 @@ onready var board_controller = $BoardController
 # Raycast 2D used for player collision
 onready var ray = $Player/RayCast2D
 
+onready var tween = $Player/Tween
+
+export var move_speed = 15
+
+
 # Directions for movement
 const RIGHT = Vector2.RIGHT
 const LEFT = Vector2.LEFT
@@ -28,7 +33,11 @@ func _input(event):
 		if event.button_index == BUTTON_LEFT or event.button_index == BUTTON_RIGHT:
 			board_controller.set_tile(selected_tile, event.button_index)
 			
+			
 func _process(_delta):
+	
+	if tween.is_active():
+		return
 	
 	# Detect player movement
 	var move_dir = Vector2.ZERO
@@ -49,6 +58,7 @@ func move(dir):
 	
 	# Don't move in a direction that is outside the board
 	if not board_controller.is_in_board(board_controller.world_to_board(player.position + dir * board_controller.tile_size)):
+		bump_tween(dir)
 		return
 	
 	# Check for any collisions
@@ -57,6 +67,24 @@ func move(dir):
 	
 	if !ray.is_colliding():
 		# Only move if there is no collision
-		player.position += dir * board_controller.tile_size
+		move_tween(dir)
+	else:
+		bump_tween(dir)
+		
 	
-
+func move_tween(dir):
+	tween.interpolate_property(player, "position",
+		player.position, player.position + dir * board_controller.tile_size,
+		1.0/move_speed, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
+	tween.start()
+	
+func bump_tween(dir):
+	var old_pos = player.position
+	var new_pos = player.position + dir * board_controller.tile_size / 4
+	tween.interpolate_property(player, "position",
+		player.position, new_pos,
+		1.0/move_speed, Tween.TRANS_BACK, Tween.EASE_IN_OUT)
+	tween.interpolate_property(player, "position",
+		player.position, old_pos,
+		1.0/move_speed, Tween.TRANS_SINE, Tween.EASE_IN_OUT, .15)
+	tween.start()
