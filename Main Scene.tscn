@@ -21,7 +21,11 @@ current = true
 zoom = Vector2( 0.3, 0.3 )
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
+position = Vector2( 24, 24 )
 script = ExtResource( 7 )
+
+[node name="Character" parent="." groups=["enemy"] instance=ExtResource( 3 )]
+position = Vector2( 104, 8 )
 
 [node name="Tilemaps" type="Node2D" parent="."]
 
@@ -42,7 +46,7 @@ z_index = 1
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 16, 16 )
 format = 1
-tile_data = PoolIntArray( 65537, 3, 0, 65539, 3, 0, 196608, 3, 0, 196612, 3, 0, 262145, 3, 0, 262147, 3, 0, 393216, 3, 0, 393217, 3, 0, 393218, 3, 0, 393220, 3, 0 )
+tile_data = PoolIntArray( 65538, 3, 0, 65539, 3, 0, 65540, 3, 0, 65541, 3, 0, 131074, 3, 0, 131076, 3, 0, 196609, 3, 0, 196610, 3, 0, 262149, 3, 0, 327681, 3, 0, 327682, 3, 0, 327683, 3, 0, 327684, 3, 0, 327685, 3, 0, 393219, 3, 0 )
 
 [node name="SolutionTileMap" type="TileMap" parent="Tilemaps"]
 tile_set = ExtResource( 1 )

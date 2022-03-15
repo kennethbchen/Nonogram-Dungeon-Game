@@ -33,3 +33,9 @@ func use_energy(cost):
 	else:
 		return false
 
+func _handle_collision(direction: Vector2, collider):
+	if collider.is_in_group("enemy"):
+		bump_tween(direction)
+	else:
+		bump_tween(direction)
+		

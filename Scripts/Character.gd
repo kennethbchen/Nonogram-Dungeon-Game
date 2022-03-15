@@ -21,13 +21,28 @@ func take_damage(damage):
 	
 func try_move(direction: Vector2):
 	
+	# Don't move if already in moving animation
 	if tween.is_active():
 		return
 		
-	if board_controller.is_valid_move(board_controller.world_to_board(position) + direction):
+	ray.cast_to = direction * board_controller.tile_size
+	ray.force_raycast_update()
+	
+	
+	if !board_controller.is_in_board( \
+		board_controller.world_to_board(position + direction * board_controller.tile_size)):
+		# Don't move outside the board
+		bump_tween(direction)
+	elif(!ray.is_colliding()):
+		# Move
 		move_tween(direction)
 	else:
-		bump_tween(direction)
+		# Collision handle collision
+		_handle_collision(direction, ray.get_collider())
+
+# Handle a collision for try_move
+func _handle_collision(direction: Vector2, collider: Object):
+	pass
 
 # Animation for moving
 func move_tween(dir):
