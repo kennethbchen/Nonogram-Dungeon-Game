@@ -29,6 +29,10 @@ func take_damage(damage):
 	
 	if health == 0:
 		queue_free()
+
+func heal(heal_amount):
+	health = min(max_health, health + heal_amount)
+	emit_signal("health_changed", health, max_health)
 	
 func try_move(direction: Vector2):
 	

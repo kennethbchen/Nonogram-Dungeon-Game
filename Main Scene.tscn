@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Sprites/Tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Scripts/EnergyDisplay.gd" type="Script" id=6]
 [ext_resource path="res://Scripts/PlayerController.gd" type="Script" id=7]
 [ext_resource path="res://Scripts/HealthDisplay.gd" type="Script" id=8]
+[ext_resource path="res://Scenes/Apple.tscn" type="PackedScene" id=9]
 
 [node name="Main Scene" type="Node2D"]
 script = ExtResource( 2 )
@@ -52,6 +53,11 @@ tile_data = PoolIntArray( 65538, 3, 0, 65539, 3, 0, 65540, 3, 0, 65541, 3, 0, 13
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 16, 16 )
 format = 1
+
+[node name="Entities" type="Node" parent="."]
+
+[node name="Apple" parent="Entities" instance=ExtResource( 9 )]
+position = Vector2( 8, 8 )
 
 [node name="EnergyDisplay" type="Label" parent="."]
 margin_left = -80.0

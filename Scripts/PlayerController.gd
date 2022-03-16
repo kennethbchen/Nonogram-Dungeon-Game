@@ -1,4 +1,4 @@
-extends "res://Scripts/Character.gd"
+extends Character
 
 
 # Energy is used when the nonogram board is being modified by the player
@@ -40,6 +40,9 @@ func use_energy(cost):
 func _handle_collision(direction: Vector2, collider):
 	if collider.is_in_group("enemy"):
 		attack_character(collider)
+		bump_tween(direction)
+	elif collider is Interactable:
+		collider.interact_with(self)
 		bump_tween(direction)
 	else:
 		bump_tween(direction)
