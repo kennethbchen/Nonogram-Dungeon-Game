@@ -13,10 +13,9 @@ func _on_health_changed(value, max_value):
 	if value == max_value:
 		bar_under.value = max_value
 		
-	tween.interpolate_property(bar_under, "value", bar_under.value, value, 1, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
+	tween.interpolate_property(bar_under, "value", bar_under.value, value, 0.4, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
 	tween.start()
-	print()
-	print(bar_under.value)
+	
 	bar_over.max_value = max_value
 	bar_over.value = value
 	

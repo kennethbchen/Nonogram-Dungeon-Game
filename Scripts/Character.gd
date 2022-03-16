@@ -14,10 +14,10 @@ export var move_speed = 15
 signal health_changed(value, max_value)
 
 # Stats
-var max_health = 50
+var max_health = 5
 var health = max_health
 
-var attack = 5
+var attack = 1
 
 func _ready():
 	emit_signal("health_changed", max_health, max_health)
