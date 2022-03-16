@@ -1,5 +1,7 @@
 extends Node2D
 
+class_name Character
+
 onready var board_controller = $"../BoardController"
 
 # Raycast 2D used for character collision
@@ -9,15 +11,24 @@ onready var ray = $RayCast2D
 onready var tween = $Tween
 export var move_speed = 15
 
+signal health_changed(value, max_value)
+
 # Stats
-var max_health = 15
+var max_health = 50
 var health = max_health
 
+var attack = 5
+
 func _ready():
+	emit_signal("health_changed", max_health, max_health)
 	pass
 
 func take_damage(damage):
 	health = max(0, health - abs(damage))
+	emit_signal("health_changed", health, max_health)
+	
+	if health == 0:
+		queue_free()
 	
 func try_move(direction: Vector2):
 	
@@ -43,6 +54,9 @@ func try_move(direction: Vector2):
 # Handle a collision for try_move
 func _handle_collision(direction: Vector2, collider: Object):
 	pass
+
+func attack_character(character: Character):
+	character.take_damage(attack)
 
 # Animation for moving
 func move_tween(dir):

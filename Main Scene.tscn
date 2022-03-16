@@ -25,7 +25,7 @@ position = Vector2( 24, 24 )
 script = ExtResource( 7 )
 
 [node name="Character" parent="." groups=["enemy"] instance=ExtResource( 3 )]
-position = Vector2( 104, 8 )
+position = Vector2( 40, 8 )
 
 [node name="Tilemaps" type="Node2D" parent="."]
 
