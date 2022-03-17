@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Sprites/Tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://Scripts/HealthDisplay.gd" type="Script" id=8]
 [ext_resource path="res://Scenes/Apple.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Scenes/Door.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Scenes/Trap.tscn" type="PackedScene" id=11]
 
 [node name="Main Scene" type="Node2D"]
 script = ExtResource( 2 )
@@ -113,6 +114,9 @@ custom_fonts/font = ExtResource( 5 )
 text = "Health:"
 align = 1
 valign = 1
+
+[node name="Trap" parent="." instance=ExtResource( 11 )]
+position = Vector2( 72, 72 )
 
 [connection signal="energy_changed" from="Player" to="EnergyDisplay" method="_on_Player_energy_changed"]
 [connection signal="health_changed" from="Player" to="HealthDisplay" method="_on_Player_health_changed"]

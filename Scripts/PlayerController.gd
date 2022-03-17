@@ -41,6 +41,9 @@ func _handle_collision(direction: Vector2, collider):
 	if collider.is_in_group("enemy"):
 		attack_character(collider)
 		bump_tween(direction)
+	elif collider is Trap:
+		collider.interact_with(self)
+		move_tween(direction)
 	elif collider is Interactable:
 		collider.interact_with(self)
 		bump_tween(direction)
