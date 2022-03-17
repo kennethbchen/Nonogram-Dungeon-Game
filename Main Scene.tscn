@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Sprites/Tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://Scenes/Apple.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Scenes/Door.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Scenes/Trap.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Scenes/Stairs.tscn" type="PackedScene" id=12]
 
 [node name="Main Scene" type="Node2D"]
 script = ExtResource( 2 )
@@ -25,6 +26,7 @@ zoom = Vector2( 0.3, 0.3 )
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
 position = Vector2( 24, 24 )
+z_index = 3
 script = ExtResource( 7 )
 
 [node name="Character" parent="." groups=["enemy"] instance=ExtResource( 3 )]
@@ -57,6 +59,9 @@ cell_size = Vector2( 16, 16 )
 format = 1
 
 [node name="Entities" type="Node" parent="."]
+
+[node name="Stairs" parent="Entities" instance=ExtResource( 12 )]
+position = Vector2( 56, 40 )
 
 [node name="Apple" parent="Entities" instance=ExtResource( 9 )]
 position = Vector2( 8, 8 )

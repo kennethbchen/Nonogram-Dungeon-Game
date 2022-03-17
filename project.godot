@@ -20,6 +20,11 @@ _global_script_classes=[ {
 "path": "res://Scripts/Interactable.gd"
 }, {
 "base": "Interactable",
+"class": "Stairs",
+"language": "GDScript",
+"path": "res://Scripts/Stairs.gd"
+}, {
+"base": "Interactable",
 "class": "Trap",
 "language": "GDScript",
 "path": "res://Trap.gd"
@@ -27,6 +32,7 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "Character": "",
 "Interactable": "",
+"Stairs": "",
 "Trap": ""
 }
 
