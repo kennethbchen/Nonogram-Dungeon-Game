@@ -35,7 +35,7 @@ func _input(event):
 		if hovered_tile != board_controller.get_selected_tile():
 			effect_tilemap.set_cellv(hovered_tile, -1)
 			hovered_tile = board_controller.get_selected_tile()
-			effect_tilemap.set_cellv(hovered_tile, 5)
+			effect_tilemap.set_cellv(hovered_tile, Util.nono_cursor)
 	elif not board_controller.is_in_board(board_controller.get_selected_tile()):
 		effect_tilemap.set_cellv(hovered_tile, -1)
 		hovered_tile = Vector2(-1, -1)
