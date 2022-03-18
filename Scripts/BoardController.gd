@@ -14,13 +14,6 @@ onready var world_tile_map = $"../Tilemaps/WorldTileMap"
 
 onready var hint_font = load("res://Font/NonagramHint.tres")
 
-# Maps tile type names to tile ID in Tileset
-var tiles = {
-	"Blank": 0,
-	"Crossed": 1,
-	"Colored": 2,
-}
-
 var tile_size = 16
 
 # The solution to the current board
@@ -214,9 +207,9 @@ func handle_tile_input(nonagram_tile_map_coords, button_index):
 	var tile = -1
 	match (button_index):
 		BUTTON_LEFT:
-			tile = tiles.Colored
+			tile = Util.nono_color
 		BUTTON_RIGHT:
-			tile = tiles.Crossed
+			tile = Util.nono_cross
 		
 		
 	# Compare this action with solution tile map to see if it's a correct one
@@ -230,7 +223,7 @@ func handle_tile_input(nonagram_tile_map_coords, button_index):
 		nonagram_tile_map.get_cellv(nonagram_tile_map_coords) == -1:
 		
 		# If the tile is already set to what we are trying to color it, then clear it
-		nonagram_tile_map.set_cellv(nonagram_tile_map_coords, 0)
+		nonagram_tile_map.set_cellv(nonagram_tile_map_coords, Util.nono_blank)
 		
 	else:
 		# Set the tile

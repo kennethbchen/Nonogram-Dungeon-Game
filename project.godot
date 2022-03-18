@@ -28,12 +28,18 @@ _global_script_classes=[ {
 "class": "Trap",
 "language": "GDScript",
 "path": "res://Trap.gd"
+}, {
+"base": "Node",
+"class": "Util",
+"language": "GDScript",
+"path": "res://Scripts/Util.gd"
 } ]
 _global_script_class_icons={
 "Character": "",
 "Interactable": "",
 "Stairs": "",
-"Trap": ""
+"Trap": "",
+"Util": ""
 }
 
 [application]
