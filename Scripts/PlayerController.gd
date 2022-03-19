@@ -1,3 +1,4 @@
+
 extends Character
 
 class_name Player
@@ -8,6 +9,9 @@ var energy = max_energy
 
 # For UI Elements
 signal energy_changed(value, max_value)
+
+# Signal that is fired when the player's turn is over
+signal player_turn_over()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -37,6 +41,29 @@ func use_energy(cost):
 		return true
 	else:
 		return false
+		
+# Animation for moving
+func move_tween(dir):
+	tween.interpolate_callback(self, 1.0/move_speed, "_tween_callback")
+	.move_tween(dir)
+
+# Animation for failing to move
+func bump_tween(dir):
+	tween.interpolate_callback(self, 1.0/move_speed, "_tween_callback")
+	.bump_tween(dir)
+
+func try_move(direction: Vector2):
+	.try_move(direction)
+	
+	pass
+
+# When the tween movement is over, the player's turn is over
+# The callback is used so the enemies will only movea after the player's animation has finished
+func _tween_callback():
+	# The player has done an action in the world
+	# The player's turn has ended
+	emit_signal("player_turn_over")
+	pass
 
 func _handle_collision(direction: Vector2, collider):
 	if collider.is_in_group("enemy"):

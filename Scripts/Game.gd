@@ -6,7 +6,9 @@ onready var board_controller = $BoardController
 
 onready var effect_tilemap = $Tilemaps/EffectTileMap
 
-onready var enemy = $Enemy
+onready var enemies_node = $Enemies
+
+onready var enemies = []
 
 var hovered_tile = Vector2(-1, -1)
 
@@ -19,6 +21,18 @@ const DOWN = Vector2.DOWN
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	board_controller.generateBoard()
+	
+	# Hook into the player's player_turn_over signal
+	player.connect("player_turn_over", self, "_on_player_turn_over")
+	
+	# Populate the list of enemies
+	# All enemies are in the Enemies Node
+	enemies = enemies_node.get_children()
+	
+	# Hook into every enemies' "enemy_died" signal
+	for enemy in enemies:
+		enemy.connect("enemy_died", self, "_on_enemy_died")
+	
 
 func _input(event):
 	# Get the selected tile in nonogram_tile_map space
@@ -57,9 +71,15 @@ func _process(_delta):
 	if Input.is_action_just_pressed("move_left"):
 		move_dir = LEFT
 		
-	if Input.is_action_just_pressed("ui_accept"):
-		enemy.act()
-	
 	if move_dir != Vector2.ZERO:
 		player.try_move(move_dir)
 		
+
+func _on_player_turn_over():
+	# The player's turn is over, so let all enemies at
+	for enemy in enemies:
+		enemy.act()
+
+# Keep track of when enemies die to remove them from the list of enemies
+func _on_enemy_died(enemy):
+	enemies.erase(enemy)	

@@ -1,8 +1,12 @@
+"""
+Handles all properties and function of characters in the game world
+"""
+
 extends Node2D
 
 class_name Character
 
-onready var board_controller = $"../BoardController"
+onready var board_controller = $"/root/Main Scene/BoardController"
 
 # Raycast 2D used for character collision
 onready var ray = $RayCast2D
@@ -12,6 +16,8 @@ onready var tween = $Tween
 export var move_speed = 15
 
 signal health_changed(value, max_value)
+
+
 
 # Stats
 var max_health = 5
@@ -23,12 +29,10 @@ func _ready():
 	emit_signal("health_changed", max_health, max_health)
 	pass
 
+# Su
 func take_damage(damage):
 	health = max(0, health - abs(damage))
 	emit_signal("health_changed", health, max_health)
-	
-	if health == 0:
-		queue_free()
 
 func heal(heal_amount):
 	health = min(max_health, health + heal_amount)
@@ -54,6 +58,7 @@ func try_move(direction: Vector2):
 	else:
 		# Collision handle collision
 		_handle_collision(direction, ray.get_collider())
+		
 
 # Handle a collision for try_move
 func _handle_collision(direction: Vector2, collider: Object):
