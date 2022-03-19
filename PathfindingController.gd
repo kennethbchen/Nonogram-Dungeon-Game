@@ -25,9 +25,7 @@ func _ready():
 	
 	
 	
-	var path = astar.get_id_path(_id(Vector2(6,0)), _id(Vector2(0, 3)))
-	for id in path:
-		print(str(astar.get_point_position(id)))
+	var path = get_tile_path(Vector2(6,0), (Vector2(0, 3)))
 	
 		
 	
@@ -69,7 +67,12 @@ func _load_connections():
 	pass
 
 # Cantor Pairing Function to map 2D tilemap space to 1D ID space
-func _id(point):
+func _id(point: Vector2):
 	var a = point.x
 	var b = point.y
 	return (a + b) * (a + b + 1) / 2 + b
+	
+func get_tile_path(start: Vector2, goal: Vector2):
+	var path = astar.get_point_path(_id(start), _id(goal))
+	print (path)
+	return path

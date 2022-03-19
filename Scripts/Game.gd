@@ -6,6 +6,8 @@ onready var board_controller = $BoardController
 
 onready var effect_tilemap = $Tilemaps/EffectTileMap
 
+onready var enemy = $Enemy
+
 var hovered_tile = Vector2(-1, -1)
 
 # Directions for movement
@@ -56,7 +58,7 @@ func _process(_delta):
 		move_dir = LEFT
 		
 	if Input.is_action_just_pressed("ui_accept"):
-		player.take_damage(1)
+		enemy.act()
 	
 	if move_dir != Vector2.ZERO:
 		player.try_move(move_dir)
