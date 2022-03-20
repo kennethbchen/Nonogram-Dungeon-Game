@@ -1,4 +1,7 @@
 extends Node2D
+
+# https://gist.github.com/fcingolani/035e43f57abf72801ec2e774fb89ad06#file-astar2dvisualizer-gd
+
 class_name AStar2DVisualizer
 
 export(float) var point_radius = 6

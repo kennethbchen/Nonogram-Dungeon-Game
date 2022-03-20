@@ -27,7 +27,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "PathfindingController",
 "language": "GDScript",
-"path": "res://PathfindingController.gd"
+"path": "res://Scripts/PathfindingController.gd"
 }, {
 "base": "Character",
 "class": "Player",
@@ -42,7 +42,7 @@ _global_script_classes=[ {
 "base": "Interactable",
 "class": "Trap",
 "language": "GDScript",
-"path": "res://Trap.gd"
+"path": "res://Scripts/Trap.gd"
 }, {
 "base": "Node",
 "class": "Util",

@@ -1,6 +1,9 @@
+"""
+Controls and handles pathfinding calculations for other objects
+"""
 extends Node
 
-#https://youtu.be/dVNH6mIDksQ
+# https://youtu.be/dVNH6mIDksQ
 
 class_name PathfindingController
 
@@ -9,20 +12,20 @@ onready var world_tilemap = $"../Tilemaps/WorldTileMap"
 # Node containing all of the entities
 onready var entities = $"../Entities"
 onready var entity_positions = []
+
 # The used cells in the world tilemap
 # Includes valid and invalid nodes for pathing
 onready var used_cells = world_tilemap.get_used_cells()
 
 var astar = AStar2D.new()
 
+# For debugging
 onready var astar_visualizer = $"../AStarVisualizer"
 
 func _ready():
 	
 	_load_entities()
-	
 	_load_points()
-	
 	_load_connections()
 	
 	astar_visualizer.offset = Vector2(8,8)
@@ -46,6 +49,7 @@ func _load_points():
 		if entity_positions.has(tile):
 			continue
 		elif world_tilemap.get_cellv(tile) == Util.nono_empty:
+			# TODO: Valid path detection system that doesn't require a blank tile
 			astar.add_point(_id(tile), tile, 1)
 		else:
 			pass
@@ -66,8 +70,6 @@ func _load_connections():
 				# Make sure next coordinates are only positive because
 				# the Cantor Pairing Function only maps one to one for positive integers
 				astar.connect_points(point_id, _id(next), true)
-				
-	pass
 
 # Cantor Pairing Function to map 2D tilemap space to 1D ID space
 func _id(point: Vector2):
@@ -77,10 +79,12 @@ func _id(point: Vector2):
 
 # The returned path is in terms of relative vector direction movements
 func get_tile_path(start: Vector2, goal: Vector2):
-	var path = astar.get_point_path(_id(start), _id(goal))
-	
 	var output = []
 	
+	# Get the path
+	var path = astar.get_point_path(_id(start), _id(goal))
+	
+	# Calculate relative movement
 	for i in range(0, path.size() - 1):
 		output.append(path[i+1] - path[i])
 

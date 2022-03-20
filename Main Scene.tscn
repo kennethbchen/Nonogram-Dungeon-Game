@@ -12,7 +12,7 @@
 [ext_resource path="res://Scenes/Door.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Scenes/Trap.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Scenes/Stairs.tscn" type="PackedScene" id=12]
-[ext_resource path="res://PathfindingController.gd" type="Script" id=13]
+[ext_resource path="res://Scripts/PathfindingController.gd" type="Script" id=13]
 [ext_resource path="res://Scenes/Enemy.tscn" type="PackedScene" id=14]
 
 [node name="Main Scene" type="Node2D"]
@@ -61,12 +61,15 @@ tile_set = ExtResource( 1 )
 cell_size = Vector2( 16, 16 )
 format = 1
 
-[node name="Enemies" type="Node" parent="."]
+[node name="Enemies" type="Node2D" parent="."]
 
 [node name="Enemy" parent="Enemies" instance=ExtResource( 14 )]
 position = Vector2( 72, 56 )
 
-[node name="Entities" type="Node" parent="."]
+[node name="Enemy2" parent="Enemies" instance=ExtResource( 14 )]
+position = Vector2( 40, 104 )
+
+[node name="Entities" type="Node2D" parent="."]
 
 [node name="Stairs" parent="Entities" instance=ExtResource( 12 )]
 position = Vector2( 56, 40 )
