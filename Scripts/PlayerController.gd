@@ -65,19 +65,25 @@ func _tween_callback():
 	emit_signal("player_turn_over")
 	pass
 
+# Returns true on successful move, else false
 func _handle_collision(direction: Vector2, collider):
 	if collider.is_in_group("enemy"):
 		attack_character(collider)
 		bump_tween(direction)
+		return false
 	elif collider is Stairs:
 		collider.interact_with(self)
 		move_tween(direction)
+		return false
 	elif collider is Trap:
 		collider.interact_with(self)
 		move_tween(direction)
+		return true
 	elif collider is Interactable:
 		collider.interact_with(self)
 		bump_tween(direction)
+		return false
 	else:
 		bump_tween(direction)
+		return false
 		

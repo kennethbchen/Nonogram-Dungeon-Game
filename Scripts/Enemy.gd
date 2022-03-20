@@ -2,7 +2,7 @@ extends Character
 
 onready var player = $"/root/Main Scene/Player"
 
-onready var pathfinder = $"/root/ Main Scene/PathfindingController"
+onready var pathfinder = $"/root/Main Scene/PathfindingController"
 
 var move_path = []
 
@@ -43,14 +43,28 @@ func act():
 		ray.cast_to = (player.position - (position + ray.position)) * board_controller.tile_size * 10
 		ray.force_raycast_update()
 		if(ray.is_colliding() and ray.get_collider() is Player):
-			# If the player is found, update the last known player position
-			last_player_position = board_controller.world_to_board(player.position)
+			# If the player is found and it's new, update the last known player position
+			if last_player_position != board_controller.world_to_board(player.position):
+				last_player_position = board_controller.world_to_board(player.position)
 			player_pos_changed = true
-			print("Player Found")
 			break
 	ray.position = Vector2(0,0)
 	
 	if player_pos_changed:
 		# Recalculate move path to this new position
 		# TODO: Create path-geting method in PathfindingController
+		move_path = pathfinder.get_tile_path(board_controller.world_to_board(position), board_controller.world_to_board(player.position))
 		pass
+	
+	if move_path.size() > 0:
+		if try_move(move_path[0]):
+			move_path.remove(0)
+
+# Handle a collision for try_move
+func _handle_collision(direction: Vector2, collider: Object):
+	
+	if collider is Player:
+		collider.take_damage(attack)
+		bump_tween(direction)
+		return false
+	pass

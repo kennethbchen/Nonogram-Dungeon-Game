@@ -37,12 +37,13 @@ func take_damage(damage):
 func heal(heal_amount):
 	health = min(max_health, health + heal_amount)
 	emit_signal("health_changed", health, max_health)
-	
+
+# Returns true on successful movement, else false
 func try_move(direction: Vector2):
 	
 	# Don't move if already in moving animation
 	if tween.is_active():
-		return
+		return false
 		
 	ray.cast_to = direction * board_controller.tile_size
 	ray.force_raycast_update()
@@ -52,15 +53,18 @@ func try_move(direction: Vector2):
 		board_controller.world_to_board(position + direction * board_controller.tile_size)):
 		# Don't move outside the board
 		bump_tween(direction)
+		return false
 	elif(!ray.is_colliding()):
 		# Move
 		move_tween(direction)
+		return true
 	else:
 		# Collision handle collision
-		_handle_collision(direction, ray.get_collider())
+		return _handle_collision(direction, ray.get_collider())
 		
 
 # Handle a collision for try_move
+# Returns true on successful move, else false
 func _handle_collision(direction: Vector2, collider: Object):
 	pass
 

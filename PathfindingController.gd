@@ -15,6 +15,8 @@ onready var used_cells = world_tilemap.get_used_cells()
 
 var astar = AStar2D.new()
 
+onready var astar_visualizer = $"../AStarVisualizer"
+
 func _ready():
 	
 	_load_entities()
@@ -23,9 +25,10 @@ func _ready():
 	
 	_load_connections()
 	
+	astar_visualizer.offset = Vector2(8,8)
+	astar_visualizer.visualize(astar)
 	
-	
-	var path = get_tile_path(Vector2(6,0), (Vector2(0, 3)))
+	get_tile_path((Vector2(6, 0)), Vector2(1,2))
 	
 		
 	
@@ -71,8 +74,15 @@ func _id(point: Vector2):
 	var a = point.x
 	var b = point.y
 	return (a + b) * (a + b + 1) / 2 + b
-	
+
+# The returned path is in terms of relative vector direction movements
 func get_tile_path(start: Vector2, goal: Vector2):
 	var path = astar.get_point_path(_id(start), _id(goal))
-	print (path)
-	return path
+	
+	var output = []
+	
+	for i in range(0, path.size() - 1):
+		output.append(path[i+1] - path[i])
+
+	return output
+
