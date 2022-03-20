@@ -32,6 +32,7 @@ func _ready():
 	# Hook into every enemies' "enemy_died" signal
 	for enemy in enemies:
 		enemy.connect("enemy_died", self, "_on_enemy_died")
+		
 	
 
 func _input(event):
@@ -70,6 +71,9 @@ func _process(_delta):
 		move_dir = RIGHT
 	if Input.is_action_just_pressed("move_left"):
 		move_dir = LEFT
+	
+	if Input.is_action_just_pressed("ui_accept"):
+		_on_player_turn_over()
 		
 	if move_dir != Vector2.ZERO:
 		player.try_move(move_dir)

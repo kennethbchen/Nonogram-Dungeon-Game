@@ -6,4 +6,4 @@ export var attack = 2
 
 func interact_with(character: Character):
 	character.take_damage(attack)
-	queue_free()
+	delete_self()
