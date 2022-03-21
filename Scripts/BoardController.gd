@@ -1,6 +1,10 @@
+"""
+Handles all aspects of the game board
+Nonogram board -> player input area for nonogram
+Solution board -> nonogram solution
+World board -> player character world 
+"""
 extends Node
-
-# Handles all aspects of the game board
 
 # Tilemap that represents the nonagram board
 # Correctly marked tiles on the board will hide to reveal the WorldTileMap
@@ -19,7 +23,7 @@ var tile_size = 16
 # The solution to the current board
 # It's assumed that the solution is at least rectangular, if not square
 var solution = [
-	[0, 1, 0, 1, 0, 1, 1],
+	[1, 1, 0, 1, 0, 1, 1],
 	[1, 1, 1, 1, 1, 0, 1],
 	[1, 1, 1, 1, 1, 0, 0],
 	[1, 1, 0, 1, 1, 1, 1],
@@ -29,11 +33,17 @@ var solution = [
 ]
 
 # The hints of the current board that are displayed
-var hint
+var hint = []
 
 var columns = 0
 var rows = 0
 
+# Hint labels for the columns (goes on top of board)
+var column_hint_labels = []
+
+# Hint labels for the rows (goes of left of board)
+var row_hint_lables = []
+	
 # Generates the nonogram board and solution based on the input data
 # The World layer of the board is within the world_tilemap itself
 func generateBoard():
@@ -43,42 +53,13 @@ func generateBoard():
 	columns = solution[0].size()
 	rows = solution.size()
 	
+	create_labels(hint)
+	
 	# Generate NonogramTileMap tiles based on board dimensions
 	for col in columns:
 		
 		for row in rows:
 			
-			# Create hints for rows (left side of board)
-			if col == 0:
-				var label = Label.new();
-				
-				# Do some horrible math to generate label for left side of board
-				label.set_size(Vector2(64, 0))
-				label.set_position(nonagram_tile_map.get_global_position() - Vector2(66, -nonagram_tile_map.map_to_world(Vector2(0,row))[1]))
-				label.add_font_override("font", hint_font)
-				label.align = HALIGN_RIGHT
-				label.valign = VALIGN_BOTTOM
-				
-				# hint[1] is the hints for the left side
-				label.text = str(hint[1][row])
-				add_child(label)
-			
-			# Create hints for columns (top of board)
-			if row == 0:
-				# Do some horrible math to generate label for top of board
-				var label = Label.new();
-				
-				# Do some horrible math to generate label for left side of board
-				label.set_size(Vector2(16, 64))
-				label.set_position(nonagram_tile_map.get_global_position() - Vector2(-nonagram_tile_map.map_to_world(Vector2(col, 0))[0], 64))
-				label.add_font_override("font", hint_font)
-				label.align = HALIGN_CENTER
-				label.valign = VALIGN_BOTTOM
-				
-				label.text = str(hint[0][col])
-				add_child(label)
-				pass
-				
 			# Set the nonagram tilemap to a blank tile
 			nonagram_tile_map.set_cell(col, row, 0)
 			
@@ -97,6 +78,7 @@ func generateBoard():
 # The returned array is an array[2][x] of strings where:
 # In array[0], x is the hints of the columns (top of board) and
 # In array[1], x is the hints of the rows (left of board)
+# Each individual cell (array[a][b]) is the full hint as a string that should be displayed
 func _generate_hint(solution):
 	
 	var output = []
@@ -195,6 +177,43 @@ func _generate_hint(solution):
 	output.append(solution_line)
 	
 	return output
+
+# TODO: add the labels to an array so they can be reused
+# Takes the nonogram board hints and displays that as labels
+func create_labels(hint):
+	
+	# Generate hint for the rows (left side of board)
+	for row_id in range(0, hint[0].size()):
+		
+		var label = Label.new();
+				
+		# Do some horrible math to generate label for left side of board
+		label.set_size(Vector2(64, 0))
+		label.set_position(nonagram_tile_map.get_global_position() - Vector2(66, -nonagram_tile_map.map_to_world(Vector2(0,row_id))[1]))
+		label.add_font_override("font", hint_font)
+		label.align = HALIGN_RIGHT
+		label.valign = VALIGN_BOTTOM
+		
+		# hint[1] is the hints for the left side
+		label.text = str(hint[1][row_id])
+		print(label.text)
+		add_child(label)
+	
+	# Generate hint for the columns (top side of board)
+	for col_id in range(0, hint[1].size()):
+		
+		var label = Label.new();
+		
+		# Do some horrible math to generate label for left side of board
+		label.set_size(Vector2(16, 64))
+		label.set_position(nonagram_tile_map.get_global_position() - Vector2(-nonagram_tile_map.map_to_world(Vector2(col_id, 0))[0], 64))
+		label.add_font_override("font", hint_font)
+		label.align = HALIGN_CENTER
+		label.valign = VALIGN_BOTTOM
+		
+		label.text = str(hint[0][col_id])
+		add_child(label)
+
 
 func set_tile(tilemap_coord, tileset_index):
 	nonagram_tile_map.set_cellv(tilemap_coord, tileset_index)
