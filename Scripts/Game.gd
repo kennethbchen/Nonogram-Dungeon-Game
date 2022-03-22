@@ -20,7 +20,7 @@ const DOWN = Vector2.DOWN
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	board_controller.generateBoard()
+	board_controller.generate_board()
 	
 	# Hook into the player's player_turn_over signal
 	player.connect("player_turn_over", self, "_on_player_turn_over")
