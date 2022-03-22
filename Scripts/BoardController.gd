@@ -44,7 +44,7 @@ var rows = 0
 
 # Generates the nonogram board and solution based on the input data
 # The World layer of the board is within the world_tilemap itself
-func generate_board():
+func init_board():
 	# Generate the hint to display based on the solution of the board
 	hint = _generate_hint(solution)
 	
