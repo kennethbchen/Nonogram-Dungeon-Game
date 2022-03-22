@@ -95,13 +95,13 @@ func _generate_hint(solution):
 	# Generate the hints for the columns (top)
 	# Go column by column
 	solution_line = []
-	for col in solution[0].size():
+	for col in range(0, solution[0].size()):
 		
 		# Reset vars for new column
 		line_count = 0
 		line_text = ""
 		
-		for row in solution.size():
+		for row in range(0, solution.size()):
 			if solution[row][col] == 1:
 				# If a 1 is found, record it
 				line_count += 1
@@ -183,7 +183,7 @@ func _generate_hint(solution):
 func create_labels(hint):
 	
 	# Generate hint for the rows (left side of board)
-	for row_id in range(0, hint[0].size()):
+	for row_id in range(0, hint[1].size()):
 		
 		var label = Label.new();
 				
@@ -196,11 +196,10 @@ func create_labels(hint):
 		
 		# hint[1] is the hints for the left side
 		label.text = str(hint[1][row_id])
-		print(label.text)
 		add_child(label)
 	
 	# Generate hint for the columns (top side of board)
-	for col_id in range(0, hint[1].size()):
+	for col_id in range(0, hint[0].size()):
 		
 		var label = Label.new();
 		
