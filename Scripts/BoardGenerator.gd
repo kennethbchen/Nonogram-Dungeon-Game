@@ -18,13 +18,14 @@ onready var hint_font = load("res://Font/NonogramHint.tres")
 # The solution to the current board
 # It's assumed that the solution is at least rectangular, if not square
 var solution = [
-	[1, 1, 0, 1, 0, 1, 1],
-	[1, 1, 1, 1, 1, 0, 1],
-	[1, 1, 1, 1, 1, 0, 0],
-	[1, 1, 0, 1, 1, 1, 1],
-	[0, 0, 0, 0, 0, 0, 1],
-	[1, 1, 0, 1, 1, 1, 0],
-	[0, 0, 0, 0, 0, 0, 0]
+	[1, 1, 0, 1, 0, 1, 1, 1],
+	[1, 1, 1, 1, 1, 0, 1, 0],
+	[1, 1, 1, 1, 1, 0, 0, 1],
+	[1, 1, 0, 1, 1, 1, 1, 1],
+	[0, 0, 0, 0, 0, 0, 1, 1],
+	[1, 1, 0, 1, 1, 1, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 1],
+	[0, 0, 0, 0, 0, 0, 0, 0]
 ]
 
 # The hints of the current board that are displayed
@@ -34,10 +35,14 @@ var hint = []
 # The format of the labels is the same as the hint array
 var hint_labels = []
 
-var columns = 0
-var rows = 0
+var columns = 8
+var rows = 8
 
 var tile_size = 16
+
+# Total number of dungeon / nonogram boards in their respective tilemaps
+var dungeon_boards = 1
+var nonogram_board = 1
 
 # Generates the nonogram board and solution based on the input data
 # The World layer of the board is within the world_tilemap itself
@@ -48,9 +53,6 @@ func generate_board():
 	
 	# Generate the hint to display based on the solution of the board
 	hint = _generate_hint(solution)
-	
-	columns = solution[0].size()
-	rows = solution.size()
 
 	hint_labels = create_labels(hint, hint_labels)
 	

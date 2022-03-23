@@ -1,5 +1,4 @@
 """
-
 Acts as an interface to the game boards to other nodes
 Nonogram board -> player input area for nonogram
 Solution board -> nonogram solution
@@ -29,7 +28,7 @@ var tile_size = 0
 func _ready():
 	tile_size = board_generator.tile_size
 	
-# Generates the nonogram board and solution based on the input data
+# Generates the nonogram board and solution
 # The World layer of the board is within the world_tilemap itself
 func init_board():
 	var data = board_generator.generate_board()
