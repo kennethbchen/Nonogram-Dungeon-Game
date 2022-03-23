@@ -1,248 +1,42 @@
 """
-Handles all aspects of the game board
+
+Acts as an interface to the game boards to other nodes
 Nonogram board -> player input area for nonogram
 Solution board -> nonogram solution
 World board -> player character world 
 """
 extends Node
 
+onready var board_generator = $BoardGenerator
+
 # Tilemap that represents the nonogram board
 # Correctly marked tiles on the board will hide to reveal the WorldTileMap
-onready var nonogram_tile_map = $"../Tilemaps/NonogramTileMap"
+onready var nonogram_tile_map = $"/root/Main Scene/Tilemaps/NonogramTileMap"
 
 # Tilemap that represents the solution of the nonogram board
 # with proper coloring or marking out
-onready var solution_tile_map = $"../Tilemaps/SolutionTileMap"
+onready var solution_tile_map = $"/root/Main Scene/Tilemaps/SolutionTileMap"
 
-onready var world_tile_map = $"../Tilemaps/WorldTileMap"
+onready var world_tile_map = $"/root/Main Scene/Tilemaps/WorldTileMap"
 
 onready var hint_font = load("res://Font/NonogramHint.tres")
-
-var tile_size = 16
-
-# The solution to the current board
-# It's assumed that the solution is at least rectangular, if not square
-var solution = [
-	[1, 1, 0, 1, 0, 1, 1],
-	[1, 1, 1, 1, 1, 0, 1],
-	[1, 1, 1, 1, 1, 0, 0],
-	[1, 1, 0, 1, 1, 1, 1],
-	[0, 0, 0, 0, 0, 0, 1],
-	[1, 1, 0, 1, 1, 1, 0],
-	[0, 0, 0, 0, 0, 0, 0]
-]
-
-# The hints of the current board that are displayed
-var hint = []
-
-# Array of label nodes that display the hints
-# The format of the labels is the same as the hint array
-var hint_labels = []
 
 var columns = 0
 var rows = 0
 
+var tile_size = 0
+
+func _ready():
+	tile_size = board_generator.tile_size
+	
 # Generates the nonogram board and solution based on the input data
 # The World layer of the board is within the world_tilemap itself
 func init_board():
-	# Generate the hint to display based on the solution of the board
-	hint = _generate_hint(solution)
+	var data = board_generator.generate_board()
+	columns = data[0]
+	rows = data[1]
 	
-	columns = solution[0].size()
-	rows = solution.size()
-
-	hint_labels = create_labels(hint, hint_labels)
 	
-	# Generate NonogramTileMap tiles based on board dimensions
-	for col in columns:
-		
-		for row in rows:
-			
-			# Set the nonogram tilemap to a blank tile
-			nonogram_tile_map.set_cell(col, row, 0)
-			
-			# Set the corresponding solution for the SolutionTileMap based on solution
-			# index is needed because of a bad translation between solution value (0 = not colored, 1 = colored)
-			# and tilemap id value (1 = not colored, 2 = colored)
-			var index
-			if solution[row][col] == 0:
-				index = 1
-			else:
-				index = 2
-				
-			solution_tile_map.set_cell(col, row, index)
-
-# Takes a board solution and generates an array that contains the hints for that board
-# The returned array is an array[2][x] of strings where:
-# In array[0], x is the hints of the columns (top of board) and
-# In array[1], x is the hints of the rows (left of board)
-# Each individual cell (array[a][b]) is the full hint as a string that should be displayed
-func _generate_hint(solution):
-	
-	var output = []
-	
-	# The solution line holds the column / row solutions before it is put into output
-	var solution_line = []
-	
-	# The size of the current continuous line of squares
-	var line_count = 0
-	
-	# The text that is displayed as the actual hint for each given continuous line of squares
-	var line_text = ""
-	
-	# Generate the hints for the columns (top)
-	# Go column by column
-	solution_line = []
-	for col in range(0, solution[0].size()):
-		
-		# Reset vars for new column
-		line_count = 0
-		line_text = ""
-		
-		for row in range(0, solution.size()):
-			if solution[row][col] == 1:
-				# If a 1 is found, record it
-				line_count += 1
-			elif solution[row][col] == 0 and line_count > 0:
-				# If a 0 is found and we were already counting a sequence of 1's,
-				# record and terminate that sequence
-			
-				if line_text != "":
-					# Don't add a leading new line for the first number
-					line_text += "\n"
-					
-				# Record and terminate sequence
-				line_text += str(line_count) 
-				line_count = 0
-		
-		# Process the value of line_count at the end of a column
-		if line_count > 0:
-			# If there is a line count left over, then add it to the row text
-			
-			if line_text != "":
-				# Only add a leading newline if there was already something in the row text
-				line_text += "\n"
-			
-			line_text += str(line_count)
-			
-		elif line_count == 0 and line_text == "":
-			# if there was no 1's in that entire row, add a zero to the row text
-			line_text += "0"
-		
-		solution_line.append(line_text)
-	
-	output.append(solution_line)
-	
-	solution_line = []
-	# Generate the hints for the rows (left side)
-	# Go row by row
-	for row in solution.size():
-		# Reset vars for new row
-		line_count = 0
-		line_text = ""
-		for col in solution[row].size():
-			
-			
-			if solution[row][col] == 1:
-				# If a 1 is found
-				line_count += 1
-			elif solution[row][col] == 0 and line_count > 0:
-				# If a 0 is found and we were already counting a sequence of 1's,
-				# terminate and record that sequence
-			
-				if line_text != "":
-					# Don't add a leading space for the first number
-					line_text += " "
-					
-				# Add the current sequence to the row and reset count
-				line_text += str(line_count) 
-				line_count = 0
-		
-		
-		# Process the end of a column
-		if line_count > 0:
-			# At the end of a row, if there is a line count left over, then add it to the row text
-			if line_text != "":
-				# Only add a leading space if there was already something in the row text
-				line_text += " "
-			line_text += str(line_count)
-		elif line_count == 0 and line_text == "":
-			# if there was no 1's in that row, add a zero to the row text
-			line_text += "0"
-		
-		solution_line.append(line_text)
-		
-	output.append(solution_line)
-	
-	return output
-
-# TODO: add the labels to an array so they can be reused
-# Takes the nonogram board hints and displays that as labels
-# The resulting labels are stored in an array in the same format as the hints
-# The label_array is the array of labels, if they exist already
-# They are used to determine if the labels can be reused or not
-# However, it's assumed that in the case of a reuse, the size of the board did not change
-func create_labels(hint, label_array):
-	
-	var output = []
-	
-	# Stores the entire row / column of labels before they are put in the output array
-	var line = []
-	
-	# If the labels can be reused, don't create new ones
-	if label_array.size() != 0:
-		for col_id in range (0, hint[0].size()):
-			
-			label_array[0][col_id].text = hint[0][col_id]
-			print(label_array[0][col_id].text)
-			print()
-			
-		for row_id in range(0, hint[1].size()):
-			label_array[1][row_id].text = hint[1][row_id]
-		
-		print("reuse")
-		return label_array
-	
-	# Generate hint for the columns (top side of board)
-	for col_id in range(0, hint[0].size()):
-		
-		var label = Label.new();
-		
-		# Do some horrible math to generate label for left side of board
-		label.set_size(Vector2(16, 64))
-		label.set_position(nonogram_tile_map.get_global_position() - Vector2(-nonogram_tile_map.map_to_world(Vector2(col_id, 0))[0], 64))
-		label.add_font_override("font", hint_font)
-		label.align = HALIGN_CENTER
-		label.valign = VALIGN_BOTTOM
-		
-		label.text = str(hint[0][col_id])
-		add_child(label)
-		
-		line.append(label)
-	
-	output.append(line)
-	line = []
-	# Generate hint for the rows (left side of board)
-	for row_id in range(0, hint[1].size()):
-		
-		var label = Label.new();
-				
-		# Do some horrible math to generate label for left side of board
-		label.set_size(Vector2(64, 0))
-		label.set_position(nonogram_tile_map.get_global_position() - Vector2(66, -nonogram_tile_map.map_to_world(Vector2(0,row_id))[1]))
-		label.add_font_override("font", hint_font)
-		label.align = HALIGN_RIGHT
-		label.valign = VALIGN_BOTTOM
-		
-		# hint[1] is the hints for the left side
-		label.text = str(hint[1][row_id])
-		add_child(label)
-		
-		line.append(label)
-	output.append(line)
-	
-	return output
-
 func set_tile(tilemap_coord, tileset_index):
 	nonogram_tile_map.set_cellv(tilemap_coord, tileset_index)
 	

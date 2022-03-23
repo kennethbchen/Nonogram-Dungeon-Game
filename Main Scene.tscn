@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Sprites/Tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -14,12 +14,16 @@
 [ext_resource path="res://Scenes/Stairs.tscn" type="PackedScene" id=12]
 [ext_resource path="res://Scripts/PathfindingController.gd" type="Script" id=13]
 [ext_resource path="res://Scenes/Enemy.tscn" type="PackedScene" id=14]
+[ext_resource path="res://Scripts/BoardGenerator.gd" type="Script" id=15]
 
 [node name="Main Scene" type="Node2D"]
 script = ExtResource( 2 )
 
 [node name="BoardController" type="Node" parent="."]
 script = ExtResource( 4 )
+
+[node name="BoardGenerator" type="Node" parent="BoardController"]
+script = ExtResource( 15 )
 
 [node name="PathfindingController" type="Node" parent="."]
 script = ExtResource( 13 )
@@ -44,6 +48,7 @@ cell_size = Vector2( 16, 16 )
 format = 1
 
 [node name="NonogramTileMap" type="TileMap" parent="Tilemaps"]
+visible = false
 z_index = 2
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 16, 16 )

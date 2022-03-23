@@ -50,6 +50,7 @@ func _input(event):
 	# Handle mouse hovering visual
 	if event is InputEventMouseMotion and board_controller.is_in_board(board_controller.get_selected_tile()):
 		if hovered_tile != board_controller.get_selected_tile():
+			
 			effect_tilemap.set_cellv(hovered_tile, -1)
 			hovered_tile = board_controller.get_selected_tile()
 			effect_tilemap.set_cellv(hovered_tile, Util.nono_cursor)
