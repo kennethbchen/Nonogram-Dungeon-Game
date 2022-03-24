@@ -22,17 +22,16 @@ var astar = AStar2D.new()
 # For debugging
 onready var astar_visualizer = $"../AStarVisualizer"
 
-func _ready():
-	
+
+func calculate_paths(rows, columns):
 	_load_entities()
-	_load_points()
+	_load_points(rows, columns)
 	_load_connections()
 	
 	astar_visualizer.offset = Vector2(8,8)
 	astar_visualizer.visualize(astar)
 	
 	get_tile_path((Vector2(6, 0)), Vector2(1,2))
-	
 		
 	
 # Go though all of the entities and compute a list of their positions (tilemap-space)
@@ -45,21 +44,33 @@ func _load_entities():
 		entity_positions.append(world_tilemap.world_to_map(entity.position))
 		pass
 
-func _load_points():
+func _load_points(rows, columns):
 	# Read through the tilemap and add valid pathing nodes to astar
-	for tile in used_cells:
-		
-
-		if world_tilemap.get_cellv(tile) == Util.nono_empty:
-			# TODO: Valid path detection system that doesn't require a blank tile
-			astar.add_point(_id(tile), tile, 1)
+	for row in range(0, rows):
+		for col in range(0, columns):
+			var coord = Vector2(col, row)
+			var tile_id = world_tilemap.get_cellv(coord)
+			if tile_id == Util.nono_empty or tile_id == -1:
+				# TODO: Valid path detection system that doesn't require a blank tile
+				astar.add_point(_id(coord), coord, 1)
 			
-			if entity_positions.has(tile):
+			if entity_positions.has(coord):
 				# If the tile has an entity on it, then don't add it as a valid point
-				astar.set_point_disabled(_id(tile))
+				astar.set_point_disabled(_id(coord))
 				continue
-		else:
-			pass
+	
+#	for tile in used_cells:
+#
+#		if world_tilemap.get_cellv(tile) == Util.nono_empty or world_tilemap.get_cellv(tile) == -1:
+#			# TODO: Valid path detection system that doesn't require a blank tile
+#			astar.add_point(_id(tile), tile, 1)
+#
+#			if entity_positions.has(tile):
+#				# If the tile has an entity on it, then don't add it as a valid point
+#				astar.set_point_disabled(_id(tile))
+#				continue
+#		else:
+#			pass
 
 func _load_connections():
 	# Go through all of the points in astar and make connections between them

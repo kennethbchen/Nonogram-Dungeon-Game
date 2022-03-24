@@ -13,7 +13,35 @@ onready var solution_tile_map = $"/root/Main Scene/Tilemaps/SolutionTileMap"
 
 onready var world_tile_map = $"/root/Main Scene/Tilemaps/WorldTileMap"
 
+onready var pathfinder = $"/root/Main Scene/PathfindingController"
+
 onready var hint_font = load("res://Font/NonogramHint.tres")
+
+# Tilemap containing all possible nonogram / dungeon boards
+onready var nonogram_layouts = $"/root/Main Scene/Tilemaps/NonogramBoards"
+onready var dungeon_layouts = $"/root/Main Scene/Tilemaps/DungeonBoards"
+
+# Node containing all enemies
+onready var enemies_node = $"/root/Main Scene/Enemies"
+
+# Node containing all entities
+onready var entities_node = $"/root/Main Scene/Entities"
+
+onready var player = $"/root/Main Scene/Player"
+
+# Entities
+onready var health_entity = load("res:///Scenes/Apple.tscn")
+onready var door_entity = load("res:///Scenes/Door.tscn")
+onready var enemy_entity = load("res:///Scenes/Enemy.tscn")
+onready var stairs_entity = load("res:///Scenes/Stairs.tscn")
+onready var trap_entity = load("res:///Scenes/Trap.tscn")
+
+
+
+var rng = RandomNumberGenerator.new()
+
+
+
 
 # The solution to the current board
 # It's assumed that the solution is at least rectangular, if not square
@@ -40,9 +68,9 @@ var rows = 8
 
 var tile_size = 16
 
-# Total number of dungeon / nonogram boards in their respective tilemaps
+# Total number of nonogram / dungeon boards in their respective tilemaps
+var nonogram_boards = 2
 var dungeon_boards = 1
-var nonogram_board = 1
 
 # Generates the nonogram board and solution based on the input data
 # The World layer of the board is within the world_tilemap itself
@@ -50,6 +78,20 @@ var nonogram_board = 1
 # array[0] = number of columns
 # array[1] = number of rows
 func generate_board():
+	rng.randomize()
+	# Clear boards first
+	nonogram_tile_map.clear()
+	world_tile_map.clear()
+	solution_tile_map.clear()
+	#world_tile_map.clear()
+	
+	# Also clear all entities
+	for child in entities_node.get_children():
+		entities_node.remove_child(child)
+		child.queue_free()
+	
+	solution = _pickNonogramBoard();
+	_pickDungeonBoard()
 	
 	# Generate the hint to display based on the solution of the board
 	hint = _generate_hint(solution)
@@ -74,7 +116,10 @@ func generate_board():
 				index = 2
 				
 			solution_tile_map.set_cell(col, row, index)
-			
+	
+	# Update the pathfinder
+	pathfinder.calculate_paths(rows, columns)
+	
 	return [columns, rows]
 			
 # Takes a board solution and generates an array that contains the hints for that board
@@ -247,3 +292,79 @@ func create_labels(hint, label_array):
 	output.append(line)
 	
 	return output
+
+# Picks a random nonogram board to generate
+func _pickNonogramBoard():
+	# Pick a random board
+	var rand = rng.randi_range(0, nonogram_boards - 1)
+	
+	var start = rand * columns
+	
+	var output = []
+	var line = []
+	for row in range(0, rows):
+		line = []
+		for col in range (0, columns):
+			
+			# Translate the data to an array where
+			# Colored square = 1, else 0
+			match (nonogram_layouts.get_cellv(Vector2(col + start, row))):
+				Util.indi_colored:
+					line.append(1)
+				_:
+					line.append(0)
+				
+		output.append(line)
+	
+	return output
+
+# Picks a random Dungeon board to generate
+func _pickDungeonBoard():
+	# Pick a random board
+	var rand = rng.randi_range(0, dungeon_boards - 1)
+	print(rand)
+	
+	var start = rand * columns
+	
+	for row in range(0, rows):
+		for col in range (0, columns):
+			
+			var tile_coord = Vector2(col + start, row)
+			var tile_id = dungeon_layouts.get_cellv(tile_coord)
+			var tile_offset = Vector2(tile_size / 2, tile_size / 2)
+			print(tile_id)
+			
+			match (tile_id):
+				Util.indi_player:
+					player.position = dungeon_layouts.map_to_world(tile_coord) + tile_offset
+					pass
+				Util.indi_health:
+					var obj = health_entity.instance()
+					obj.position = dungeon_layouts.map_to_world(tile_coord) + tile_offset
+					entities_node.add_child(obj)
+					pass
+				Util.indi_door:
+					var obj = door_entity.instance()
+					obj.position = dungeon_layouts.map_to_world(tile_coord) + tile_offset
+					entities_node.add_child(obj)
+					pass
+				Util.indi_stairs:
+					var obj = stairs_entity.instance()
+					obj.position = dungeon_layouts.map_to_world(tile_coord) + tile_offset
+					entities_node.add_child(obj)
+					pass
+				Util.indi_enemy:
+					pass
+				Util.indi_trap:
+					var obj = trap_entity.instance()
+					obj.position = dungeon_layouts.map_to_world(tile_coord) + tile_offset
+					entities_node.add_child(obj)
+					pass
+				Util.indi_wall:
+					print("wal")
+					world_tile_map.set_cellv(tile_coord, Util.world_wall)
+					pass
+
+				
+		
+	pass

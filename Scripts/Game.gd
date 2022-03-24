@@ -22,9 +22,6 @@ const DOWN = Vector2.DOWN
 func _ready():
 	board_controller.init_board()
 	
-	# Hook into the player's player_turn_over signal
-	player.connect("player_turn_over", self, "_on_player_turn_over")
-	
 	# Populate the list of enemies
 	# All enemies are in the Enemies Node
 	enemies = enemies_node.get_children()
@@ -32,6 +29,11 @@ func _ready():
 	# Hook into every enemies' "enemy_died" signal
 	for enemy in enemies:
 		enemy.connect("enemy_died", self, "_on_enemy_died")
+		
+	# Hook into the player's player_turn_over signal
+	player.connect("player_turn_over", self, "_on_player_turn_over")
+	
+	
 		
 	
 

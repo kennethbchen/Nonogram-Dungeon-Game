@@ -4,7 +4,7 @@ extends Character
 class_name Player
 
 # Energy is used when the nonogram board is being modified by the player
-var max_energy = 70
+var max_energy = 100
 var energy = max_energy
 
 # For UI Elements
