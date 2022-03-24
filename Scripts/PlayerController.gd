@@ -7,8 +7,13 @@ class_name Player
 var max_energy = 100
 var energy = max_energy
 
+var found_stairs = false
+
 # For UI Elements
 signal energy_changed(value, max_value)
+
+# To indicate the stairs have been found
+signal stairs_found()
 
 # Signal that is fired when the player's turn is over
 signal player_turn_over()
@@ -60,6 +65,13 @@ func try_move(direction: Vector2):
 # When the tween movement is over, the player's turn is over
 # The callback is used so the enemies will only movea after the player's animation has finished
 func _tween_callback():
+	
+	if found_stairs:
+		found_stairs = false
+		emit_signal("stairs_found")
+		emit_signal("player_turn_over")
+		return
+	
 	# The player has done an action in the world
 	# The player's turn has ended
 	emit_signal("player_turn_over")
@@ -86,4 +98,6 @@ func _handle_collision(direction: Vector2, collider):
 	else:
 		bump_tween(direction)
 		return false
-		
+
+func stairs_found():
+	found_stairs = true

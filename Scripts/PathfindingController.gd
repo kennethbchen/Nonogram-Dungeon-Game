@@ -9,21 +9,24 @@ class_name PathfindingController
 
 onready var world_tilemap = $"../Tilemaps/WorldTileMap"
 
-# Node containing all of the entities
-onready var entities = $"../Entities"
 onready var entity_positions = []
 
 # The used cells in the world tilemap
 # Includes valid and invalid nodes for pathing
 onready var used_cells = world_tilemap.get_used_cells()
 
-var astar = AStar2D.new()
+var astar
 
 # For debugging
 onready var astar_visualizer = $"../AStarVisualizer"
 
+func _ready():
+	astar = AStar2D.new()
 
 func calculate_paths(rows, columns):
+	
+	astar.clear()
+	
 	_load_entities()
 	_load_points(rows, columns)
 	_load_connections()
@@ -31,13 +34,10 @@ func calculate_paths(rows, columns):
 	astar_visualizer.offset = Vector2(8,8)
 	astar_visualizer.visualize(astar)
 	
-	get_tile_path((Vector2(6, 0)), Vector2(1,2))
-		
-	
 # Go though all of the entities and compute a list of their positions (tilemap-space)
 func _load_entities():
 	
-	for entity in entities.get_children():
+	for entity in get_tree().get_nodes_in_group("entity"):
 		
 		entity.connect("tile_free", self, "_on_tile_free")
 		
@@ -116,5 +116,4 @@ func _on_tile_free(entity):
 	astar.set_point_disabled(_id(world_tilemap.world_to_map(entity.position)), false)
 	
 	astar_visualizer.visualize(astar)
-	print(entity)
 	

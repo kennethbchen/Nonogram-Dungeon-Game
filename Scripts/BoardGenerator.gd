@@ -13,7 +13,7 @@ onready var solution_tile_map = $"/root/Main Scene/Tilemaps/SolutionTileMap"
 
 onready var world_tile_map = $"/root/Main Scene/Tilemaps/WorldTileMap"
 
-onready var pathfinder = $"/root/Main Scene/PathfindingController"
+onready var pathfinder = $"../../PathfindingController"
 
 onready var hint_font = load("res://Font/NonogramHint.tres")
 
@@ -45,16 +45,7 @@ var rng = RandomNumberGenerator.new()
 
 # The solution to the current board
 # It's assumed that the solution is at least rectangular, if not square
-var solution = [
-	[1, 1, 0, 1, 0, 1, 1, 1],
-	[1, 1, 1, 1, 1, 0, 1, 0],
-	[1, 1, 1, 1, 1, 0, 0, 1],
-	[1, 1, 0, 1, 1, 1, 1, 1],
-	[0, 0, 0, 0, 0, 0, 1, 1],
-	[1, 1, 0, 1, 1, 1, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 1],
-	[0, 0, 0, 0, 0, 0, 0, 0]
-]
+var solution = []
 
 # The hints of the current board that are displayed
 var hint = []
@@ -70,7 +61,7 @@ var tile_size = 16
 
 # Total number of nonogram / dungeon boards in their respective tilemaps
 var nonogram_boards = 2
-var dungeon_boards = 1
+var dungeon_boards = 2
 
 # Generates the nonogram board and solution based on the input data
 # The World layer of the board is within the world_tilemap itself
@@ -83,13 +74,15 @@ func generate_board():
 	nonogram_tile_map.clear()
 	world_tile_map.clear()
 	solution_tile_map.clear()
-	#world_tile_map.clear()
 	
+	# Clear all enemies
+	for child in get_tree().get_nodes_in_group("enemy"):
+		child.delete_self()
+		
 	# Also clear all entities
-	for child in entities_node.get_children():
-		entities_node.remove_child(child)
+	for child in get_tree().get_nodes_in_group("entity"):
 		child.queue_free()
-	
+		
 	solution = _pickNonogramBoard();
 	_pickDungeonBoard()
 	
@@ -244,13 +237,10 @@ func create_labels(hint, label_array):
 		for col_id in range (0, hint[0].size()):
 			
 			label_array[0][col_id].text = hint[0][col_id]
-			print(label_array[0][col_id].text)
-			print()
 			
 		for row_id in range(0, hint[1].size()):
 			label_array[1][row_id].text = hint[1][row_id]
-		
-		print("reuse")
+
 		return label_array
 	
 	# Generate hint for the columns (top side of board)
@@ -322,7 +312,6 @@ func _pickNonogramBoard():
 func _pickDungeonBoard():
 	# Pick a random board
 	var rand = rng.randi_range(0, dungeon_boards - 1)
-	print(rand)
 	
 	var start = rand * columns
 	
@@ -332,38 +321,34 @@ func _pickDungeonBoard():
 			var tile_coord = Vector2(col + start, row)
 			var tile_id = dungeon_layouts.get_cellv(tile_coord)
 			var tile_offset = Vector2(tile_size / 2, tile_size / 2)
-			print(tile_id)
+			
+			var output_coord = Vector2(col , row)
 			
 			match (tile_id):
 				Util.indi_player:
-					player.position = dungeon_layouts.map_to_world(tile_coord) + tile_offset
-					pass
+					player.position = world_tile_map.map_to_world(output_coord) + tile_offset
 				Util.indi_health:
 					var obj = health_entity.instance()
-					obj.position = dungeon_layouts.map_to_world(tile_coord) + tile_offset
+					obj.position = world_tile_map.map_to_world(output_coord) + tile_offset
 					entities_node.add_child(obj)
-					pass
 				Util.indi_door:
 					var obj = door_entity.instance()
-					obj.position = dungeon_layouts.map_to_world(tile_coord) + tile_offset
+					obj.position = world_tile_map.map_to_world(output_coord) + tile_offset
 					entities_node.add_child(obj)
-					pass
 				Util.indi_stairs:
 					var obj = stairs_entity.instance()
-					obj.position = dungeon_layouts.map_to_world(tile_coord) + tile_offset
+					obj.position = world_tile_map.map_to_world(output_coord) + tile_offset
 					entities_node.add_child(obj)
-					pass
 				Util.indi_enemy:
-					pass
+					var obj = enemy_entity.instance()
+					obj.position = world_tile_map.map_to_world(output_coord) + tile_offset
+					enemies_node.add_child(obj)
 				Util.indi_trap:
 					var obj = trap_entity.instance()
-					obj.position = dungeon_layouts.map_to_world(tile_coord) + tile_offset
+					obj.position = world_tile_map.map_to_world(output_coord) + tile_offset
 					entities_node.add_child(obj)
-					pass
 				Util.indi_wall:
-					print("wal")
-					world_tile_map.set_cellv(tile_coord, Util.world_wall)
-					pass
+					world_tile_map.set_cellv(output_coord, Util.world_wall)
 
 				
 		

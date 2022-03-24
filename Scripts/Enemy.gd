@@ -31,8 +31,12 @@ func take_damage(damage):
 	.take_damage(damage)
 	
 	if health == 0:
-		emit_signal("enemy_died", self)
-		queue_free()
+		delete_self()
+
+func delete_self():
+	print("delself")
+	emit_signal("enemy_died", self)
+	queue_free()
 
 func act():
 	# Do a raycast to the player's position

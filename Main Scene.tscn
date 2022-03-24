@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Sprites/Tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -8,12 +8,7 @@
 [ext_resource path="res://Scripts/EnergyDisplay.gd" type="Script" id=6]
 [ext_resource path="res://Scripts/AStar2DVisualizer.gd" type="Script" id=7]
 [ext_resource path="res://Scripts/HealthDisplay.gd" type="Script" id=8]
-[ext_resource path="res://Scenes/Apple.tscn" type="PackedScene" id=9]
-[ext_resource path="res://Scenes/Door.tscn" type="PackedScene" id=10]
-[ext_resource path="res://Scenes/Trap.tscn" type="PackedScene" id=11]
-[ext_resource path="res://Scenes/Stairs.tscn" type="PackedScene" id=12]
 [ext_resource path="res://Scripts/PathfindingController.gd" type="Script" id=13]
-[ext_resource path="res://Scenes/Enemy.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Scripts/BoardGenerator.gd" type="Script" id=15]
 [ext_resource path="res://Sprites/BoardLayoutTileset.tres" type="TileSet" id=16]
 
@@ -49,29 +44,31 @@ cell_size = Vector2( 16, 16 )
 format = 1
 
 [node name="NonogramTileMap" type="TileMap" parent="Tilemaps"]
+visible = false
 z_index = 2
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 16, 16 )
 format = 1
 
 [node name="WorldTileMap" type="TileMap" parent="Tilemaps"]
+visible = false
 z_index = 1
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 16, 16 )
 format = 1
-tile_data = PoolIntArray( 0, 4, 0, 1, 4, 0, 2, 4, 0, 3, 4, 0, 4, 4, 0, 5, 4, 0, 6, 4, 0, 65536, 4, 0, 65537, 4, 0, 65538, 3, 0, 65539, 3, 0, 65540, 3, 0, 65541, 3, 0, 65542, 4, 0, 65543, 3, 0, 131072, 4, 0, 131073, 4, 0, 131074, 3, 0, 131075, 4, 0, 131076, 4, 0, 131077, 3, 0, 131078, 4, 0, 196608, 4, 0, 196609, 3, 0, 196610, 3, 0, 196611, 4, 0, 196612, 4, 0, 196613, 4, 0, 196614, 4, 0, 262144, 4, 0, 262145, 4, 0, 262146, 4, 0, 262147, 4, 0, 262148, 4, 0, 262149, 3, 0, 262150, 4, 0, 262151, 3, 0, 327680, 4, 0, 327681, 3, 0, 327682, 3, 0, 327683, 3, 0, 327684, 3, 0, 327685, 3, 0, 327686, 4, 0, 393216, 4, 0, 393217, 4, 0, 393218, 4, 0, 393219, 3, 0, 393220, 4, 0, 393221, 4, 0, 393222, 4, 0, 458755, 3, 0 )
 
 [node name="SolutionTileMap" type="TileMap" parent="Tilemaps"]
+visible = false
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 16, 16 )
 format = 1
 
 [node name="DungeonBoards" type="TileMap" parent="Tilemaps"]
-position = Vector2( 256, -192 )
+position = Vector2( 256, -320 )
 tile_set = ExtResource( 16 )
 cell_size = Vector2( 16, 16 )
 format = 1
-tile_data = PoolIntArray( 2, 10, 0, 3, 6, 0, 5, 10, 0, 7, 1, 0, 65537, 0, 0, 65538, 10, 0, 65541, 10, 0, 131072, 4, 0, 131073, 10, 0, 131074, 10, 0, 131075, 10, 0, 131076, 4, 0, 131077, 10, 0, 131078, 4, 0, 131079, 10, 0, 262144, 10, 0, 262145, 10, 0, 262146, 10, 0, 262148, 7, 0, 327683, 10, 0, 327684, 10, 0, 327685, 10, 0, 327686, 4, 0, 327687, 10, 0, 393216, 5, 0, 393217, 7, 0, 393219, 10, 0, 393220, 6, 0, 458757, 7, 0 )
+tile_data = PoolIntArray( 2, 10, 0, 3, 6, 0, 5, 10, 0, 7, 1, 0, 11, 10, 0, 65537, 0, 0, 65538, 10, 0, 65541, 10, 0, 65547, 4, 0, 65550, 0, 0, 131072, 4, 0, 131073, 10, 0, 131074, 10, 0, 131075, 10, 0, 131076, 4, 0, 131077, 10, 0, 131078, 4, 0, 131079, 10, 0, 131080, 10, 0, 131081, 10, 0, 131082, 4, 0, 131083, 10, 0, 131084, 10, 0, 131085, 10, 0, 131086, 10, 0, 131087, 10, 0, 196620, 4, 0, 196623, 7, 0, 262144, 10, 0, 262145, 10, 0, 262146, 10, 0, 262148, 7, 0, 262153, 6, 0, 262156, 10, 0, 262157, 7, 0, 262159, 1, 0, 327683, 10, 0, 327684, 10, 0, 327685, 10, 0, 327686, 4, 0, 327687, 10, 0, 327689, 10, 0, 327690, 10, 0, 327691, 10, 0, 327692, 10, 0, 327693, 10, 0, 327694, 10, 0, 327695, 10, 0, 393216, 5, 0, 393217, 7, 0, 393219, 10, 0, 393220, 6, 0, 393225, 10, 0, 393229, 4, 0, 458757, 7, 0, 458761, 4, 0, 458763, 7, 0, 458765, 10, 0, 458767, 5, 0 )
 
 [node name="NonogramBoards" type="TileMap" parent="Tilemaps"]
 position = Vector2( 256, -64 )
@@ -82,31 +79,7 @@ tile_data = PoolIntArray( 0, 8, 0, 1, 8, 0, 2, 8, 0, 3, 8, 0, 4, 8, 0, 5, 8, 0, 
 
 [node name="Enemies" type="Node2D" parent="."]
 
-[node name="Enemy" parent="Enemies" instance=ExtResource( 14 )]
-position = Vector2( 72, 56 )
-
 [node name="Entities" type="Node2D" parent="."]
-
-[node name="Stairs" parent="Entities" instance=ExtResource( 12 )]
-position = Vector2( 56, 40 )
-
-[node name="Apple" parent="Entities" instance=ExtResource( 9 )]
-position = Vector2( 8, 24 )
-
-[node name="Door" parent="Entities" instance=ExtResource( 10 )]
-position = Vector2( 24, 72 )
-
-[node name="Door2" parent="Entities" instance=ExtResource( 10 )]
-position = Vector2( 104, 72 )
-
-[node name="Door3" parent="Entities" instance=ExtResource( 10 )]
-position = Vector2( 8, 88 )
-
-[node name="Door4" parent="Entities" instance=ExtResource( 10 )]
-position = Vector2( 104, 24 )
-
-[node name="Trap" parent="Entities" instance=ExtResource( 11 )]
-position = Vector2( 72, 72 )
 
 [node name="UI" type="Node" parent="."]
 

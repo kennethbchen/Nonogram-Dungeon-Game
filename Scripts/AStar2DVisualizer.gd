@@ -34,5 +34,4 @@ func _draw():
 		var point_color = disabled_point_color if astar.is_point_disabled(point) else enabled_point_color
 		draw_circle(_point_pos(point), point_radius, point_color)
 
- 
 
