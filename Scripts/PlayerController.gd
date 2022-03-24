@@ -69,13 +69,10 @@ func _tween_callback():
 	if found_stairs:
 		found_stairs = false
 		emit_signal("stairs_found")
-		emit_signal("player_turn_over")
-		return
 	
 	# The player has done an action in the world
 	# The player's turn has ended
 	emit_signal("player_turn_over")
-	pass
 
 # Returns true on successful move, else false
 func _handle_collision(direction: Vector2, collider):
@@ -85,7 +82,8 @@ func _handle_collision(direction: Vector2, collider):
 		return false
 	elif collider is Stairs:
 		collider.interact_with(self)
-		move_tween(direction)
+		emit_signal("stairs_found")
+		
 		return false
 	elif collider is Trap:
 		collider.interact_with(self)
@@ -98,6 +96,3 @@ func _handle_collision(direction: Vector2, collider):
 	else:
 		bump_tween(direction)
 		return false
-
-func stairs_found():
-	found_stairs = true
