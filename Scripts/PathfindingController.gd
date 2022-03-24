@@ -37,11 +37,11 @@ func calculate_paths(rows, columns):
 # Go though all of the entities and compute a list of their positions (tilemap-space)
 func _load_entities():
 	
+	entity_positions = []
+	
 	for entity in get_tree().get_nodes_in_group("entity"):
-		
+		entity_positions.append(world_tilemap.world_to_map(entity.position))
 		entity.connect("tile_free", self, "_on_tile_free")
-		
-		#entity_positions.append(world_tilemap.world_to_map(entity.position))
 
 func _load_points(rows, columns):
 	# Read through the tilemap and add valid pathing nodes to astar
@@ -58,19 +58,6 @@ func _load_points(rows, columns):
 				# If the tile has an entity on it, then don't add it as a valid point
 				astar.set_point_disabled(_id(coord))
 				continue
-	
-#	for tile in used_cells:
-#
-#		if world_tilemap.get_cellv(tile) == Util.nono_empty or world_tilemap.get_cellv(tile) == -1:
-#			# TODO: Valid path detection system that doesn't require a blank tile
-#			astar.add_point(_id(tile), tile, 1)
-#
-#			if entity_positions.has(tile):
-#				# If the tile has an entity on it, then don't add it as a valid point
-#				astar.set_point_disabled(_id(tile))
-#				continue
-#		else:
-#			pass
 
 func _load_connections():
 	# Go through all of the points in astar and make connections between them

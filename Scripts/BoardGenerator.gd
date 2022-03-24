@@ -77,12 +77,12 @@ func generate_board():
 	
 	# Clear all enemies
 	for child in get_tree().get_nodes_in_group("enemy"):
-		child.delete_self()
-		
+		child.free()
+	
 	# Also clear all entities
 	for child in get_tree().get_nodes_in_group("entity"):
-		child.queue_free()
-		
+		child.free()
+
 	solution = _pickNonogramBoard();
 	_pickDungeonBoard()
 	

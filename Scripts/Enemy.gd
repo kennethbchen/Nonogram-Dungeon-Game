@@ -35,7 +35,6 @@ func take_damage(damage):
 
 func delete_self():
 	print("delself")
-	emit_signal("enemy_died", self)
 	queue_free()
 
 func act():
