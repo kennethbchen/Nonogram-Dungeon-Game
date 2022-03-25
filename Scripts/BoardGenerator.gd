@@ -31,6 +31,7 @@ onready var player = $"/root/Main Scene/Player"
 
 # Entities
 onready var health_entity = load("res:///Scenes/Apple.tscn")
+onready var energy_entity = load("res:///Scenes/Potion.tscn")
 onready var door_entity = load("res:///Scenes/Door.tscn")
 onready var enemy_entity = load("res:///Scenes/Enemy.tscn")
 onready var stairs_entity = load("res:///Scenes/Stairs.tscn")
@@ -328,7 +329,15 @@ func _pickDungeonBoard():
 				Util.indi_player:
 					player.position = world_tile_map.map_to_world(output_coord) + tile_offset
 				Util.indi_health:
-					var obj = health_entity.instance()
+					# Pick between spawning a health item or an energy item
+					var num = rng.randi_range(0,1)
+					var obj
+					match(rand):
+						0:
+							obj = health_entity.instance()
+						_:
+							obj = energy_entity.instance()
+					
 					obj.position = world_tile_map.map_to_world(output_coord) + tile_offset
 					entities_node.add_child(obj)
 				Util.indi_door:

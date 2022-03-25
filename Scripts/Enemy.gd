@@ -34,7 +34,6 @@ func take_damage(damage):
 		delete_self()
 
 func delete_self():
-	print("delself")
 	queue_free()
 
 func act():

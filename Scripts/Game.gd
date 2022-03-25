@@ -80,4 +80,5 @@ func _on_player_turn_over():
 		enemy.act()
 
 func _on_stairs_found():
+	player.restore_energy(35)
 	_create_board()

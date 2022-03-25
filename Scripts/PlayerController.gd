@@ -4,7 +4,7 @@ extends Character
 class_name Player
 
 # Energy is used when the nonogram board is being modified by the player
-var max_energy = 100
+var max_energy = 160
 var energy = max_energy
 
 var found_stairs = false
@@ -46,7 +46,11 @@ func use_energy(cost):
 		return true
 	else:
 		return false
-		
+
+func restore_energy(amount):
+	energy = min(max_energy, energy + amount)
+	emit_signal("energy_changed", energy, max_energy)
+
 # Animation for moving
 func move_tween(dir):
 	tween.interpolate_callback(self, 1.0/move_speed, "_tween_callback")
