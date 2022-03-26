@@ -40,7 +40,7 @@ func set_tile(tilemap_coord, tileset_index):
 	nonogram_tile_map.set_cellv(tilemap_coord, tileset_index)
 	
 # Based on the tile coords and mouse input, make a mark on the nonogram tilemap
-func handle_tile_input(nonogram_tile_map_coords, button_index, override = false):
+func handle_tile_input(nonogram_tile_map_coords, button_index):
 	
 	# Don't try to change a tile that is not in the board
 	if not is_in_board(nonogram_tile_map_coords):
@@ -62,7 +62,7 @@ func handle_tile_input(nonogram_tile_map_coords, button_index, override = false)
 		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, -1)
 		
 	elif nonogram_tile_map.get_cellv(nonogram_tile_map_coords) == tile or \
-		nonogram_tile_map.get_cellv(nonogram_tile_map_coords) == -1 and not override:
+		nonogram_tile_map.get_cellv(nonogram_tile_map_coords) == -1:
 		
 		# If the tile is already set to what we are trying to color it, then clear it
 		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, Util.nono_blank)

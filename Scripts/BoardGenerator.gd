@@ -61,8 +61,8 @@ var rows = 8
 var tile_size = 16
 
 # Total number of nonogram / dungeon boards in their respective tilemaps
-var nonogram_boards = 2
-var dungeon_boards = 2
+var nonogram_boards = 4
+var dungeon_boards = 4
 
 # Generates the nonogram board and solution based on the input data
 # The World layer of the board is within the world_tilemap itself
@@ -332,10 +332,10 @@ func _pickDungeonBoard():
 					# Pick between spawning a health item or an energy item
 					var num = rng.randi_range(0,1)
 					var obj
-					match(rand):
+					match(num):
 						0:
 							obj = health_entity.instance()
-						_:
+						1:
 							obj = energy_entity.instance()
 					
 					obj.position = world_tile_map.map_to_world(output_coord) + tile_offset
@@ -357,8 +357,6 @@ func _pickDungeonBoard():
 					obj.position = world_tile_map.map_to_world(output_coord) + tile_offset
 					entities_node.add_child(obj)
 				Util.indi_wall:
-					world_tile_map.set_cellv(output_coord, Util.world_wall)
-
-				
+					world_tile_map.set_cellv(output_coord, Util.world_wall)	
 		
-	pass
+

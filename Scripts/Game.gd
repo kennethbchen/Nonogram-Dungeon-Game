@@ -52,16 +52,18 @@ func _input(event):
 			if player.use_energy(1):
 				board_controller.handle_tile_input(selected_tile, event.button_index)
 	
+	# If the mouse was released, reset all dragging-related variables
 	if event is InputEventMouseButton and not event.pressed:
 		drag = false
 		drag_origin = Vector2.ZERO
 		drag_button = -1
 		visited_tiles = []
-		print(drag)
 	
+	# Handle mouse dragging input
 	if event is InputEventMouseMotion and drag and board_controller.is_in_board(board_controller.get_selected_tile()):
 		var tile_coords = board_controller.get_selected_tile()
 		
+		# If the mouse is being dragged onto a tile that is new, process it
 		if not visited_tiles.has(tile_coords):
 			var tile = -1
 			match drag_button:
@@ -73,9 +75,8 @@ func _input(event):
 			
 			if board_controller.get_nono_tile(tile_coords) != tile and player.use_energy(1):
 				visited_tiles.append(tile_coords)
-				board_controller.handle_tile_input(board_controller.get_selected_tile(), drag_button, true)
+				board_controller.handle_tile_input(board_controller.get_selected_tile(), drag_button)
 				
-		pass
 	
 	# Handle mouse hovering visual
 	if event is InputEventMouseMotion and board_controller.is_in_board(board_controller.get_selected_tile()):
