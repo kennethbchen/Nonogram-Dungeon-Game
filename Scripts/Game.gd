@@ -16,6 +16,12 @@ const LEFT = Vector2.LEFT
 const UP = Vector2.UP
 const DOWN = Vector2.DOWN
 
+# Mouse Dragging
+var drag = false
+var drag_origin = Vector2.ZERO
+var drag_button = -1
+var visited_tiles = []
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
@@ -35,12 +41,42 @@ func _input(event):
 	
 	# Check for L / R Mouse Click for nonogram input
 	if event is InputEventMouseButton and event.pressed and board_controller.is_in_board(selected_tile):
-
+		drag = true
+		drag_button = event.button_index
+		drag_origin = board_controller.get_selected_tile()
+		visited_tiles.append(board_controller.get_selected_tile())
+		print(drag)
+		
 		# If there is a left or right mouse click in board, process it
 		if event.button_index == BUTTON_LEFT or event.button_index == BUTTON_RIGHT:
 			if player.use_energy(1):
 				board_controller.handle_tile_input(selected_tile, event.button_index)
+	
+	if event is InputEventMouseButton and not event.pressed:
+		drag = false
+		drag_origin = Vector2.ZERO
+		drag_button = -1
+		visited_tiles = []
+		print(drag)
+	
+	if event is InputEventMouseMotion and drag and board_controller.is_in_board(board_controller.get_selected_tile()):
+		var tile_coords = board_controller.get_selected_tile()
+		
+		if not visited_tiles.has(tile_coords):
+			var tile = -1
+			match drag_button:
+				BUTTON_LEFT:
+					tile = Util.nono_color
+				BUTTON_RIGHT:
+					tile = Util.nono_cross
+					
 			
+			if board_controller.get_nono_tile(tile_coords) != tile and player.use_energy(1):
+				visited_tiles.append(tile_coords)
+				board_controller.handle_tile_input(board_controller.get_selected_tile(), drag_button, true)
+				
+		pass
+	
 	# Handle mouse hovering visual
 	if event is InputEventMouseMotion and board_controller.is_in_board(board_controller.get_selected_tile()):
 		if hovered_tile != board_controller.get_selected_tile():

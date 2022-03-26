@@ -40,7 +40,7 @@ func set_tile(tilemap_coord, tileset_index):
 	nonogram_tile_map.set_cellv(tilemap_coord, tileset_index)
 	
 # Based on the tile coords and mouse input, make a mark on the nonogram tilemap
-func handle_tile_input(nonogram_tile_map_coords, button_index):
+func handle_tile_input(nonogram_tile_map_coords, button_index, override = false):
 	
 	# Don't try to change a tile that is not in the board
 	if not is_in_board(nonogram_tile_map_coords):
@@ -52,7 +52,7 @@ func handle_tile_input(nonogram_tile_map_coords, button_index):
 			tile = Util.nono_color
 		BUTTON_RIGHT:
 			tile = Util.nono_cross
-		
+	
 		
 	# Compare this action with solution tile map to see if it's a correct one
 	if solution_tile_map.get_cellv(nonogram_tile_map_coords) == tile and \
@@ -62,7 +62,7 @@ func handle_tile_input(nonogram_tile_map_coords, button_index):
 		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, -1)
 		
 	elif nonogram_tile_map.get_cellv(nonogram_tile_map_coords) == tile or \
-		nonogram_tile_map.get_cellv(nonogram_tile_map_coords) == -1:
+		nonogram_tile_map.get_cellv(nonogram_tile_map_coords) == -1 and not override:
 		
 		# If the tile is already set to what we are trying to color it, then clear it
 		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, Util.nono_blank)
@@ -89,10 +89,24 @@ func is_valid_move(tilemap_coord: Vector2):
 		
 	return true
 
+func is_correct_mark(tilemap_coord: Vector2):
+	if not is_in_board(tilemap_coord):
+		return false
+	
+	if nonogram_tile_map.get_cellv(tilemap_coord) == -1:
+		return true
+	else:
+		return false
 # Returns the position of the closest tile that the mouse is pointing at
 func get_selected_tile():
 	return nonogram_tile_map.world_to_map(nonogram_tile_map.get_local_mouse_position())
-	
+
+func get_nono_tile(tilemap_coord: Vector2):
+	return nonogram_tile_map.get_cellv(tilemap_coord)
+
+func get_solution_tile(tilemap_coord: Vector2):
+	return solution_tile_map.get_cellv(tilemap_coord)
+
 # Converts world space to tilemap space
 func world_to_board(pos: Vector2):
 	return nonogram_tile_map.world_to_map(pos)
