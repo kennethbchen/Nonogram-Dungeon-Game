@@ -22,9 +22,13 @@ var drag_origin = Vector2.ZERO
 var drag_button = -1
 var visited_tiles = []
 
+var dungeon_floor = 1
+
+signal floor_changed(dungeon_floor)
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
+	emit_signal("floor_changed", dungeon_floor)
 	_create_board()
 	
 	# Hook into the player's signals
@@ -105,7 +109,7 @@ func _process(_delta):
 		move_dir = LEFT
 	
 	if Input.is_action_just_pressed("ui_accept"):
-		_create_board()
+		pass
 		
 	if move_dir != Vector2.ZERO:
 		player.try_move(move_dir)
@@ -119,3 +123,5 @@ func _on_player_turn_over():
 func _on_stairs_found():
 	player.restore_energy(35)
 	_create_board()
+	dungeon_floor += 1
+	emit_signal("floor_changed", dungeon_floor)
