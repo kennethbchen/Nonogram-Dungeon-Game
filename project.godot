@@ -63,7 +63,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Nonogram Dungeon"
-run/main_scene="res://Main Scene.tscn"
+run/main_scene="res://Title.tscn"
 config/icon="res://Sprites/icon.png"
 
 [display]

@@ -1,0 +1,45 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Font/Font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://TitleScreenController.gd" type="Script" id=2]
+
+[node name="Title" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+
+[node name="Label" type="Label" parent="."]
+margin_left = -208.0
+margin_top = -200.0
+margin_right = -109.0
+margin_bottom = -186.0
+rect_scale = Vector2( 4.20358, 4.48404 )
+custom_fonts/font = ExtResource( 1 )
+text = "nonogram dungeon"
+align = 1
+
+[node name="Start Button" type="Button" parent="."]
+margin_left = -88.0
+margin_top = -72.0
+margin_right = -44.0
+margin_bottom = -54.0
+rect_scale = Vector2( 3.9583, 3.9583 )
+custom_fonts/font = ExtResource( 1 )
+text = "Start"
+
+[node name="Instruction Button" type="Button" parent="."]
+margin_left = -160.0
+margin_top = 56.0
+margin_right = -79.0
+margin_bottom = 74.0
+rect_scale = Vector2( 3.9583, 3.9583 )
+custom_fonts/font = ExtResource( 1 )
+text = "Instructions"
+
+[node name="Popup" type="Popup" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[connection signal="pressed" from="Start Button" to="." method="_on_Start_Button_pressed"]
+[connection signal="pressed" from="Instruction Button" to="." method="_on_Instruction_Button_pressed"]
