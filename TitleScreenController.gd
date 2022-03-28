@@ -1,11 +1,14 @@
 extends Node2D
 
-
+onready var instruction_popup = $InstructionPopup
 
 func _on_Start_Button_pressed():
 	get_tree().change_scene("res://Game.tscn")
-	pass # Replace with function body.
 
 
 func _on_Instruction_Button_pressed():
-	pass # Replace with function body.
+	instruction_popup.popup_centered()
+
+
+func _on_ClosePopupButton_pressed():
+	instruction_popup.hide()
