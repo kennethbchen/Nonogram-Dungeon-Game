@@ -18,6 +18,11 @@ signal stairs_found()
 # Signal that is fired when the player's turn is over
 signal player_turn_over()
 
+signal player_footstep()
+signal player_attack()
+signal player_door()
+signal player_trap()
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	max_health = 10
@@ -62,9 +67,11 @@ func bump_tween(dir):
 	.bump_tween(dir)
 
 func try_move(direction: Vector2):
-	.try_move(direction)
-	
-	pass
+	var result = .try_move(direction)
+	print("try_move")
+	if result:
+		emit_signal("player_footstep")
+	return result
 
 # When the tween movement is over, the player's turn is over
 # The callback is used so the enemies will only movea after the player's animation has finished
@@ -83,6 +90,7 @@ func _handle_collision(direction: Vector2, collider):
 	if collider.is_in_group("enemy"):
 		attack_character(collider)
 		bump_tween(direction)
+		emit_signal("player_attack")
 		return false
 	elif collider is Stairs:
 		collider.interact_with(self)
@@ -92,10 +100,14 @@ func _handle_collision(direction: Vector2, collider):
 	elif collider is Trap:
 		collider.interact_with(self)
 		move_tween(direction)
+		emit_signal("player_trap")
 		return true
 	elif collider is Interactable:
 		collider.interact_with(self)
 		bump_tween(direction)
+		
+		if collider is Door:
+			emit_signal("player_door")
 		return false
 	else:
 		bump_tween(direction)
