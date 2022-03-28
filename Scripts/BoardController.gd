@@ -18,7 +18,12 @@ onready var solution_tile_map = $"/root/Main Scene/Tilemaps/SolutionTileMap"
 
 onready var world_tile_map = $"/root/Main Scene/Tilemaps/WorldTileMap"
 
+onready var entities_node = $"../Entities"
+onready var enemies_node = $"../Enemies"
+
 onready var hint_font = load("res://Font/NonogramHint.tres")
+
+
 
 var columns = 0
 var rows = 0
@@ -70,6 +75,16 @@ func handle_tile_input(nonogram_tile_map_coords, button_index):
 	else:
 		# Set the tile
 		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, tile)
+
+func set_dungeon_board_visibility(visible):
+	if visible:
+		world_tile_map.show()
+		entities_node.show()
+		enemies_node.show()
+	else:
+		world_tile_map.hide()
+		entities_node.hide()
+		enemies_node.hide()
 
 # Gets a nonogram_tile_map coordinate and returns whether or not that is in the board
 func is_in_board(tilemap_coord):

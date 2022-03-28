@@ -43,6 +43,7 @@ func _input(event):
 	# Get the selected tile in nonogram_tile_map space
 	var selected_tile = board_controller.get_selected_tile()
 	
+	
 	# Check for L / R Mouse Click for nonogram input
 	if event is InputEventMouseButton and event.pressed and board_controller.is_in_board(selected_tile):
 		drag = true
@@ -110,7 +111,13 @@ func _process(_delta):
 	
 	if Input.is_action_just_pressed("ui_accept"):
 		pass
+	
+	if Input.is_action_just_pressed("hide_dungeon"):
+		board_controller.set_dungeon_board_visibility(false)
+	elif Input.is_action_just_released("hide_dungeon"):
+		board_controller.set_dungeon_board_visibility(true)
 		
+	
 	if move_dir != Vector2.ZERO:
 		player.try_move(move_dir)
 		

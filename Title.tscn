@@ -151,6 +151,8 @@ size_flags_horizontal = 3
 theme = ExtResource( 3 )
 text = "WASD - Move
 
+Shift - Hide Dungeon
+
 Move into things to interact or attack enemies
 
 Solving the picross board allows you to see the dungeon layout
