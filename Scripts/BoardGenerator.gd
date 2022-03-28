@@ -15,7 +15,7 @@ onready var world_tile_map = $"/root/Main Scene/Tilemaps/WorldTileMap"
 
 onready var pathfinder = $"../../PathfindingController"
 
-onready var hint_font = load("res://Font/NonogramHint.tres")
+onready var hint_font = load("res://UI/NonogramHint.tres")
 
 # Tilemap containing all possible nonogram / dungeon boards
 onready var nonogram_layouts = $"/root/Main Scene/Tilemaps/NonogramBoards"

@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Font/Font.tres" type="DynamicFont" id=1]
-[ext_resource path="res://TitleScreenController.gd" type="Script" id=2]
-[ext_resource path="res://Main_Theme.tres" type="Theme" id=3]
+[ext_resource path="res://UI/Font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Scripts/TitleScreenController.gd" type="Script" id=2]
+[ext_resource path="res://UI/Main_Theme.tres" type="Theme" id=3]
 [ext_resource path="res://Sprites/Tile_Info.png" type="Texture" id=5]
 
 [node name="Title" type="Node2D"]
@@ -139,9 +139,11 @@ Right click - Cross out square
 
 Marking the board costs 1 ENERGY
 
-Correct marks will reveal the dungeon for that square
+The dungeon's layout is hidden:
 
-Incorrect marks are allowed, but will not reveal the dungeon"
+-Correct marks will reveal the dungeon for that square
+
+-Incorrect marks are allowed, but will not reveal the dungeon"
 
 [node name="DungeonText" type="RichTextLabel" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer"]
 margin_left = 232.0

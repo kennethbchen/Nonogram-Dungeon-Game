@@ -50,7 +50,6 @@ func _input(event):
 		drag_button = event.button_index
 		drag_origin = board_controller.get_selected_tile()
 		visited_tiles.append(board_controller.get_selected_tile())
-		print(drag)
 		
 		# If there is a left or right mouse click in board, process it
 		if event.button_index == BUTTON_LEFT or event.button_index == BUTTON_RIGHT:

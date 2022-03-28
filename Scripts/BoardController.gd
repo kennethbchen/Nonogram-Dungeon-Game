@@ -21,7 +21,6 @@ onready var world_tile_map = $"/root/Main Scene/Tilemaps/WorldTileMap"
 onready var entities_node = $"../Entities"
 onready var enemies_node = $"../Enemies"
 
-onready var hint_font = load("res://Font/NonogramHint.tres")
 
 
 
