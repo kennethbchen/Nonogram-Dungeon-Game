@@ -32,7 +32,17 @@ var door = [
 	preload("res://Audio/Door/door-5.wav")
 ]
 
+var last_food = {"value": -1}
+var food_crunch = [
+	preload("res://Audio/FoodCrunch/crunch-1.wav"),
+	preload("res://Audio/FoodCrunch/crunch-2.wav"),
+	preload("res://Audio/FoodCrunch/crunch-3.wav")
+]
+
 var trap = preload("res://Audio/Single/trap.wav")
+
+# Potion sound effect
+var energy = preload("res://Audio/SIngle/bottle.wav")
 
 func _ready():
 	rng.randomize()
@@ -45,18 +55,22 @@ func _on_player_attack():
 	_play_rand(attacks, last_attack)
 	pass
 
+func _on_player_damage():
+	pass
+
 func _on_door():
 	_play_rand(door, last_door)
 
 
 func _on_trap():
 	print("trap")
-	play(trap)
+	_play(trap)
 	
 func _on_health():
-	pass
+	_play_rand(food_crunch, last_food)
 
 func _on_energy():
+	_play(energy)
 	pass
 
 func _on_nono_color():
@@ -73,11 +87,11 @@ func _play_rand(sounds, last_index):
 	
 	last_index["value"] = index
 	
-	var player = get_audio_player()
+	var player = _get_audio_player()
 	player.stream = sounds[index]
 	player.play()
 
-func get_audio_player():
+func _get_audio_player():
 	
 	# Go through all of the available audio players and get one that is free
 	for player in players:
@@ -86,7 +100,7 @@ func get_audio_player():
 	
 	return players[0]
 
-func play(sound):
-	var player = get_audio_player()
+func _play(sound):
+	var player = _get_audio_player()
 	player.stream = sound
 	player.play()

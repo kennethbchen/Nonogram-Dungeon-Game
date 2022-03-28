@@ -1,5 +1,7 @@
 extends Interactable
 
+class_name Potion
+
 var restore_amount = 60
 
 func interact_with(character: Character):

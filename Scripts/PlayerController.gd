@@ -18,10 +18,13 @@ signal stairs_found()
 # Signal that is fired when the player's turn is over
 signal player_turn_over()
 
+# Sound Effects
 signal player_footstep()
 signal player_attack()
 signal player_door()
 signal player_trap()
+signal player_health()
+signal player_energy()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -68,7 +71,6 @@ func bump_tween(dir):
 
 func try_move(direction: Vector2):
 	var result = .try_move(direction)
-	print("try_move")
 	if result:
 		emit_signal("player_footstep")
 	return result
@@ -108,6 +110,10 @@ func _handle_collision(direction: Vector2, collider):
 		
 		if collider is Door:
 			emit_signal("player_door")
+		elif collider is Apple:
+			emit_signal("player_health")
+		elif collider is Potion:
+			emit_signal("player_energy")
 		return false
 	else:
 		bump_tween(direction)
