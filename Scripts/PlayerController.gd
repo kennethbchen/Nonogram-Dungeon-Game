@@ -25,6 +25,7 @@ signal player_door()
 signal player_trap()
 signal player_health()
 signal player_energy()
+signal player_hurt()
 
 signal player_death()
 
@@ -50,6 +51,7 @@ func init():
 func take_damage(damage):
 	.take_damage(damage)
 	
+	emit_signal("player_hurt")
 	if health == 0:
 		emit_signal("player_death")
 

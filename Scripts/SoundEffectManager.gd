@@ -39,6 +39,13 @@ var food_crunch = [
 	preload("res://Audio/FoodCrunch/crunch-3.wav")
 ]
 
+var last_hurt = {"value": -1}
+var hurt = [
+	preload("res://Audio/Hurt/hurt-1.wav"),
+	preload("res://Audio/Hurt/hurt-2.wav"),
+	preload("res://Audio/Hurt/hurt-3.wav")
+]
+
 var trap = preload("res://Audio/Single/trap.wav")
 
 # Potion sound effect
@@ -80,7 +87,10 @@ func _on_nono_color():
 
 func _on_nono_cross():
 	pass
-	
+
+func _on_hurt():
+	_play_rand(hurt, last_hurt)
+
 func _on_player_death():
 	_play(death)
 	
