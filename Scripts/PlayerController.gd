@@ -26,13 +26,21 @@ signal player_trap()
 signal player_health()
 signal player_energy()
 
+signal player_death()
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	max_health = 10
-	health = max_health
+	
+	init()
 	
 	# The player does not need a health bar
 	remove_child(get_node("HealthBar"))
+	
+	
+
+func init():
+	max_health = 10
+	health = max_health
 	
 	# Update UI Elements
 	emit_signal("health_changed", max_health, max_health)
@@ -43,7 +51,7 @@ func take_damage(damage):
 	.take_damage(damage)
 	
 	if health == 0:
-		print("ded")
+		emit_signal("player_death")
 
 # Returns true if the energy is able to be used (and is subsequently used)
 # Else false

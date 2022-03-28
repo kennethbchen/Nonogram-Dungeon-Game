@@ -42,7 +42,9 @@ var food_crunch = [
 var trap = preload("res://Audio/Single/trap.wav")
 
 # Potion sound effect
-var energy = preload("res://Audio/SIngle/bottle.wav")
+var energy = preload("res://Audio/Single/bottle.wav")
+
+var death = preload("res://Audio/Single/death-1.wav")
 
 func _ready():
 	rng.randomize()
@@ -78,6 +80,9 @@ func _on_nono_color():
 
 func _on_nono_cross():
 	pass
+	
+func _on_player_death():
+	_play(death)
 	
 func _play_rand(sounds, last_index):
 	var index = rng.randi_range(0, sounds.size() - 1)

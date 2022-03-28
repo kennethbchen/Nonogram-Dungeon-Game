@@ -8,6 +8,9 @@ onready var effect_tilemap = $Tilemaps/EffectTileMap
 
 onready var enemies_node = $Enemies
 
+onready var death_popup = $"/root/Main Scene/UI/DeathPopup"
+
+
 var hovered_tile = Vector2(-1, -1)
 
 # Directions for movement
@@ -26,8 +29,12 @@ var dungeon_floor = 1
 
 signal floor_changed(dungeon_floor)
 
+var dead = false
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	
 	emit_signal("floor_changed", dungeon_floor)
 	_create_board()
 	
@@ -40,6 +47,11 @@ func _create_board():
 	
 
 func _input(event):
+	
+	# Don't accept any inputs if dead
+	if dead:
+		return
+		
 	# Get the selected tile in nonogram_tile_map space
 	var selected_tile = board_controller.get_selected_tile()
 	
@@ -97,6 +109,10 @@ func _input(event):
 			
 func _process(_delta):
 	
+	# Don't accept any inputs if dead
+	if dead:
+		return
+		
 	# Detect player input for character movement
 	var move_dir = Vector2.ZERO
 	if Input.is_action_just_pressed("move_up"):
@@ -109,13 +125,14 @@ func _process(_delta):
 		move_dir = LEFT
 	
 	if Input.is_action_just_pressed("ui_accept"):
+		_on_player_death()
 		pass
 	
 	if Input.is_action_just_pressed("hide_dungeon"):
 		board_controller.set_dungeon_board_visibility(false)
 	elif Input.is_action_just_released("hide_dungeon"):
 		board_controller.set_dungeon_board_visibility(true)
-		
+	
 	
 	if move_dir != Vector2.ZERO:
 		player.try_move(move_dir)
@@ -131,3 +148,15 @@ func _on_stairs_found():
 	_create_board()
 	dungeon_floor += 1
 	emit_signal("floor_changed", dungeon_floor)
+
+func _on_player_death():
+	dead = true
+	death_popup.show()
+	
+func _on_retry_button():
+	if dead:
+		_create_board()
+		death_popup.hide()
+		dead = false
+		player.init()
+	
