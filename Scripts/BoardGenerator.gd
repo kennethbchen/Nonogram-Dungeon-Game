@@ -61,8 +61,13 @@ var rows = 8
 var tile_size = 16
 
 # Total number of nonogram / dungeon boards in their respective tilemaps
-var nonogram_boards = 4
-var dungeon_boards = 4
+var nonogram_boards = 8
+var dungeon_boards = 8
+
+# The index of the last selected nonogram / dungeon boards
+# Used to prevent repeats back to back
+var last_nonogram = -1
+var last_dungeon = -1
 
 # Generates the nonogram board and solution based on the input data
 # The World layer of the board is within the world_tilemap itself
@@ -289,6 +294,12 @@ func _pickNonogramBoard():
 	# Pick a random board
 	var rand = rng.randi_range(0, nonogram_boards - 1)
 	
+	if rand == last_nonogram:
+		rand = (rand + 1) % nonogram_boards
+		print("reroll nono")
+		
+	last_nonogram = rand
+		
 	var start = rand * columns
 	
 	var output = []
@@ -313,7 +324,11 @@ func _pickNonogramBoard():
 func _pickDungeonBoard():
 	# Pick a random board
 	var rand = rng.randi_range(0, dungeon_boards - 1)
-	
+	if rand == last_dungeon:
+		rand = (rand + 1) % dungeon_boards
+		print("reroll dungeon")
+	last_dungeon = rand
+		
 	var start = rand * columns
 	
 	for row in range(0, rows):
