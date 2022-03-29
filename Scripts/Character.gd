@@ -20,7 +20,7 @@ signal health_changed(value, max_value)
 
 
 # Stats
-var max_health = 5
+var max_health = 4
 var health = max_health
 
 var attack = 1
