@@ -61,40 +61,40 @@ theme = ExtResource( 3 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 32.0
+margin_top = 30.0
 margin_right = -4.0
 margin_bottom = -4.0
 theme = ExtResource( 3 )
 
 [node name="Label" type="Label" parent="InstructionPopup/TabContainer/Page 1"]
 margin_right = 480.0
-margin_bottom = 31.0
+margin_bottom = 27.0
 theme = ExtResource( 3 )
 text = "Instructions Page 1:
 Two Components"
 align = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="InstructionPopup/TabContainer/Page 1"]
-margin_top = 35.0
+margin_top = 31.0
 margin_right = 480.0
-margin_bottom = 332.0
+margin_bottom = 336.0
 size_flags_vertical = 3
 theme = ExtResource( 3 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer"]
 margin_right = 480.0
-margin_bottom = 297.0
+margin_bottom = 305.0
 size_flags_horizontal = 3
 theme = ExtResource( 3 )
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer"]
 margin_right = 480.0
-margin_bottom = 31.0
+margin_bottom = 27.0
 theme = ExtResource( 3 )
 
 [node name="NonogramL" type="Label" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/HBoxContainer2"]
 margin_right = 238.0
-margin_bottom = 31.0
+margin_bottom = 27.0
 size_flags_horizontal = 3
 theme = ExtResource( 3 )
 text = "
@@ -104,7 +104,7 @@ align = 1
 [node name="DCL" type="Label" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/HBoxContainer2"]
 margin_left = 242.0
 margin_right = 480.0
-margin_bottom = 31.0
+margin_bottom = 27.0
 size_flags_horizontal = 3
 theme = ExtResource( 3 )
 text = "
@@ -112,9 +112,9 @@ Dungeon Crawling"
 align = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer"]
-margin_top = 35.0
+margin_top = 31.0
 margin_right = 480.0
-margin_bottom = 297.0
+margin_bottom = 305.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 3 )
@@ -123,13 +123,13 @@ theme = ExtResource( 3 )
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 470.0
-margin_bottom = 252.0
+margin_bottom = 264.0
 size_flags_vertical = 3
 theme = ExtResource( 3 )
 
 [node name="NonoText" type="RichTextLabel" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer"]
 margin_right = 228.0
-margin_bottom = 242.0
+margin_bottom = 254.0
 size_flags_horizontal = 3
 theme = ExtResource( 3 )
 text = "Normal Nonogram Rules
@@ -148,7 +148,7 @@ The dungeon's layout is hidden:
 [node name="DungeonText" type="RichTextLabel" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer"]
 margin_left = 232.0
 margin_right = 460.0
-margin_bottom = 242.0
+margin_bottom = 254.0
 size_flags_horizontal = 3
 theme = ExtResource( 3 )
 text = "WASD - Move
@@ -162,9 +162,9 @@ Solving the picross board allows you to see the dungeon layout
 Reach the stairs on each floor to progress to the next"
 
 [node name="ClosePopupButton" type="Button" parent="InstructionPopup/TabContainer/Page 1"]
-margin_top = 336.0
+margin_top = 340.0
 margin_right = 480.0
-margin_bottom = 356.0
+margin_bottom = 358.0
 theme = ExtResource( 3 )
 text = "Close"
 
