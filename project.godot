@@ -14,20 +14,10 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/AStar2DVisualizer.gd"
 }, {
-"base": "Area2D",
-"class": "Apple",
-"language": "GDScript",
-"path": "res://Scripts/Apple.gd"
-}, {
 "base": "Node2D",
 "class": "Character",
 "language": "GDScript",
 "path": "res://Scripts/Character.gd"
-}, {
-"base": "Interactable",
-"class": "Door",
-"language": "GDScript",
-"path": "res://Scripts/Door.gd"
 }, {
 "base": "Area2D",
 "class": "Interactable",
@@ -45,19 +35,9 @@ _global_script_classes=[ {
 "path": "res://Scripts/PlayerController.gd"
 }, {
 "base": "Interactable",
-"class": "Potion",
-"language": "GDScript",
-"path": "res://Scripts/Potion.gd"
-}, {
-"base": "Interactable",
 "class": "Stairs",
 "language": "GDScript",
 "path": "res://Scripts/Stairs.gd"
-}, {
-"base": "Interactable",
-"class": "Trap",
-"language": "GDScript",
-"path": "res://Scripts/Trap.gd"
 }, {
 "base": "Node",
 "class": "Util",
@@ -66,15 +46,11 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "AStar2DVisualizer": "",
-"Apple": "",
 "Character": "",
-"Door": "",
 "Interactable": "",
 "PathfindingController": "",
 "Player": "",
-"Potion": "",
 "Stairs": "",
-"Trap": "",
 "Util": ""
 }
 

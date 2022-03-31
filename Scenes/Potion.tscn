@@ -1,11 +1,11 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Scenes/Interactable.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Scripts/Potion.gd" type="Script" id=2]
 [ext_resource path="res://Sprites/Potion.png" type="Texture" id=3]
 
 [node name="Potion" instance=ExtResource( 1 )]
-script = ExtResource( 2 )
+energy_change = 60
+delete_self = true
 
 [node name="Sprite" parent="." index="1"]
 texture = ExtResource( 3 )

@@ -78,7 +78,7 @@ func act():
 func _handle_collision(direction: Vector2, collider: Object):
 	
 	if collider is Player:
-		collider.take_damage(attack)
+		collider.change_health(abs(attack) * -1)
 		bump_tween(direction)
 		return false
 	pass

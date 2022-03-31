@@ -20,22 +20,33 @@ signal health_changed(value, max_value)
 
 
 # Stats
-var max_health = 4
-var health = max_health
+export(int) var max_health = 4
+export(int) var health = max_health
 
-var attack = 1
+export(int) var attack = 1
 
 func _ready():
 	emit_signal("health_changed", max_health, max_health)
 	pass
 
-# Su
 func take_damage(damage):
 	health = max(0, health - abs(damage))
 	emit_signal("health_changed", health, max_health)
 
 func heal(heal_amount):
 	health = min(max_health, health + heal_amount)
+	emit_signal("health_changed", health, max_health)
+
+func change_health(change_amount):
+	if change_amount > 0:
+		# Positive change, heal
+		health = min(max_health, health + change_amount)
+	elif change_amount < 0:
+		# Negative change, take damage
+		health = max(0, health + (change_amount))
+	else:
+		return
+
 	emit_signal("health_changed", health, max_health)
 
 # Returns true on successful movement, else false

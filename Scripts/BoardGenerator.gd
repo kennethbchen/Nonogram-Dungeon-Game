@@ -346,6 +346,7 @@ func _pickDungeonBoard():
 				Util.indi_health:
 					# Pick between spawning a health item or an energy item
 					var num = rng.randi_range(0,1)
+					print(num)
 					var obj
 					match(num):
 						0:

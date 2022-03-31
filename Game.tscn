@@ -46,6 +46,7 @@ cell_size = Vector2( 16, 16 )
 format = 1
 
 [node name="NonogramTileMap" type="TileMap" parent="Tilemaps"]
+visible = false
 z_index = 2
 tile_set = ExtResource( 9 )
 cell_size = Vector2( 16, 16 )
@@ -200,4 +201,7 @@ align = 1
 valign = 1
 
 [connection signal="floor_changed" from="." to="UI/Node2D/FloorDisplay" method="_on_floor_changed"]
+[connection signal="energy_changed" from="Player" to="UI/Node2D/EnergyDisplay" method="_on_Player_energy_changed"]
+[connection signal="health_changed" from="Player" to="UI/Node2D/HealthDisplay" method="_on_Player_health_changed"]
+[connection signal="player_death" from="Player" to="." method="_on_player_death"]
 [connection signal="pressed" from="UI/DeathPopup/VBoxContainer/Button" to="." method="_on_retry_button"]

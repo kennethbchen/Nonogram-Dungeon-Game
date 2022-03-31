@@ -56,6 +56,12 @@ func take_damage(damage):
 	if health == 0:
 		emit_signal("player_death")
 
+func change_health(change_amount):
+	.change_health(change_amount)
+	
+	if health == 0:
+		emit_signal("player_death")
+		
 # Returns true if the energy is able to be used (and is subsequently used)
 # Else false
 func use_energy(cost):
@@ -70,6 +76,17 @@ func restore_energy(amount):
 	energy = min(max_energy, energy + amount)
 	emit_signal("energy_changed", energy, max_energy)
 
+func change_energy(change_amount):
+	if change_amount > 0:
+		# Positive change, heal
+		energy = min(max_energy, energy + change_amount)
+	elif change_amount < 0:
+		# Negative change, take damage
+		energy = max(0, energy + (change_amount))
+	else:
+		return
+	emit_signal("energy_changed", energy, max_energy)
+	
 # Animation for moving
 func move_tween(dir):
 	tween.interpolate_callback(self, 1.0/move_speed, "_tween_callback")
@@ -110,22 +127,17 @@ func _handle_collision(direction: Vector2, collider):
 		emit_signal("stairs_found")
 		
 		return false
-	elif collider is Trap:
-		collider.interact_with(self)
-		move_tween(direction)
-		emit_signal("player_trap")
-		return true
 	elif collider is Interactable:
-		collider.interact_with(self)
-		bump_tween(direction)
+		var result = collider.interact_with(self)
 		
-		if collider is Door:
-			emit_signal("player_door")
-		elif collider is Apple:
-			emit_signal("player_health")
-		elif collider is Potion:
-			emit_signal("player_energy")
-		return false
+		# result[2] is whether or not the player is allowed to move into this interactable object
+		if result[2]:
+			move_tween(direction)
+		else:
+			bump_tween(direction)
+		
+		
+		return result[2]
 	else:
 		bump_tween(direction)
 		return false
