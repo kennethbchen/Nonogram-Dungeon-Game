@@ -129,7 +129,6 @@ func _handle_collision(direction: Vector2, collider):
 		return false
 	elif collider is Interactable:
 		var result = collider.interact_with(self)
-		
 		# result[2] is whether or not the player is allowed to move into this interactable object
 		if result[2]:
 			move_tween(direction)

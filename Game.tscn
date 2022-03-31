@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
 [ext_resource path="res://Scripts/PathfindingController.gd" type="Script" id=3]
@@ -10,7 +10,6 @@
 [ext_resource path="res://Scripts/AStar2DVisualizer.gd" type="Script" id=11]
 [ext_resource path="res://Scripts/BoardController.gd" type="Script" id=12]
 [ext_resource path="res://Audio/dungeon002.ogg" type="AudioStream" id=13]
-[ext_resource path="res://Scripts/SoundEffectManager.gd" type="Script" id=14]
 [ext_resource path="res://Scenes/TextLabelDisplay.tscn" type="PackedScene" id=15]
 
 [node name="Main Scene" type="Node2D"]
@@ -78,18 +77,6 @@ tile_data = PoolIntArray( 0, 8, 0, 1, 8, 0, 2, 8, 0, 3, 8, 0, 4, 8, 0, 5, 8, 0, 
 [node name="Enemies" type="Node2D" parent="."]
 
 [node name="Entities" type="Node2D" parent="."]
-
-[node name="SoundEffectManager" type="Node" parent="."]
-script = ExtResource( 14 )
-
-[node name="SEP1" type="AudioStreamPlayer2D" parent="SoundEffectManager"]
-bus = "Sound Effects"
-
-[node name="SEP2" type="AudioStreamPlayer2D" parent="SoundEffectManager"]
-bus = "Sound Effects"
-
-[node name="SEP3" type="AudioStreamPlayer2D" parent="SoundEffectManager"]
-bus = "Sound Effects"
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 13 )
@@ -188,7 +175,6 @@ text = "0"
 
 [connection signal="floor_changed" from="." to="UI/Node2D/Floor Display" method="_on_value_changed"]
 [connection signal="energy_changed" from="Player" to="UI/Node2D/Energy Display" method="_on_value_changed"]
-[connection signal="health_changed" from="Player" to="UI/Node2D/Health Display" method="_on_Player_health_changed"]
 [connection signal="health_changed" from="Player" to="UI/Node2D/Health Display" method="_on_value_changed"]
 [connection signal="player_death" from="Player" to="." method="_on_player_death"]
 [connection signal="pressed" from="UI/DeathPopup/VBoxContainer/Button" to="." method="_on_retry_button"]
