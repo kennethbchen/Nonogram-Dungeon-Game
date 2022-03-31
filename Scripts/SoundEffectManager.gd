@@ -95,8 +95,11 @@ func _on_player_death():
 	_play(death)
 	
 func _play_rand(sounds, last_index):
+	# Pick a random number
 	var index = rng.randi_range(0, sounds.size() - 1)
 	
+	# If the index is the same as what was previously played,
+	# Avoid this by changing the index
 	if index == last_index["value"]:
 		index = (index + 1) % sounds.size()
 	

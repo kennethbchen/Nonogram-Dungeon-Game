@@ -160,4 +160,6 @@ func _on_retry_button():
 		death_popup.hide()
 		dead = false
 		player.init()
+		dungeon_floor = 1
+		emit_signal("floor_changed", dungeon_floor)
 	

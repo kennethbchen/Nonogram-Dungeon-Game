@@ -31,17 +31,18 @@ signal player_death()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
+	max_health = 10
 	init()
 	
 	# The player does not need a health bar
-	remove_child(get_node("HealthBar"))
+	get_node("HealthBar").queue_free()
 	
 	
 
 func init():
-	max_health = 10
+	
 	health = max_health
+	energy = max_energy
 	
 	# Update UI Elements
 	emit_signal("health_changed", max_health, max_health)

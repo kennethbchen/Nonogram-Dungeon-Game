@@ -103,6 +103,7 @@ func is_valid_move(tilemap_coord: Vector2):
 		
 	return true
 
+# Compares the nonogram board and if the tile is blank, that means that it is correct
 func is_correct_mark(tilemap_coord: Vector2):
 	if not is_in_board(tilemap_coord):
 		return false
@@ -111,6 +112,7 @@ func is_correct_mark(tilemap_coord: Vector2):
 		return true
 	else:
 		return false
+
 # Returns the position of the closest tile that the mouse is pointing at
 func get_selected_tile():
 	return nonogram_tile_map.world_to_map(nonogram_tile_map.get_local_mouse_position())

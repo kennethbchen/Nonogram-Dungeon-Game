@@ -28,15 +28,14 @@ script = ExtResource( 5 )
 script = ExtResource( 3 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( 32, 56 )
+position = Vector2( 16, 56 )
 current = true
 zoom = Vector2( 0.35, 0.35 )
 
+[node name="Player" parent="." instance=ExtResource( 10 )]
+
 [node name="AStarVisualizer" type="Node2D" parent="."]
 script = ExtResource( 11 )
-
-[node name="Player" parent="." instance=ExtResource( 10 )]
-position = Vector2( 8, -8 )
 
 [node name="Tilemaps" type="Node2D" parent="."]
 
@@ -201,15 +200,4 @@ align = 1
 valign = 1
 
 [connection signal="floor_changed" from="." to="UI/Node2D/FloorDisplay" method="_on_floor_changed"]
-[connection signal="energy_changed" from="Player" to="UI/Node2D/EnergyDisplay" method="_on_Player_energy_changed"]
-[connection signal="health_changed" from="Player" to="UI/Node2D/HealthDisplay" method="_on_Player_health_changed"]
-[connection signal="player_attack" from="Player" to="SoundEffectManager" method="_on_player_attack"]
-[connection signal="player_death" from="Player" to="." method="_on_player_death"]
-[connection signal="player_death" from="Player" to="SoundEffectManager" method="_on_player_death"]
-[connection signal="player_door" from="Player" to="SoundEffectManager" method="_on_door"]
-[connection signal="player_energy" from="Player" to="SoundEffectManager" method="_on_energy"]
-[connection signal="player_footstep" from="Player" to="SoundEffectManager" method="_on_player_footstep"]
-[connection signal="player_health" from="Player" to="SoundEffectManager" method="_on_health"]
-[connection signal="player_hurt" from="Player" to="SoundEffectManager" method="_on_hurt"]
-[connection signal="player_trap" from="Player" to="SoundEffectManager" method="_on_trap"]
 [connection signal="pressed" from="UI/DeathPopup/VBoxContainer/Button" to="." method="_on_retry_button"]

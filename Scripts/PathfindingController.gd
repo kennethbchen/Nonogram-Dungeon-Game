@@ -95,6 +95,7 @@ func get_tile_path(start: Vector2, goal: Vector2):
 
 	return output
 
+# Checks if the tile is in the list of points and not disabled
 func is_valid_tile(tile: Vector2):
 	var tile_id = _id(tile)
 	return astar.has_point(tile_id) and not astar.is_point_disabled(tile_id)
