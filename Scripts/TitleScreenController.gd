@@ -3,7 +3,6 @@ extends Node2D
 onready var instruction_popup = $InstructionPopup
 
 func _on_Start_Button_pressed():
-	print("load")
 	get_tree().change_scene("res://Game.tscn")
 
 

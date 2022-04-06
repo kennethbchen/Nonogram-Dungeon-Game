@@ -12,21 +12,17 @@ var energy = max_energy
 
 var found_stairs = false
 
+# Sound Resources
 export(Array, Resource) var attack_sounds = []
-
 export(Array, Resource) var footstep_sounds = []
-
 export(Resource) var death_sound = null
 
 # For UI Elements
 signal energy_changed(value, max_value)
 
-# To indicate the stairs have been found
+# Signals
 signal stairs_found()
-
-# Signal that is fired when the player's turn is over
 signal player_turn_over()
-
 signal player_death()
 
 # Called when the node enters the scene tree for the first time.
@@ -37,8 +33,6 @@ func _ready():
 	# The player does not need a health bar
 	get_node("HealthBar").queue_free()
 	
-	
-
 func init():
 	
 	health = max_health
@@ -105,10 +99,6 @@ func try_move(direction: Vector2):
 # The callback is used so the enemies will only move after the player's animation has finished
 func _tween_callback():
 	
-	if found_stairs:
-		found_stairs = false
-		emit_signal("stairs_found")
-	
 	# The player has done an action in the world
 	# The player's turn has ended
 	emit_signal("player_turn_over")
@@ -118,12 +108,14 @@ func _handle_collision(direction: Vector2, collider):
 	
 	# Process collision by type of object being collided with
 	if collider.is_in_group("enemy"):
+		
 		attack_character(collider)
 		bump_tween(direction)
 		sound_eff_controller.play_rand(attack_sounds)
 		return false
 		
 	elif collider is Stairs:
+		
 		collider.interact_with(self)
 		emit_signal("stairs_found")
 		
@@ -131,6 +123,7 @@ func _handle_collision(direction: Vector2, collider):
 		
 	elif collider is Interactable:
 		var result = collider.interact_with(self)
+		
 		# result[2] is whether or not the player is allowed to move into this interactable object
 		if result[2]:
 			move_tween(direction)

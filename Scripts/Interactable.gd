@@ -24,6 +24,7 @@ export(Array, Resource) var sounds = []
 # For informing pathfinding that the current position is a valid path node
 signal tile_free(entity)
 
+# The interacting character will call this and pass themselves as the parameter
 func interact_with(character: Character):
 	if health_change != 0:
 		character.change_health(health_change)
@@ -55,6 +56,7 @@ func interact_with(character: Character):
 	# [2] if the character is allowed to move to the tile
 	return [health_change != 0, energy_change != 0, allow_movement]
 
+# If this is called then the sound effect player has indicated that it is done playing sounds
 func on_audio_done():
 	delete_self()	
 		

@@ -296,7 +296,6 @@ func _pickNonogramBoard():
 	
 	if rand == last_nonogram:
 		rand = (rand + 1) % nonogram_boards
-		print("reroll nono")
 		
 	last_nonogram = rand
 		
@@ -326,7 +325,8 @@ func _pickDungeonBoard():
 	var rand = rng.randi_range(0, dungeon_boards - 1)
 	if rand == last_dungeon:
 		rand = (rand + 1) % dungeon_boards
-		print("reroll dungeon")
+
+
 	last_dungeon = rand
 		
 	var start = rand * columns
