@@ -1,6 +1,9 @@
-
 extends Character
 
+"""
+Represents the player character and contains functionality for the player
+
+"""
 class_name Player
 
 # Energy is used when the nonogram board is being modified by the player
@@ -8,6 +11,12 @@ var max_energy = 160
 var energy = max_energy
 
 var found_stairs = false
+
+export(Array, Resource) var attack_sounds = []
+
+export(Array, Resource) var footstep_sounds = []
+
+export(Resource) var death_sound = null
 
 # For UI Elements
 signal energy_changed(value, max_value)
@@ -17,15 +26,6 @@ signal stairs_found()
 
 # Signal that is fired when the player's turn is over
 signal player_turn_over()
-
-# Sound Effects
-signal player_footstep()
-signal player_attack()
-signal player_door()
-signal player_trap()
-signal player_health()
-signal player_energy()
-signal player_hurt()
 
 signal player_death()
 
@@ -78,21 +78,19 @@ func restore_energy(amount):
 
 func change_energy(change_amount):
 	if change_amount > 0:
-		# Positive change, heal
+		# Positive change, increase energy
 		energy = min(max_energy, energy + change_amount)
 	elif change_amount < 0:
-		# Negative change, take damage
+		# Negative change, decrease energy
 		energy = max(0, energy + (change_amount))
 	else:
 		return
 	emit_signal("energy_changed", energy, max_energy)
-	
-# Animation for moving
+
 func move_tween(dir):
 	tween.interpolate_callback(self, 1.0/move_speed, "_tween_callback")
 	.move_tween(dir)
 
-# Animation for failing to move
 func bump_tween(dir):
 	tween.interpolate_callback(self, 1.0/move_speed, "_tween_callback")
 	.bump_tween(dir)
@@ -100,11 +98,11 @@ func bump_tween(dir):
 func try_move(direction: Vector2):
 	var result = .try_move(direction)
 	if result:
-		emit_signal("player_footstep")
+		sound_eff_controller.play_rand(footstep_sounds)
 	return result
 
 # When the tween movement is over, the player's turn is over
-# The callback is used so the enemies will only movea after the player's animation has finished
+# The callback is used so the enemies will only move after the player's animation has finished
 func _tween_callback():
 	
 	if found_stairs:
@@ -117,16 +115,20 @@ func _tween_callback():
 
 # Returns true on successful move, else false
 func _handle_collision(direction: Vector2, collider):
+	
+	# Process collision by type of object being collided with
 	if collider.is_in_group("enemy"):
 		attack_character(collider)
 		bump_tween(direction)
-		emit_signal("player_attack")
+		sound_eff_controller.play_rand(attack_sounds)
 		return false
+		
 	elif collider is Stairs:
 		collider.interact_with(self)
 		emit_signal("stairs_found")
 		
 		return false
+		
 	elif collider is Interactable:
 		var result = collider.interact_with(self)
 		# result[2] is whether or not the player is allowed to move into this interactable object
@@ -134,8 +136,7 @@ func _handle_collision(direction: Vector2, collider):
 			move_tween(direction)
 		else:
 			bump_tween(direction)
-		
-		
+			
 		return result[2]
 	else:
 		bump_tween(direction)

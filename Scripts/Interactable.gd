@@ -37,7 +37,7 @@ func interact_with(character: Character):
 		# Instead, remove collisionshape2D and sprite first and leave everything else
 		# Also free the tile for pathfinding
 		if delete_self:
-			sound_eff_controller.connect("finished", self, "on_audio_done")
+			sound_eff_controller.connect("players_finished", self, "on_audio_done")
 			$CollisionShape2D.queue_free()
 			$Sprite.queue_free()
 			emit_signal("tile_free", self) 

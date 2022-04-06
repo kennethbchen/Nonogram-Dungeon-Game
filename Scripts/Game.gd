@@ -38,10 +38,6 @@ func _ready():
 	emit_signal("floor_changed", dungeon_floor)
 	_create_board()
 	
-	# Hook into the player's signals
-	player.connect("player_turn_over", self, "_on_player_turn_over")
-	player.connect("stairs_found", self, "_on_stairs_found")
-	
 func _create_board():
 	board_controller.init_board()
 	

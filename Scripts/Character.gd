@@ -11,13 +11,13 @@ onready var board_controller = $"/root/Main Scene/BoardController"
 # Raycast 2D used for character collision
 onready var ray = $RayCast2D
 
+onready var sound_eff_controller = $SoundEffectPlayer
+
 # Tween used for movement animation
 onready var tween = $Tween
 export var move_speed = 15
 
 signal health_changed(value, max_value)
-
-
 
 # Stats
 export(int) var max_health = 4
@@ -49,6 +49,7 @@ func change_health(change_amount):
 
 	emit_signal("health_changed", health, max_health)
 
+# Used when a character is attempting to move
 # Returns true on successful movement, else false
 func try_move(direction: Vector2):
 	
