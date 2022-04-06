@@ -42,22 +42,16 @@ func init():
 	emit_signal("health_changed", max_health, max_health)
 	emit_signal("energy_changed", max_energy, max_energy)
 
-# Reduces health and fires signal
-func take_damage(damage):
-	.take_damage(damage)
-	
-	emit_signal("player_hurt")
-	if health == 0:
-		emit_signal("player_death")
-
 func change_health(change_amount):
 	.change_health(change_amount)
-	
+
 	if health == 0:
+		sound_eff_controller.play_sound(death_sound)
 		emit_signal("player_death")
 		
 # Returns true if the energy is able to be used (and is subsequently used)
 # Else false
+# Deprecated implementation until change_energy() can replace it
 func use_energy(cost):
 	if cost <= energy:
 		energy = max(0, energy - cost)
@@ -66,9 +60,9 @@ func use_energy(cost):
 	else:
 		return false
 
+# Deprecated implementation
 func restore_energy(amount):
-	energy = min(max_energy, energy + amount)
-	emit_signal("energy_changed", energy, max_energy)
+	change_energy(abs(amount))
 
 func change_energy(change_amount):
 	if change_amount > 0:
@@ -99,8 +93,6 @@ func try_move(direction: Vector2):
 # The callback is used so the enemies will only move after the player's animation has finished
 func _tween_callback():
 	
-	# The player has done an action in the world
-	# The player's turn has ended
 	emit_signal("player_turn_over")
 
 # Returns true on successful move, else false

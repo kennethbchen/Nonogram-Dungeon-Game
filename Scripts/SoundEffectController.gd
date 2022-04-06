@@ -34,7 +34,7 @@ func _ready():
 		
 		add_child(player)
 	
-	
+# Play a random sound from an array of sounds
 func play_rand(sounds):
 	
 	# Pick a random number
@@ -47,9 +47,12 @@ func play_rand(sounds):
 	
 	last_index = index
 	
+	play_sound(sounds[index])
+
+# Play one sound
+func play_sound(sound):
 	var player = _get_audio_player()
-	
-	player.stream = sounds[index]
+	player.stream = sound
 	player.play()
 
 func is_playing():

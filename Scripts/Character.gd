@@ -30,12 +30,10 @@ func _ready():
 	pass
 
 func take_damage(damage):
-	health = max(0, health - abs(damage))
-	emit_signal("health_changed", health, max_health)
+	change_health(abs(damage) * -1)
 
 func heal(heal_amount):
-	health = min(max_health, health + heal_amount)
-	emit_signal("health_changed", health, max_health)
+	change_health(abs(heal_amount))
 
 func change_health(change_amount):
 	if change_amount > 0:
