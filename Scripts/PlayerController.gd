@@ -13,7 +13,7 @@ var energy = max_energy
 var found_stairs = false
 
 # Sound Resources
-export(Array, Resource) var attack_sounds = []
+
 export(Array, Resource) var footstep_sounds = []
 export(Resource) var death_sound = null
 
@@ -71,6 +71,7 @@ func change_energy(change_amount):
 	elif change_amount < 0:
 		# Negative change, decrease energy
 		energy = max(0, energy + (change_amount))
+		
 	else:
 		return
 	emit_signal("energy_changed", energy, max_energy)
@@ -103,7 +104,7 @@ func _handle_collision(direction: Vector2, collider):
 		
 		attack_character(collider)
 		bump_tween(direction)
-		sound_eff_controller.play_rand(attack_sounds)
+		#sound_eff_controller.play_rand(attack_sounds)
 		return false
 		
 	elif collider is Stairs:

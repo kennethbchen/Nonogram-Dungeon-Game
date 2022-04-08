@@ -37,6 +37,10 @@ func _ready():
 # Play a random sound from an array of sounds
 func play_rand(sounds):
 	
+	# Don't try to play sounds if there are no sounds
+	if sounds.size() <= 0:
+		return
+		
 	# Pick a random number
 	var index = rng.randi_range(0, sounds.size() - 1)
 	

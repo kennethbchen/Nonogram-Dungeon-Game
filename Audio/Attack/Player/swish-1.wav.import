@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/swish-5.wav-f4dfee90091fdc6a0568c132015d6b53.sample"
+path="res://.import/swish-1.wav-1f0237e7acfb6287be42bd45f4787929.sample"
 
 [deps]
 
-source_file="res://Audio/Attack/swish-5.wav"
-dest_files=[ "res://.import/swish-5.wav-f4dfee90091fdc6a0568c132015d6b53.sample" ]
+source_file="res://Audio/Attack/Player/swish-1.wav"
+dest_files=[ "res://.import/swish-1.wav-1f0237e7acfb6287be42bd45f4787929.sample" ]
 
 [params]
 

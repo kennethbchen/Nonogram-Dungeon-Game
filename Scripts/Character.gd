@@ -25,6 +25,9 @@ export(int) var health = max_health
 
 export(int) var attack = 1
 
+export(Array, Resource) var attack_sounds = []
+export(Array, Resource) var hurt_sounds = []
+
 func _ready():
 	emit_signal("health_changed", max_health, max_health)
 	pass
@@ -42,6 +45,7 @@ func change_health(change_amount):
 	elif change_amount < 0:
 		# Negative change, take damage
 		health = max(0, health + (change_amount))
+		sound_eff_controller.play_rand(hurt_sounds)
 	else:
 		return
 
@@ -79,6 +83,7 @@ func _handle_collision(direction: Vector2, collider: Object):
 	pass
 
 func attack_character(character: Character):
+	sound_eff_controller.play_rand(attack_sounds)
 	character.take_damage(attack)
 
 # Animation for moving
