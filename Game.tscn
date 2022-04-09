@@ -42,6 +42,12 @@ texture = ExtResource( 1 )
 region_enabled = true
 region_rect = Rect2( 32, 0, 16, 16 )
 
+[node name="MultiStart" type="Sprite" parent="Cursor"]
+z_index = 3
+
+[node name="MultiEnd" type="Sprite" parent="Cursor"]
+z_index = 3
+
 [node name="CursorScale" type="Tween" parent="Cursor"]
 
 [node name="CursorPosition" type="Tween" parent="Cursor"]

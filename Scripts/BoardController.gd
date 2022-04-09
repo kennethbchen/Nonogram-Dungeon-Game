@@ -44,6 +44,7 @@ func set_tile(tilemap_coord, tileset_index):
 	nonogram_tile_map.set_cellv(tilemap_coord, tileset_index)
 	
 # Based on the tile coords and mouse input, make a mark on the nonogram tilemap
+# If direct replace is enabled, then 
 func handle_tile_input(nonogram_tile_map_coords, button_index):
 	
 	# Don't try to change a tile that is not in the board
@@ -52,10 +53,11 @@ func handle_tile_input(nonogram_tile_map_coords, button_index):
 	
 	var tile = -1
 	match (button_index):
-		BUTTON_LEFT:
-			tile = Util.nono_color
 		BUTTON_RIGHT:
 			tile = Util.nono_cross
+		BUTTON_LEFT:
+			tile = Util.nono_color
+		
 	
 		
 	# Compare this action with solution tile map to see if it's a correct one
@@ -74,6 +76,7 @@ func handle_tile_input(nonogram_tile_map_coords, button_index):
 	else:
 		# Set the tile
 		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, tile)
+
 
 func set_dungeon_board_visibility(visible):
 	if visible:
