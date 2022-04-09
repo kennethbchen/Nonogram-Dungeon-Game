@@ -126,3 +126,6 @@ func get_solution_tile(tilemap_coord: Vector2):
 # Converts world space to tilemap space
 func world_to_board(pos: Vector2):
 	return nonogram_tile_map.world_to_map(pos)
+	
+func board_to_world(pos: Vector2):
+	return nonogram_tile_map.map_to_world(pos)

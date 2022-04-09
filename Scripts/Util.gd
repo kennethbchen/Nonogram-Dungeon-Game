@@ -2,12 +2,22 @@ extends Node
 
 class_name Util
 
+const board_columns = 8
+const board_rows = 8
+
+const tile_size = 16
+const tile_offset = Vector2(8,8)
+
 # Map names to tileset IDs
 const nono_blank = 0
 const nono_color = 2
 const nono_cross = 1
 const nono_empty = 4
 const nono_cursor = 5
+const nono_verti_guide = 6
+const nono_horiz_guide = 7
+
+
 
 const world_wall = 3
 

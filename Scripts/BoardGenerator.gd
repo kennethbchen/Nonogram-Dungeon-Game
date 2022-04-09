@@ -55,10 +55,10 @@ var hint = []
 # The format of the labels is the same as the hint array
 var hint_labels = []
 
-var columns = 8
-var rows = 8
+var columns = Util.board_columns
+var rows = Util.board_rows
 
-var tile_size = 16
+var tile_size = Util.tile_size
 
 # Total number of nonogram / dungeon boards in their respective tilemaps
 var nonogram_boards = 8
