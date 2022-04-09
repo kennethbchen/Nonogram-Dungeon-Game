@@ -57,22 +57,31 @@ func handle_tile_input(nonogram_tile_map_coords, button_index):
 			tile = Util.nono_cross
 		BUTTON_LEFT:
 			tile = Util.nono_color
-		
 	
-		
+	# If the solution map matches the tile input, then that input is correct
+	var correct_input = solution_tile_map.get_cellv(nonogram_tile_map_coords) == tile
+	
+	# If the nonogram map has no tile, then the tile was already marked correctly
+	var already_correct = nonogram_tile_map.get_cellv(nonogram_tile_map_coords) == -1
+	
+	# Whether or not the tile and the input are the same correct value or same incorrect value
+	var same_correct = correct_input and already_correct
+	var same_incorrect = nonogram_tile_map.get_cellv(nonogram_tile_map_coords) == tile
+	
+	
 	# Compare this action with solution tile map to see if it's a correct one
-	if solution_tile_map.get_cellv(nonogram_tile_map_coords) == tile and \
-	not nonogram_tile_map.get_cellv(nonogram_tile_map_coords) == -1:
+	if correct_input and not already_correct:
 		
 		# If it is correct, then the tile is removed to reveal the tilemaps underneath it
 		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, -1)
 		
-	elif nonogram_tile_map.get_cellv(nonogram_tile_map_coords) == tile or \
-		nonogram_tile_map.get_cellv(nonogram_tile_map_coords) == -1:
-		
-		# If the tile is already set to what we are trying to color it, then clear it
+	elif same_correct:
+
 		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, Util.nono_blank)
 		
+	elif same_incorrect:
+		
+		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, Util.nono_blank)
 	else:
 		# Set the tile
 		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, tile)
