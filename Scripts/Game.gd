@@ -55,34 +55,34 @@ func _input(event):
 	if dead:
 		return
 	
-	# Get the selected tile in nonogram_tile_map space
+	# Get the selected tile in nonogram_tile_map space based on mouse position
 	var selected_tile = board_controller.get_selected_tile()
+	var in_board = board_controller.is_in_board(selected_tile)
 	
 	# Register click press
 	if event is InputEventMouseButton and event.pressed:
 		
 		# Don't do anything for clicks outside the board
-		if not board_controller.is_in_board(selected_tile):
+		if not in_board:
 			return
 		
-		# If click button isn't -1, then another mouse button is being held down
-		# so reset mouse state and cancel action
+		
 		if click_button == -1:
 			click_origin = selected_tile
 			click_button = event.button_index
 		else:
-			print("action cancelled")
+			# If click button isn't -1, then another mouse button is being held down
+			# so reset mouse state and cancel action
 			cursor.enable_cursor()
 			cursor.set_position(board_controller.get_selected_tile())
 			_reset_mouse_state()
 		
-		print("click")
 	
 	# Register click relese
 	if event is InputEventMouseButton and not event.pressed:
 		
 		# Don't do anything for clicks outside the board
-		if not board_controller.is_in_board(selected_tile):
+		if not in_board:
 			return
 		
 		# If the mouse was released in the same place it was clicked
@@ -100,7 +100,6 @@ func _input(event):
 		elif drag:
 			# If it is a drag, then modify multiple tiles
 			var diff = selected_tile - click_origin
-			print(diff)
 			
 			var from = -1
 			var to = -1
@@ -151,7 +150,7 @@ func _input(event):
 					var new_pos = Vector2(click_origin.x, row)
 					
 					# If the tile is already the color that is going to be set
-					# or the tile is correct and the color that is going to be set
+					# or the tile is correct and is the color that is going to be set
 					# ignore the tile
 					if board_controller.get_nono_tile(new_pos) == new_tile or \
 						board_controller.is_correct_mark(new_pos) and board_controller.get_solution_tile(new_pos) == new_tile:
@@ -167,33 +166,33 @@ func _input(event):
 	# Register mouse move
 	if event is InputEventMouseMotion:
 		
-		if not board_controller.is_in_board(selected_tile):
+		if not in_board:
 			_reset_mouse_state()
 		
 			# If the mouse was clicked (and not released yet) and moved to a different tile, that is a drag
 		if click_button != -1 and selected_tile != click_origin:
 			drag = true
-			print("drag")
 		elif selected_tile == click_origin:
 			# If the mouse is returned back to the drag origin, then it is no longer a drag
 			drag = false
-			
-		
-		pass
 	
 	# Handle mouse hovering visual
 	if event is InputEventMouseMotion:
 		
-		if board_controller.is_in_board(selected_tile):
+		if in_board:
 			
 			if not drag:
+				# Not dragging, normal cursor state
 				cursor.enable_cursor()
 				cursor.set_position(board_controller.get_selected_tile())
 			else:
+				# Dragging, multi select state
 				cursor.disable_cursor()
 				cursor.set_multi(click_origin, selected_tile)
 		else:
+			# Out of board, disable cursor
 			cursor.disable_cursor()
+			cursor.disable_multi()
 		
 		
 	

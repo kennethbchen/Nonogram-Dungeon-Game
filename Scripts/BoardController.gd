@@ -75,13 +75,10 @@ func handle_tile_input(nonogram_tile_map_coords, button_index):
 		# If it is correct, then the tile is removed to reveal the tilemaps underneath it
 		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, -1)
 		
-	elif same_correct:
+	elif same_correct or same_incorrect:
 
 		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, Util.nono_blank)
-		
-	elif same_incorrect:
-		
-		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, Util.nono_blank)
+
 	else:
 		# Set the tile
 		nonogram_tile_map.set_cellv(nonogram_tile_map_coords, tile)

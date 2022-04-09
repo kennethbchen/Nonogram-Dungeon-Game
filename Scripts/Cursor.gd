@@ -1,10 +1,5 @@
 extends Node2D
 
-enum states {
-	NORMAL,
-	DRAG
-}
-
 onready var main_sprite = $Main
 
 onready var tileset = load("res://Sprites/Nonagram Tiles.png")
@@ -13,26 +8,24 @@ onready var tileset = load("res://Sprites/Nonagram Tiles.png")
 onready var multi_start = $MultiStart
 onready var multi_end = $MultiEnd
 
-# The region values in the tilemap
+# The region values that point to the right sprites in the tileset
 var horiz_region = Rect2(Util.tile_size * 4, 0, Util.tile_size, Util.tile_size)
 var verti_region = Rect2(Util.tile_size * 4, Util.tile_size, Util.tile_size, Util.tile_size)
 
 onready var scale_tween = $CursorScale
 
-onready var position_tween = $CursorPosition
-
 onready var effect_tilemap = $"../Tilemaps/EffectTileMap"
 
 onready var board_ctrl = $"../BoardController"
 
+# Current position of the cursor in tilemap space
 var tilemap_position = Vector2(0,0)
-var current_position = Vector2(0,0)
 
-var current_state = states.NORMAL
+# Current position of the cursor in world space
+var current_position = Vector2(0,0)
 
 func _ready():
 	_update_tween_scale()
-	_update_tween_position()
 	
 	multi_start.region_enabled = true
 	multi_start.texture = tileset
@@ -67,16 +60,14 @@ func _update_tween_scale():
 	scale_tween.repeat = true
 	scale_tween.start()
 
-func _update_tween_position():
-	position = current_position
-
+# Used to indicate the position of the cursor for single tile marking
 func set_position(tilemap_pos: Vector2):
 	enable_cursor()
 	disable_multi()
 	
 	tilemap_position = tilemap_pos
 	current_position = tilemap_pos * Util.tile_size + Util.tile_offset
-	_update_tween_position()
+	position = current_position
 	
 	# Also make the horizontal and vertical guides
 	effect_tilemap.clear()
@@ -95,65 +86,79 @@ func set_position(tilemap_pos: Vector2):
 			pass
 		pass
 
+# Used to indicate the tiles that will be affected in multi tile marking
 func set_multi(tilemap_start: Vector2, tilemap_end: Vector2):
 	disable_cursor()
 	enable_multi()
 	
 	var diff = tilemap_end - tilemap_start
+	
+	# The start sprite doesn't change local coordinate wise
+	# The end sprite does, however
 	var end_offset = diff * Util.tile_size
 	
-	multi_start.show()
-	multi_end.show()
-	
-	
-	
-	
+	# Determine whether or not the multi select is happening horizontall or vertically
+	# The dimension with the largest distance between start and end wins
 	if abs(diff.x) > abs(diff.y):
 		# Horizontal
 		
+		# Set sprites
 		multi_start.region_rect = horiz_region
 		multi_end.region_rect = horiz_region
 		
+		# Horizontal select means no vertical flips
 		multi_start.flip_v = false
 		multi_end.flip_v = false
 		
+		# Determine whether or not the selection is happening from
+		# left to right or right ot left
+		# This changes which sprite (start/end) should be flipped
 		if diff.x > 0:
+			# Positive diff, left to right
 			multi_start.flip_h = false
 			
 			multi_end.flip_h = true
 		else:
+			# Negative diff, right to left
 			multi_start.flip_h = true
 			
 			multi_end.flip_h = false
 			
 		
-		
+		# Set the positions
+		# End position inherits the start's y value
 		multi_start.position = Vector2.ZERO
 		multi_end.position = Vector2(end_offset.x, multi_start.position.y)
 		
-		print("horizontal")
 	else:
 		
+		# Set sprites
 		multi_start.region_rect = verti_region
 		multi_end.region_rect = verti_region
 		
+		# Vertical select means no horizontal flips
 		multi_start.flip_h = false
 		multi_end.flip_h = false
 		
+		# Determine whether or not the selection is happening from
+		# top to bottom or bottom to top
+		# This changes which sprite (start/end) should be flipped
 		if diff.y > 0:
+			# Positive diff, bottom to top
 			multi_start.flip_v = true
 			
 			multi_end.flip_v = false
 		else:
+			# Negative diff, top to bottom
 			multi_start.flip_v = false
 			
 			multi_end.flip_v = true
 		
-		
+		# Set the positions
+		# End position inherits the start's x value
 		multi_start.position = Vector2.ZERO
 		multi_end.position = Vector2(multi_start.position.x, end_offset.y)
 		
-		print("vertical")
 				
 
 func disable_cursor():

@@ -50,8 +50,6 @@ z_index = 3
 
 [node name="CursorScale" type="Tween" parent="Cursor"]
 
-[node name="CursorPosition" type="Tween" parent="Cursor"]
-
 [node name="Player" parent="." instance=ExtResource( 10 )]
 
 [node name="AStarVisualizer" type="Node2D" parent="."]
