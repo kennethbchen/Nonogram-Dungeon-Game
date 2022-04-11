@@ -8,6 +8,10 @@ onready var tileset = load("res://Sprites/Nonagram Tiles.png")
 onready var multi_start = $MultiStart
 onready var multi_end = $MultiEnd
 
+# The Multi Label is a UI element that shows how many squares are being selected in multi select mode
+onready var multi_text_back = $MultiLabel/MultiLabelText/MultiLabelBack
+onready var multi_label = $MultiLabel/MultiLabelText
+
 # The region values that point to the right sprites in the tileset
 var horiz_region = Rect2(Util.tile_size * 4, 0, Util.tile_size, Util.tile_size)
 var verti_region = Rect2(Util.tile_size * 4, Util.tile_size, Util.tile_size, Util.tile_size)
@@ -124,11 +128,14 @@ func set_multi(tilemap_start: Vector2, tilemap_end: Vector2):
 			
 			multi_end.flip_h = false
 			
+		multi_label.text = str(abs(diff.x) + 1)
+		
 		
 		# Set the positions
 		# End position inherits the start's y value
 		multi_start.position = Vector2.ZERO
 		multi_end.position = Vector2(end_offset.x, multi_start.position.y)
+		multi_label.set_position(Vector2( (multi_start.position.x + multi_end.position.x) / 2, multi_start.position.y) - Util.tile_offset)
 		
 	else:
 		
@@ -154,11 +161,13 @@ func set_multi(tilemap_start: Vector2, tilemap_end: Vector2):
 			
 			multi_end.flip_v = true
 		
+		multi_label.text = str(abs(diff.y) + 1)
+		
 		# Set the positions
 		# End position inherits the start's x value
 		multi_start.position = Vector2.ZERO
 		multi_end.position = Vector2(multi_start.position.x, end_offset.y)
-		
+		multi_label.set_position( Vector2(multi_start.position.x, (multi_start.position.y + multi_end.position.y) / 2) - Util.tile_offset)
 				
 
 func disable_cursor():
@@ -171,7 +180,11 @@ func enable_cursor():
 func enable_multi():
 	multi_start.show()
 	multi_end.show()
+	multi_text_back.show()
+	multi_label.show()
 	
 func disable_multi():
 	multi_start.hide()
 	multi_end.hide()
+	multi_text_back.hide()
+	multi_label.hide()
