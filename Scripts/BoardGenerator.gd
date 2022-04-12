@@ -41,7 +41,8 @@ onready var trap_entity = load("res:///Scenes/Trap.tscn")
 
 var rng = RandomNumberGenerator.new()
 
-
+# Use Open Simplex Noise to generate random picross boards
+var noise = OpenSimplexNoise.new()
 
 
 # The solution to the current board
@@ -76,6 +77,13 @@ var last_dungeon = -1
 # array[1] = number of rows
 func generate_board():
 	rng.randomize()
+	
+	noise.seed = rng.randi()
+	noise.octaves = 8
+	noise.period = 3.2
+	noise.persistence = 0.4
+	
+	
 	# Clear boards first
 	nonogram_tile_map.clear()
 	world_tile_map.clear()
@@ -89,8 +97,9 @@ func generate_board():
 	for child in get_tree().get_nodes_in_group("entity"):
 		child.free()
 
-	solution = _pickNonogramBoard();
+	solution = _generate_nonogram_board(columns, rows)
 	_pickDungeonBoard()
+	
 	
 	# Generate the hint to display based on the solution of the board
 	hint = _generate_hint(solution)
@@ -286,6 +295,33 @@ func create_labels(hint, label_array):
 		
 		line.append(label)
 	output.append(line)
+	
+	return output
+
+# Generates a random nonogram board using a noise texture
+func _generate_nonogram_board(columns, rows):
+	
+	var output = []
+	
+	var row_data = []
+	for col in range(0, columns):
+		
+		row_data = []
+		for row in range(0, rows):
+			
+			# The noise determines the value of that cell in the solution
+			var val = noise.get_noise_2d(col,row)
+			
+			
+			if val >= 0 - 0.02:
+				row_data.append(1)
+			else:
+				row_data.append(0)
+			
+		output.append(row_data)
+		print(row_data)
+	
+	
 	
 	return output
 

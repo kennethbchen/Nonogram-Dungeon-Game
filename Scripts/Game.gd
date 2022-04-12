@@ -219,7 +219,7 @@ func _process(_delta):
 		move_dir = LEFT
 	
 	if Input.is_action_just_pressed("ui_accept"):
-		#_on_stairs_found()
+		_on_stairs_found()
 		#_on_player_death()
 		pass
 	
