@@ -17,8 +17,7 @@ onready var pathfinder = $"../../PathfindingController"
 
 onready var hint_font = load("res://UI/NonogramHint.tres")
 
-# Tilemap containing all possible nonogram / dungeon boards
-onready var nonogram_layouts = $"/root/Main Scene/Tilemaps/NonogramBoards"
+# Tilemap containing all possible dungeon boards
 onready var dungeon_layouts = $"/root/Main Scene/Tilemaps/DungeonBoards"
 
 # Node containing all enemies
@@ -61,13 +60,11 @@ var rows = Util.board_rows
 
 var tile_size = Util.tile_size
 
-# Total number of nonogram / dungeon boards in their respective tilemaps
-var nonogram_boards = 8
+# Total number of dungeon boards in the tilemap
 var dungeon_boards = 8
 
-# The index of the last selected nonogram / dungeon boards
+# The index of the last selected dungeon boards
 # Used to prevent repeats back to back
-var last_nonogram = -1
 var last_dungeon = -1
 
 # Generates the nonogram board and solution based on the input data
@@ -234,7 +231,6 @@ func _generate_hint(solution):
 	
 	return output
 
-# TODO: add the labels to an array so they can be reused
 # Takes the nonogram board hints and displays that as labels
 # The resulting labels are stored in an array in the same format as the hints
 # The label_array is the array of labels, if they exist already
@@ -325,35 +321,7 @@ func _generate_nonogram_board(columns, rows):
 	
 	return output
 
-# Picks a random nonogram board to generate
-func _pickNonogramBoard():
-	# Pick a random board
-	var rand = rng.randi_range(0, nonogram_boards - 1)
-	
-	if rand == last_nonogram:
-		rand = (rand + 1) % nonogram_boards
-		
-	last_nonogram = rand
-		
-	var start = rand * columns
-	
-	var output = []
-	var line = []
-	for row in range(0, rows):
-		line = []
-		for col in range (0, columns):
-			
-			# Translate the data to an array where
-			# Colored square = 1, else 0
-			match (nonogram_layouts.get_cellv(Vector2(col + start, row))):
-				Util.indi_colored:
-					line.append(1)
-				_:
-					line.append(0)
-				
-		output.append(line)
-	
-	return output
+
 
 # Picks a random Dungeon board to generate
 func _pickDungeonBoard():

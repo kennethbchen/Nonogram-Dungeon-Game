@@ -150,7 +150,6 @@ margin_left = 232.0
 margin_right = 460.0
 margin_bottom = 254.0
 size_flags_horizontal = 3
-theme = ExtResource( 3 )
 text = "WASD - Move
 
 Shift - Hide Dungeon
