@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Sprites/Nonagram Tiles.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://Scripts/AStar2DVisualizer.gd" type="Script" id=11]
 [ext_resource path="res://Scripts/BoardController.gd" type="Script" id=12]
 [ext_resource path="res://Audio/dungeon002.ogg" type="AudioStream" id=13]
+[ext_resource path="res://Scripts/DungeonGenerator.gd" type="Script" id=14]
 [ext_resource path="res://Scenes/TextLabelDisplay.tscn" type="PackedScene" id=15]
 
 [node name="Main Scene" type="Node2D"]
@@ -24,13 +25,16 @@ script = ExtResource( 12 )
 [node name="BoardGenerator" type="Node" parent="BoardController"]
 script = ExtResource( 5 )
 
+[node name="DungeonGenerator" type="Node2D" parent="BoardController"]
+script = ExtResource( 14 )
+
 [node name="PathfindingController" type="Node" parent="."]
 script = ExtResource( 3 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( 16, 48 )
+position = Vector2( 192, 336 )
 current = true
-zoom = Vector2( 0.35, 0.35 )
+zoom = Vector2( 1.5, 1.5 )
 
 [node name="Player" parent="." instance=ExtResource( 10 )]
 
