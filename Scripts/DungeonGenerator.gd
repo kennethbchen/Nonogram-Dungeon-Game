@@ -20,7 +20,31 @@ var max_floor_rows = Util.max_floor_rows
 var max_rooms_x = Util.max_rooms_x
 var max_rooms_y = Util.max_rooms_y
 
-var subdivision_data = []
+var max_subdivisions = 4
+
+var subdivision_data = null
+
+
+# Class that represents 
+class MapRegion:
+	
+	var bounds: Rect2
+	var parent: MapRegion
+	var children: Array
+	var id: int
+	
+	func _init(rect, new_parent = null):
+		bounds = rect
+		
+		if new_parent != null:
+			parent = new_parent
+		
+	func add_child(new_child: MapRegion):
+		children.append(new_child)
+		
+	func add_children(new_children: Array):
+		children.append_array(new_children)
+		pass
 
 func generate_board():
 	
@@ -39,44 +63,41 @@ func generate_board():
 	
 	var bound = Rect2(Vector2(0,0), Vector2(max_rooms_x, max_rooms_y))
 	
-	var subdivisions = 4
+	var root = MapRegion.new(Rect2(Vector2(0,0), Vector2(max_rooms_x, max_rooms_y)))
+	root.id = 0
 	
-	var temp = []
-	var buffer = []
+	var current = [root]
 	
-	temp.append(bound)
-	while subdivisions > 0:
-		
-		if temp.size() > 0:
-			# Divisions go into the buffer until all of the areas have been subdivided once
-			buffer.append_array(subdivide_area(temp.pop_front()))
-		else:
-			subdivisions -= 1
-			temp.append_array(buffer)
-			buffer.clear()
+	var subdivisions = max_subdivisions
 	
-	subdivision_data = temp
+	subdivide_area(root, max_subdivisions)
 	
-	print(subdivision_data)
+	
+	subdivision_data = root
 
-# Takes a Rect2 area and randomly divides it in half horizontally or vertically and returns the subdivided pieces
+
+# Takes a MapRegion area and randomly divides it in half horizontally or vertically and returns the subdivided pieces
 # Individual Rect2 units (position or height / width units) represent rooms in the floor
-func subdivide_area(bounds: Rect2):
+func subdivide_area(region: MapRegion, subdivisions):
 	
-	if bounds.size <= Vector2(1,1):
+	
+	if subdivisions == 0:
+		return
+		
+	if region.bounds.size <= Vector2(1,1):
 		# Bounds are too small to divide
-		return [bounds]
+		return [region]
 	
 	# 0 - Dividing line is horizontal
 	# 1 - Dividing line is vertical
 	var split_direction = -1
 	
 	# Determine the direction to split the bounds in
-	if bounds.size.y <= 1:
+	if region.bounds.size.y <= 1:
 		# If the width of the bound is too small to be divided,
 		# Then the split direction must be vertical
 		split_direction = 1
-	elif bounds.size.x <= 1:
+	elif region.bounds.size.x <= 1:
 
 		# If the height of the board is too small to be divided,
 		# Then the split direction must be horizontal
@@ -87,49 +108,61 @@ func subdivide_area(bounds: Rect2):
 	# When the board is split, it divides it into an a section and a b section
 	# If the dividing line is horizontal, then a is the upper subdivision and b is the lower
 	# If the dividing line is vertical, then a is the left subdivision and b is the right
-	var a = null
-	var b = null
+	var a: MapRegion = null
+	var b: MapRegion = null
 	
 	var split_position = 0
 	
 	if split_direction == 0:
 		# Horizontal line, choose vertical position for that line
 		
-		split_position = rand.randi_range(min(bounds.size.y - 1, bounds.position.y + 1), max(bounds.size.y - 1, 1))
+		split_position = rand.randi_range(min(region.bounds.size.y - 1, region.bounds.position.y + 1), max(region.bounds.size.y - 1, 1))
 		
 		# Assign subdivision sections
-		a = Rect2(bounds.position, Vector2(bounds.size.x, bounds.size.y - (bounds.size.y - split_position) ))
-		b = Rect2(Vector2(bounds.position.x, bounds.position.y + split_position), Vector2(bounds.size.x, bounds.size.y - split_position))
+		a = MapRegion.new(Rect2(region.bounds.position, Vector2(region.bounds.size.x, region.bounds.size.y - (region.bounds.size.y - split_position) )))
+		b = MapRegion.new(Rect2(Vector2(region.bounds.position.x, region.bounds.position.y + split_position), Vector2(region.bounds.size.x, region.bounds.size.y - split_position)))
 		
 		
 	elif split_direction == 1:
 		# Vertical line, choose horizontal position for that line
 		
-		split_position = rand.randi_range(min(bounds.size.x - 1, bounds.position.x + 1), max(bounds.size.x - 1, 1))
+		split_position = rand.randi_range(min(region.bounds.size.x - 1, region.bounds.position.x + 1), max(region.bounds.size.x - 1, 1))
 		
 		# Assign subdivision sections
-		a = Rect2(bounds.position, Vector2(bounds.size.x - (bounds.size.x - split_position), bounds.size.y))
-		b = Rect2(Vector2(bounds.position.x + split_position, bounds.position.y), Vector2(bounds.size.x - split_position, bounds.size.y))
-		
-		
-	return [a,b]
+		a = MapRegion.new(Rect2(region.bounds.position, Vector2(region.bounds.size.x - (region.bounds.size.x - split_position), region.bounds.size.y)))
+		b = MapRegion.new(Rect2(Vector2(region.bounds.position.x + split_position, region.bounds.position.y), Vector2(region.bounds.size.x - split_position, region.bounds.size.y)))
+	
+	region.add_child(a)
+	region.add_child(b)
+	
+	a.parent = region
+	b.parent = region
+	
+	subdivide_area(a, subdivisions - 1)
+	subdivide_area(b, subdivisions - 1)
+	
+func _draw_rec(region: MapRegion, offset):
+	
+	var new_rect = Rect2(region.bounds.position * Util.tile_size * 8, region.bounds.size * Util.tile_size * 8)
+	var color = Color.white
+	color.g -= 0.2 * offset
+	draw_rect(new_rect.grow(-offset * 8), color, false, 2 * offset)
+	
+	for i in range(0, region.children.size()):
+		_draw_rec(region.children[i], offset + 1)
 
 func _draw():
 	
-	if subdivision_data.size() > 0:
-		
-		for i in range(0, subdivision_data.size()):
-			var newRect = Rect2(subdivision_data[i].position * Util.tile_size * 8, subdivision_data[i].size * Util.tile_size * 8)
-			
-			draw_rect(newRect, Color.from_hsv(rand.randf_range(0,1), 1,1))
-	
+	if subdivision_data != null:
+		_draw_rec(subdivision_data, 0)
+
 	# Draw the dividing lines between rooms
 	for room_col in range(0, max_rooms_x + 1):
 		draw_line(Vector2(room_col * room_columns, 0 ) * Util.tile_size, Vector2(room_col * room_columns, max_floor_rows) * Util.tile_size, Color.aqua)
-	
+
 	for room_row in range(0, max_rooms_y + 1):
 		draw_line(Vector2(0, room_row * room_rows) * Util.tile_size, Vector2(max_floor_columns, room_row * room_rows) * Util.tile_size, Color.aqua)
-	
+
 	
 	
 	
