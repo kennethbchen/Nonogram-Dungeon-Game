@@ -64,17 +64,53 @@ func generate_board():
 	var bound = Rect2(Vector2(0,0), Vector2(max_rooms_x, max_rooms_y))
 	
 	var root = MapRegion.new(Rect2(Vector2(0,0), Vector2(max_rooms_x, max_rooms_y)))
-	root.id = 0
-	
-	var current = [root]
+
 	
 	var subdivisions = max_subdivisions
 	
+	
+		
 	subdivide_area(root, max_subdivisions)
 	
+	_call_at_level(root, -1, funcref(self, "generate_room"))
 	
 	subdivision_data = root
 
+func generate_room(region: MapRegion):
+	
+	# The bounds of the region in tilemap units
+	var tile_bounds = Rect2(region.bounds.position * Util.room_columns, region.bounds.end * Util.room_columns)
+	
+	var room_bounds = Rect2(tile_bounds.position, Vector2(4,4))
+
+	print(room_bounds)
+	
+	for col in range(tile_bounds.position.x, tile_bounds.size.x):
+		for row in range(tile_bounds.position.y, tile_bounds.size.y):
+			
+			var pos = Vector2(col, row)
+			if room_bounds.has_point(pos):
+				dungeon_tile_map.set_cellv(pos, Util.world_wall)
+	
+	
+func print_node(region: MapRegion):
+	print("hello")
+	
+# Takes a map region and traverses it recursively
+# For each node at a specified level, the given funciton is called with those nodes as input
+# A negative level input will call the function on each leaf
+func _call_at_level(region_tree: MapRegion, level: int, function: FuncRef):
+	
+	# If level is 0, then this region is the target
+	# If the level is negative and there are no children, this node is a leaf
+	# Call the function
+	if level == 0 or (level < 0 and region_tree.children.size() == 0):
+		
+		function.call_func(region_tree)
+	else:
+		# Traverse a level deeper
+		for i in range(0, region_tree.children.size()):
+			_call_at_level(region_tree.children[i], level - 1, function)
 
 # Takes a MapRegion area and randomly divides it in half horizontally or vertically and returns the subdivided pieces
 # Individual Rect2 units (position or height / width units) represent rooms in the floor
