@@ -79,7 +79,8 @@ func generate_board():
 func generate_room(region: MapRegion):
 	
 	# The bounds of the region in tilemap units
-	var tile_bounds = Rect2(region.bounds.position * Util.room_columns, region.bounds.end * Util.room_columns)
+	# The multiplication by Util stuff is transforming the region variable's map_region units to tilemap units
+	var tile_bounds = Rect2( region.bounds.position * Vector2(Util.room_columns, Util.room_rows), 	region.bounds.end * Vector2(Util.room_columns, Util.room_rows))
 	
 	var room_bounds = Rect2(tile_bounds.position, Vector2(4,4))
 
@@ -179,7 +180,9 @@ func subdivide_area(region: MapRegion, subdivisions):
 	
 func _draw_rec(region: MapRegion, offset):
 	
-	var new_rect = Rect2(region.bounds.position * Util.tile_size * 8, region.bounds.size * Util.tile_size * 8)
+	# The multiplication by Util stuff is transforming it from map region room units to tilemap units and from tilemap units to pixel units
+	var new_rect = Rect2(region.bounds.position * Vector2(Util.room_columns, Util.room_rows) * Util.tile_size, 
+						 region.bounds.size * Vector2(Util.room_columns, Util.room_rows) * Util.tile_size )
 	var color = Color.white
 	color.g -= 0.2 * offset
 	draw_rect(new_rect.grow(-offset * 8), color, false, 2 * offset)
