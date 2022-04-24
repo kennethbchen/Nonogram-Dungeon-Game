@@ -48,6 +48,7 @@ class MapRegion:
 
 func generate_board():
 	
+	
 	rand.randomize()
 	
 	dungeon_tile_map.clear()
@@ -58,6 +59,25 @@ func generate_board():
 			pass
 			#dungeon_tile_map.set_cellv(Vector2(col, row), Util.world_wall)
 	
+	var floor_bounds = Rect2(0, 0, max_floor_columns, max_floor_rows)
+	
+	
+	random_fill_map(floor_bounds)
+	
+	# Go through the board and apply the wall logic rules a certain number of iterations
+	
+	var iterations = 1
+	
+	for i in range(0, iterations):
+		for col in range(0, max_floor_columns):
+			for row in range(0, max_floor_rows):
+
+				var pos = Vector2(col, row)
+
+				var out = place_wall_logic(pos, 5, 2)
+				dungeon_tile_map.set_cellv(pos, out)
+
+				
 	# http://roguebasin.com/index.php/Basic_BSP_Dungeon_generation
 
 	
@@ -75,6 +95,102 @@ func generate_board():
 	
 	subdivision_data = root
 
+func generate_floor():
+	
+	pass
+
+# http://roguebasin.com/?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
+func random_fill_map(bounds: Rect2):
+	
+	var wall_chance = 0.45
+	var num = 0
+	for col in range(0, bounds.size.x):
+		
+		for row in range(0, bounds.size.y):
+			num = rand.randf_range(0, 1)
+			
+			var pos = Vector2(col, row)
+			
+			if col == 0 or col == max_floor_columns - 1 or row == 0 or row == max_floor_rows -1:
+				dungeon_tile_map.set_cellv(pos, Util.world_wall)
+			elif num < wall_chance:
+				dungeon_tile_map.set_cellv(pos, Util.world_wall)
+			
+
+func place_wall_logic(position: Vector2, n1_threshold, n2_threshold):
+	
+	# Count of walls in a 3x3 area around center
+	var neighbors_1 = get_adjacent_walls(position, Vector2(1,1))
+	
+	# Count of walls in a 5x5 area around center
+	var neighbors_2 = get_adjacent_walls(position, Vector2(2,2))
+	
+	if dungeon_tile_map.get_cellv(position) == Util.world_wall:
+		# If the current position is a wall...
+		
+		if neighbors_1 >= 4:
+			# It stays a wall if it has 4 or more wall neighbors
+			return Util.world_wall
+		elif neighbors_1 < 2:
+			# If it has less than two neighbors, it is made open space
+			return -1
+			
+	else:
+		# If the current position is not a wall..
+		
+		if neighbors_1 >= n1_threshold or neighbors_2 <= n2_threshold:
+			# It can become a wall if it has more than 5 wall neighbors
+			return Util.world_wall
+			
+	
+	# Otherwise, it is not a wall
+	return -1
+
+func is_wall(position: Vector2):
+	
+	# Out of bounds areas are considered walls
+	if not is_in_bounds(position):
+		return true
+	elif dungeon_tile_map.get_cellv(position) == Util.world_wall:
+		return true
+	else:
+		return false
+
+func is_in_bounds(position: Vector2):
+	
+	if position.x < 0 or position.y < 0:
+		return false
+	elif position.x > max_floor_columns - 1 or position. y > max_floor_rows - 1:
+		return false
+	else:
+		return true
+	
+# Takes a position on the dungeon tilemap and returns the number of walls that neighbor it 
+# in any of the surrounding specified tiles
+# the Scope is the size of the area that will be checked for neighbors
+# For example, a scope of (1,1) will check the surrounding 3x3 area from a tile
+func get_adjacent_walls(position: Vector2, scope: Vector2):
+	
+	var start_x = position.x - scope.x
+	var start_y = position.y - scope.y
+	
+	var end_x = position.x + scope.x
+	var end_y = position.y + scope.y
+	
+	var output = 0
+	
+	for col in range (start_x, end_x + 1):
+		
+		for row in range (start_y, end_y + 1):
+			
+			var pos = Vector2(col, row)
+
+			if pos != position:
+				
+				if is_wall(pos):
+					output += 1
+
+	return output
 
 # Takes a MapRegion area and randomly divides it in half horizontally or vertically and returns the subdivided pieces
 # Individual Rect2 units (position or height / width units) represent rooms in the floor
@@ -140,7 +256,8 @@ func subdivide_area(region: MapRegion, subdivisions):
 	
 	subdivide_area(a, subdivisions - 1)
 	subdivide_area(b, subdivisions - 1)
-	
+
+# Recursive function that draws the tree of subdivisions
 func _draw_rec(region: MapRegion, offset):
 	
 	var new_rect = Rect2(region.bounds.position * Util.tile_size * 8, region.bounds.size * Util.tile_size * 8)
@@ -152,9 +269,10 @@ func _draw_rec(region: MapRegion, offset):
 		_draw_rec(region.children[i], offset + 1)
 
 func _draw():
-	
-	if subdivision_data != null:
-		_draw_rec(subdivision_data, 0)
+#
+#	if subdivision_data != null:
+#		_draw_rec(subdivision_data, 0)
+#
 
 	# Draw the dividing lines between rooms
 	for room_col in range(0, max_rooms_x + 1):
@@ -163,6 +281,6 @@ func _draw():
 	for room_row in range(0, max_rooms_y + 1):
 		draw_line(Vector2(0, room_row * room_rows) * Util.tile_size, Vector2(max_floor_columns, room_row * room_rows) * Util.tile_size, Color.aqua)
 
-	
+	pass
 	
 	
