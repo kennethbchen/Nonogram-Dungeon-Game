@@ -20,7 +20,7 @@ var max_floor_rows = Util.max_floor_rows
 var max_rooms_x = Util.max_rooms_x
 var max_rooms_y = Util.max_rooms_y
 
-var max_subdivisions = 4
+var max_subdivisions = 5
 
 var subdivision_data = null
 
@@ -59,15 +59,11 @@ func generate_board():
 			#dungeon_tile_map.set_cellv(Vector2(col, row), Util.world_wall)
 	
 	# http://roguebasin.com/index.php/Basic_BSP_Dungeon_generation
-
-	
-	var bound = Rect2(Vector2(0,0), Vector2(max_rooms_x, max_rooms_y))
 	
 	var root = MapRegion.new(Rect2(Vector2(0,0), Vector2(max_rooms_x, max_rooms_y)))
 
 	
 	var subdivisions = max_subdivisions
-	
 	
 		
 	subdivide_area(root, max_subdivisions)
@@ -80,18 +76,33 @@ func generate_room(region: MapRegion):
 	
 	# The bounds of the region in tilemap units
 	# The multiplication by Util stuff is transforming the region variable's map_region units to tilemap units
-	var tile_bounds = Rect2( region.bounds.position * Vector2(Util.room_columns, Util.room_rows), 	region.bounds.end * Vector2(Util.room_columns, Util.room_rows))
+	var tile_bounds = Rect2( region.bounds.position * Vector2(Util.room_columns, Util.room_rows), region.bounds.size * Vector2(Util.room_columns, Util.room_rows))
 	
-	var room_bounds = Rect2(tile_bounds.position, Vector2(4,4))
+	# The room is a random size withing the bounds of the region
+	var room_width = rand.randi_range((tile_bounds.size.x / 2) + 1, tile_bounds.size.x)
+	var room_height = rand.randi_range((tile_bounds.size.y / 2) + 1, tile_bounds.size.y)
+	
+	# The position of the room is in random places where it fits given the size
+	var room_x = rand.randi_range(0, tile_bounds.size.x - room_width)
+	var room_y = rand.randi_range(0, tile_bounds.size.y - room_height)
+	
+	var room_bounds = Rect2(tile_bounds.position + Vector2(room_x, room_y), Vector2(room_width, room_height))
+	
+	
+	var room_inside = room_bounds.grow(-1)
+	
+	for col in range(room_bounds.position.x, room_bounds.end.x):
 
-	print(room_bounds)
-	
-	for col in range(tile_bounds.position.x, tile_bounds.size.x):
-		for row in range(tile_bounds.position.y, tile_bounds.size.y):
+		for row in range(room_bounds.position.y, room_bounds.end.y):
 			
 			var pos = Vector2(col, row)
-			if room_bounds.has_point(pos):
+			
+			# Only make make a hollow rectangle around the room
+			if not room_inside.has_point(pos):
 				dungeon_tile_map.set_cellv(pos, Util.world_wall)
+	
+
+	
 	
 	
 func print_node(region: MapRegion):
@@ -200,6 +211,7 @@ func _draw():
 		draw_line(Vector2(room_col * room_columns, 0 ) * Util.tile_size, Vector2(room_col * room_columns, max_floor_rows) * Util.tile_size, Color.aqua)
 
 	for room_row in range(0, max_rooms_y + 1):
+		
 		draw_line(Vector2(0, room_row * room_rows) * Util.tile_size, Vector2(max_floor_columns, room_row * room_rows) * Util.tile_size, Color.aqua)
 
 	
