@@ -26,8 +26,8 @@ onready var enemies_node = $"../Enemies"
 
 
 
-var columns = 0
-var rows = 0
+var columns = Util.max_floor_columns
+var rows = Util.max_floor_rows
 
 var tile_size = 0
 

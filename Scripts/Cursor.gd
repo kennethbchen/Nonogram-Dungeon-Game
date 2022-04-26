@@ -76,14 +76,14 @@ func set_position(tilemap_pos: Vector2):
 	# Also make the horizontal and vertical guides
 	effect_tilemap.clear()
 	
-	for col in range (0, Util.board_columns):
+	for col in range (0, Util.max_floor_columns):
 		
 		if col != tilemap_position.x:
 			effect_tilemap.set_cellv(Vector2(col, tilemap_position.y), Util.nono_horiz_guide)
 			pass
 		pass
 		
-	for row in range(0, Util.board_rows):
+	for row in range(0, Util.max_floor_rows):
 		
 		if row != tilemap_position.y:
 			effect_tilemap.set_cellv(Vector2(tilemap_position.x, row), Util.nono_verti_guide)
