@@ -25,13 +25,6 @@ var max_subdivisions = 5
 # Subdivision Data purely for drawing debug graphics to the screen
 var subdivision_data = null
 
-# Astar pathfinding is used to connect the rooms
-var astar = AStar2D.new()
-
-# AStar costs
-# Heavily discourage going through walls unless absolutely necessary
-var wall_cost = 20.0
-var empty_cost = 1.0
 
 # Array of Rect2Ds that represent the regions of rooms in the floor
 # These room bounds include the wall that surrounds the empty space within the room
@@ -112,35 +105,12 @@ func generate_board():
 	
 	dungeon_tile_map.clear()
 	
-	astar.clear()
-	astar.reserve_space(max_floor_columns * max_floor_rows)
-	
 	for col in range(0, max_floor_columns):
 		for row in range(0, max_floor_rows):
 			
 			var point = Vector2(col, row)
 			# Fill in the board with walls
 			dungeon_tile_map.set_cellv(point, Util.world_wall)
-			
-			# Also add every point on the board valid for pathfinding
-			astar.add_point(_id(point), point, wall_cost)
-
-	# From PathfindingController
-	# Go through all of the points in astar and make connections between them
-	for point_id in astar.get_points():
-		# Check each neighboring cell for each cell
-		# Right Left Up Down
-		var neighbors = [Vector2(1,0), Vector2(-1,0), Vector2(0,-1), Vector2(0,1)]
-		
-		for neighbor in neighbors:
-			
-			var next = astar.get_point_position(point_id) + neighbor
-			
-			# Connect points if they exist
-			if astar.has_point(_id(next)) and next.x >= 0 and next.y >= 0:
-				# Make sure next coordinates are only positive because
-				# the Cantor Pairing Function only maps one to one for positive integers
-				astar.connect_points(point_id, _id(next), true)
 	
 	# http://roguebasin.com/index.php/Basic_BSP_Dungeon_generation
 	
@@ -210,9 +180,7 @@ func create_room(region: MapRegion):
 			# Carve out the room
 			if room_inside.has_point(pos):
 				dungeon_tile_map.set_cellv(pos, -1)
-				
-			# The new room also needs to be reflected in the astar map
-			astar.add_point(_id(pos), pos, empty_cost)
+			
 	
 	# The resulting room is also stored in the region's room_bounds variable
 	region.room_bounds = room_bounds
@@ -250,10 +218,6 @@ func create_hall(regionA: Rect2, regionB: Rect2):
 		
 		dungeon_tile_map.set_cellv(Vector2(x,y), -1)
 		pass
-
-		
-		
-	
 
 # Takes a region in tilemap coordinates and draws walls in that area
 func draw_rectangle(region: Rect2):
@@ -326,12 +290,6 @@ func subdivide_area(region: MapRegion, subdivisions):
 	
 	subdivide_area(a, subdivisions - 1)
 	subdivide_area(b, subdivisions - 1)
-
-# Cantor Pairing Function to map 2D tilemap space to 1D ID space for astar pathfinding
-func _id(point: Vector2):
-	var a = point.x
-	var b = point.y
-	return (a + b) * (a + b + 1) / 2 + b
 
 func _draw_rec(region: MapRegion, offset):
 	
