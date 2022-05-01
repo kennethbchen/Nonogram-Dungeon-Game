@@ -8,8 +8,6 @@ extends Node
 
 onready var board_generator = $BoardGenerator
 
-onready var dungeon_generator = $DungeonGenerator
-
 # Tilemap that represents the nonogram board
 # Correctly marked tiles on the board will hide to reveal the WorldTileMap
 onready var nonogram_tile_map = $"/root/Main Scene/Tilemaps/NonogramTileMap"
@@ -37,8 +35,6 @@ func _ready():
 # Generates the nonogram board and solution
 # The World layer of the board is within the world_tilemap itself
 func init_board():
-	#dungeon_generator.generate_board()
-	
 	var data = board_generator.generate_board()
 	pass
 	

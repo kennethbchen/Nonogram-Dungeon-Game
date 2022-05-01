@@ -1,17 +1,17 @@
 extends Node2D
 
 """
-Handles creation of the game boards
+Handles creation of the floors
 """
 # Tilemap that represents the nonogram board
 # Correctly marked tiles on the board will hide to reveal the WorldTileMap
-onready var nonogram_tile_map = $"/root/Main Scene/Tilemaps/NonogramTileMap"
+onready var nonogram_tilemap = $"/root/Main Scene/Tilemaps/NonogramTileMap"
 
 # Tilemap that represents the solution of the nonogram board
 # with proper coloring or marking out
-onready var solution_tile_map = $"/root/Main Scene/Tilemaps/SolutionTileMap"
+onready var solution_tilemap = $"/root/Main Scene/Tilemaps/SolutionTileMap"
 
-onready var world_tile_map = $"/root/Main Scene/Tilemaps/WorldTileMap"
+onready var dungeon_tilemap = $"/root/Main Scene/Tilemaps/WorldTileMap"
 
 onready var pathfinder = $"../../PathfindingController"
 
@@ -41,8 +41,7 @@ var rng = RandomNumberGenerator.new()
 # Use Open Simplex Noise to generate random picross boards
 var noise = OpenSimplexNoise.new()
 
-
-# The solution to the current board
+# The solution to the current nonogram
 # It's assumed that the solution is at least rectangular, if not square
 var solution = []
 
@@ -53,64 +52,47 @@ var hint = []
 # The format of the labels is the same as the hint array
 var hint_labels = []
 
-var columns = Util.max_floor_columns
-var rows = Util.max_floor_rows
-
-var tile_size = Util.tile_size
-
-# Total number of dungeon boards in the tilemap
-var dungeon_boards = 8
-
-# The index of the last selected dungeon boards
-# Used to prevent repeats back to back
-var last_dungeon = -1
-
-
-""""""
-
-onready var dungeon_tile_map = $"/root/Main Scene/Tilemaps/WorldTileMap"
-
-var rand = RandomNumberGenerator.new()
+# The max size of a dungeon floor measured in individual tiles
+var max_floor_columns = Util.max_floor_columns
+var max_floor_rows = Util.max_floor_rows
 
 # The max size of a room measured in individual tiles
 var room_columns = Util.room_columns
 var room_rows = Util.room_rows
 
-# The max size of a dungeon floor measured in individual tiles
-var max_floor_columns = Util.max_floor_columns
-var max_floor_rows = Util.max_floor_rows
-
 # The maximum amount of rooms allowed in the horizontal or vertical direction
+# For example, each floor is a collection of x by y rooms
 var max_rooms_x = Util.max_rooms_x
 var max_rooms_y = Util.max_rooms_y
 
+var tile_size = Util.tile_size
+
+# Amount of subdivisions that the board generator will perform
 var max_subdivisions = 5
 
 # Subdivision Data purely for drawing debug graphics to the screen
 var subdivision_data = null
 
-
 # Array of MapRegions that contain a room
 var room_regions = []
 
 # Generates the nonogram board and solution based on the input data
-# The World layer of the board is within the world_tilemap itself
-# Returns an array indicating the size of the newly generated board:
-# array[0] = number of columns
-# array[1] = number of rows
+# Generates the dungeon board procedurally
 func generate_board():
+	
+	# ------------ Setup ------------
 	rng.randomize()
 	
+	# Configure noise generator for nonogram board generation
 	noise.seed = rng.randi()
 	noise.octaves = 8
 	noise.period = 3.2
 	noise.persistence = 0.4
 	
-	
-	# Clear boards first
-	nonogram_tile_map.clear()
-	world_tile_map.clear()
-	solution_tile_map.clear()
+	# Clear boards
+	nonogram_tilemap.clear()
+	dungeon_tilemap.clear()
+	solution_tilemap.clear()
 	
 	# Clear all enemies
 	for child in get_tree().get_nodes_in_group("enemy"):
@@ -119,40 +101,43 @@ func generate_board():
 	# Also clear all entities
 	for child in get_tree().get_nodes_in_group("entity"):
 		child.free()
-
-	solution = _generate_nonogram_board(Util.max_floor_columns, Util.max_floor_rows)
 	
-	var entrypoints = _generate_board()
-	player.position = world_tile_map.map_to_world(entrypoints[0]) + Util.tile_offset
+	# ------------ Generate Nonogram Board ------------
+	solution = _generate_nonogram_board(Util.max_floor_columns, Util.max_floor_rows)
 	
 	# Generate the hint to display based on the solution of the board
 	hint = _generate_hint(solution)
 
 	hint_labels = create_labels(hint, hint_labels)
 	
-	# Generate NonogramTileMap tiles based on board dimensions
-	for col in columns:
+	# Fills the nonogram tilemap and the solution tilemap with appropriate tiles
+	for col in max_floor_columns:
 		
-		for row in rows:
+		for row in max_floor_rows:
 			
 			# Set the nonogram tilemap to a blank tile
-			nonogram_tile_map.set_cell(col, row, 0)
+			nonogram_tilemap.set_cell(col, row, 0)
 			
 			# Set the corresponding solution for the SolutionTileMap based on solution
 			# index is needed because of a bad translation between solution value (0 = not colored, 1 = colored)
 			# and tilemap id value (1 = not colored, 2 = colored)
 			var index
 			if solution[row][col] == 0:
-				index = 1
+				index = Util.nono_color
 			else:
-				index = 2
+				index = Util.nono_cross
 				
-			solution_tile_map.set_cell(col, row, index)
+			solution_tilemap.set_cell(col, row, index)
+			
+	# ------------ Generate Dungeon Board ------------
+	var entrypoints = _generate_dungeon()
+	player.position = dungeon_tilemap.map_to_world(entrypoints[0]) + Util.tile_offset
 	
+
 	# Update the pathfinder
-	pathfinder.calculate_paths(rows, columns)
+	pathfinder.calculate_paths(max_floor_rows, max_floor_columns)
 	
-	return [columns, rows]
+	return entrypoints
 			
 # Takes a board solution and generates an array that contains the hints for that board
 # The returned array is an array[2][x] of strings where:
@@ -288,7 +273,7 @@ func create_labels(hint, label_array):
 		
 		# Do some horrible math to generate label for left side of board
 		label.set_size(Vector2(16, 64))
-		label.set_position(nonogram_tile_map.get_global_position() - Vector2(-nonogram_tile_map.map_to_world(Vector2(col_id, 0))[0], 64))
+		label.set_position(nonogram_tilemap.get_global_position() - Vector2(-nonogram_tilemap.map_to_world(Vector2(col_id, 0))[0], 64))
 		label.add_font_override("font", hint_font)
 		label.align = HALIGN_CENTER
 		label.valign = VALIGN_BOTTOM
@@ -307,7 +292,7 @@ func create_labels(hint, label_array):
 				
 		# Do some horrible math to generate label for left side of board
 		label.set_size(Vector2(64, 0))
-		label.set_position(nonogram_tile_map.get_global_position() - Vector2(66, -nonogram_tile_map.map_to_world(Vector2(0,row_id))[1]))
+		label.set_position(nonogram_tilemap.get_global_position() - Vector2(66, -nonogram_tilemap.map_to_world(Vector2(0,row_id))[1]))
 		label.add_font_override("font", hint_font)
 		label.align = HALIGN_RIGHT
 		label.valign = VALIGN_BOTTOM
@@ -322,15 +307,15 @@ func create_labels(hint, label_array):
 	return output
 
 # Generates a random nonogram board using a noise texture
-func _generate_nonogram_board(columns, rows):
+func _generate_nonogram_board(max_floor_columns, max_floor_rows):
 	
 	var output = []
 	
 	var row_data = []
-	for col in range(0, columns):
+	for col in range(0, max_floor_columns):
 		
 		row_data = []
-		for row in range(0, rows):
+		for row in range(0, max_floor_rows):
 			
 			# The noise determines the value of that cell in the solution
 			var val = noise.get_noise_2d(col,row)
@@ -347,64 +332,6 @@ func _generate_nonogram_board(columns, rows):
 	
 	
 	return output
-
-
-
-# Picks a random Dungeon board to generate
-func _pickDungeonBoard():
-	# Pick a random board
-	var rand = rng.randi_range(0, dungeon_boards - 1)
-	if rand == last_dungeon:
-		rand = (rand + 1) % dungeon_boards
-
-
-	last_dungeon = rand
-		
-	var start = rand * columns
-	
-	for row in range(0, rows):
-		for col in range (0, columns):
-			
-			var tile_coord = Vector2(col + start, row)
-			var tile_id = dungeon_layouts.get_cellv(tile_coord)
-			var tile_offset = Vector2(tile_size / 2, tile_size / 2)
-			
-			var output_coord = Vector2(col , row)
-			
-			match (tile_id):
-				Util.indi_player:
-					player.position = world_tile_map.map_to_world(output_coord) + tile_offset
-				Util.indi_health:
-					# Pick between spawning a health item or an energy item
-					var num = rng.randi_range(0,1)
-					var obj
-					match(num):
-						0:
-							obj = health_entity.instance()
-						1:
-							obj = energy_entity.instance()
-					
-					obj.position = world_tile_map.map_to_world(output_coord) + tile_offset
-					entities_node.add_child(obj)
-				Util.indi_door:
-					var obj = door_entity.instance()
-					obj.position = world_tile_map.map_to_world(output_coord) + tile_offset
-					entities_node.add_child(obj)
-				Util.indi_stairs:
-					var obj = stairs_entity.instance()
-					obj.position = world_tile_map.map_to_world(output_coord) + tile_offset
-					entities_node.add_child(obj)
-				Util.indi_enemy:
-					var obj = enemy_entity.instance()
-					obj.position = world_tile_map.map_to_world(output_coord) + tile_offset
-					enemies_node.add_child(obj)
-				Util.indi_trap:
-					var obj = trap_entity.instance()
-					obj.position = world_tile_map.map_to_world(output_coord) + tile_offset
-					entities_node.add_child(obj)
-				Util.indi_wall:
-					world_tile_map.set_cellv(output_coord, Util.world_wall)	
-		
 
 # Class that represents a region of the map which may or may not contain a room
 class MapRegion:
@@ -493,37 +420,26 @@ class MapRegion:
 		else:
 			return b
 		
+# Generate a dungeon based on BSP
+# http://roguebasin.com/index.php/Basic_BSP_Dungeon_generation
+func _generate_dungeon():
 
-func _generate_board():
-	
-	rand.randomize()
-	
-	dungeon_tile_map.clear()
 	room_regions = []
 	
+	# Fill the dungeon tilemap with walls
 	for col in range(0, max_floor_columns):
 		for row in range(0, max_floor_rows):
-			
 			var point = Vector2(col, row)
-			# Fill in the board with walls
-			dungeon_tile_map.set_cellv(point, Util.world_wall)
-	
-	# http://roguebasin.com/index.php/Basic_BSP_Dungeon_generation
+			
+			dungeon_tilemap.set_cellv(point, Util.world_wall)
 	
 	var root = MapRegion.new(Rect2(Vector2(0,0), Vector2(max_rooms_x, max_rooms_y)))
-
 	
-	var subdivisions = max_subdivisions
-	
-		
 	subdivide_area(root, max_subdivisions)
 	generate_rooms(root)
 	
 	var entrypoints = place_entities(room_regions)
 
-	for i in range(0, room_regions.size()):
-		#print(room_regions[i].get_room_area().position)
-		pass
 	subdivision_data = root
 	
 	return entrypoints
@@ -535,12 +451,12 @@ func _generate_board():
 func place_entities(rooms):
 	
 	# Pick a random room to be the starting room
-	var start_room = rooms[rand.randi_range(0, rooms.size() - 1)]
+	var start_room = rooms[rng.randi_range(0, rooms.size() - 1)]
 	
 	# The end room is a randrom room that is not the start room
 	var end_room
 	while end_room == null or end_room == start_room:
-		end_room = rooms[rand.randi_range(0, rooms.size() - 1)]
+		end_room = rooms[rng.randi_range(0, rooms.size() - 1)]
 	
 	
 	var start_position = start_room.rand_in_room()
@@ -579,15 +495,14 @@ func create_room(region: MapRegion):
 	var tile_bounds = region.get_tile_bounds()
 	
 	# The room is a random size withing the bounds of the region
-	var room_width = rand.randi_range((tile_bounds.size.x / 2) + 1, tile_bounds.size.x)
-	var room_height = rand.randi_range((tile_bounds.size.y / 2) + 1, tile_bounds.size.y)
+	var room_width = rng.randi_range((tile_bounds.size.x / 2) + 1, tile_bounds.size.x)
+	var room_height = rng.randi_range((tile_bounds.size.y / 2) + 1, tile_bounds.size.y)
 	
 	# The position of the room is in random places where it fits given the size
-	var room_x = rand.randi_range(0, tile_bounds.size.x - room_width)
-	var room_y = rand.randi_range(0, tile_bounds.size.y - room_height)
+	var room_x = rng.randi_range(0, tile_bounds.size.x - room_width)
+	var room_y = rng.randi_range(0, tile_bounds.size.y - room_height)
 	
 	var room_bounds = Rect2(tile_bounds.position + Vector2(room_x, room_y), Vector2(room_width, room_height))
-	
 	
 	var room_inside = room_bounds.grow(-1)
 	
@@ -599,7 +514,7 @@ func create_room(region: MapRegion):
 			
 			# Carve out the room
 			if room_inside.has_point(pos):
-				dungeon_tile_map.set_cellv(pos, -1)
+				dungeon_tilemap.set_cellv(pos, -1)
 			
 	
 	# The resulting room is also stored in the region's room_bounds variable
@@ -615,10 +530,8 @@ func create_hall(regionA: Rect2, regionB: Rect2):
 	var inner_a = regionA.grow(-2)
 	var inner_b = regionB.grow(-2)
 	# pick one random point inside each room
-	var point_1 = Vector2(rand.randi_range(inner_a.position.x, inner_a.end.x), rand.randi_range(inner_a.position.y, inner_a.end.y))
-	var point_2 = Vector2(rand.randi_range(inner_b.position.x, inner_b.end.x), rand.randi_range(inner_b.position.y, inner_b.end.y))
-	
-
+	var point_1 = Vector2(rng.randi_range(inner_a.position.x, inner_a.end.x), rng.randi_range(inner_a.position.y, inner_a.end.y))
+	var point_2 = Vector2(rng.randi_range(inner_b.position.x, inner_b.end.x), rng.randi_range(inner_b.position.y, inner_b.end.y))
 	
 	var x = point_1.x
 	var y = point_1.y
@@ -636,21 +549,14 @@ func create_hall(regionA: Rect2, regionB: Rect2):
 		elif y > point_2.y:
 			y -= 1
 		
-		dungeon_tile_map.set_cellv(Vector2(x,y), -1)
+		dungeon_tilemap.set_cellv(Vector2(x,y), -1)
 		pass
-
-# Takes a region in tilemap coordinates and draws walls in that area
-func draw_rectangle(region: Rect2):
-	
-	for col in range(region.position.x, region.end.x):
-		for row in range(region.position.y, region.end.y):
-			dungeon_tile_map.set_cellv(Vector2(col, row), Util.nono_blank)
 
 # Takes a MapRegion area and randomly divides it in half horizontally or vertically and returns the subdivided pieces
 # Individual Rect2 units (position or height / width units) represent rooms in the floor
 func subdivide_area(region: MapRegion, subdivisions):
 	
-	
+	# Don't subdivide anymore
 	if subdivisions == 0:
 		return
 		
@@ -673,7 +579,7 @@ func subdivide_area(region: MapRegion, subdivisions):
 		# Then the split direction must be horizontal
 		split_direction = 0
 	else:
-		split_direction = rand.randi_range(0,1)
+		split_direction = rng.randi_range(0,1)
 	
 	# When the board is split, it divides it into an a section and a b section
 	# If the dividing line is horizontal, then a is the upper subdivision and b is the lower
@@ -681,12 +587,13 @@ func subdivide_area(region: MapRegion, subdivisions):
 	var a: MapRegion = null
 	var b: MapRegion = null
 	
+	# Vertical / Horizontal position of the subdivision, depending on split_direction
 	var split_position = 0
 	
 	if split_direction == 0:
 		# Horizontal line, choose vertical position for that line
 		
-		split_position = rand.randi_range(min(region.bounds.size.y - 1, region.bounds.position.y + 1), max(region.bounds.size.y - 1, 1))
+		split_position = rng.randi_range(min(region.bounds.size.y - 1, region.bounds.position.y + 1), max(region.bounds.size.y - 1, 1))
 		
 		# Assign subdivision sections
 		a = MapRegion.new(Rect2(region.bounds.position, Vector2(region.bounds.size.x, region.bounds.size.y - (region.bounds.size.y - split_position) )))
@@ -696,7 +603,7 @@ func subdivide_area(region: MapRegion, subdivisions):
 	elif split_direction == 1:
 		# Vertical line, choose horizontal position for that line
 		
-		split_position = rand.randi_range(min(region.bounds.size.x - 1, region.bounds.position.x + 1), max(region.bounds.size.x - 1, 1))
+		split_position = rng.randi_range(min(region.bounds.size.x - 1, region.bounds.position.x + 1), max(region.bounds.size.x - 1, 1))
 		
 		# Assign subdivision sections
 		a = MapRegion.new(Rect2(region.bounds.position, Vector2(region.bounds.size.x - (region.bounds.size.x - split_position), region.bounds.size.y)))
