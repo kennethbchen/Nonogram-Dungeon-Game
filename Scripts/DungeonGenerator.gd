@@ -27,6 +27,11 @@ var subdivision_data = null
 # Astar pathfinding is used to connect the rooms
 var astar = AStar2D.new()
 
+# AStar costs
+# Heavily discourage going through walls unless absolutely necessary
+var wall_cost = 5.0
+var empty_cost = 1.0
+
 # Class that represents 
 class MapRegion:
 	
@@ -111,8 +116,8 @@ func generate_board():
 			dungeon_tile_map.set_cellv(point, Util.world_wall)
 			
 			# Also add every point on the board valid for pathfinding
-			astar.add_point(_id(point), point, 1)
-	
+			astar.add_point(_id(point), point, wall_cost)
+
 	# From PathfindingController
 	# Go through all of the points in astar and make connections between them
 	for point_id in astar.get_points():
@@ -154,7 +159,7 @@ func generate_rooms(root: MapRegion):
 			generate_rooms(root.child_b)
 		
 		if root.child_a != null and root.child_b != null:
-			
+				
 			create_hall(root.child_a.get_room_in_children(), root.child_b.get_room_in_children())
 	else:
 		create_room(root)
@@ -188,9 +193,15 @@ func create_room(region: MapRegion):
 			# Carve out the room
 			if room_inside.has_point(pos):
 				dungeon_tile_map.set_cellv(pos, -1)
+				
+			# The new room also needs to be reflected in the astar map
+			astar.add_point(_id(pos), pos, empty_cost)
 	
 	# The resulting room is also stored in the region's room_bounds variable
 	region.room_bounds = room_bounds
+	
+	
+	
 
 	
 # Takes two regions and connects their rooms together
@@ -212,8 +223,16 @@ func create_hall(regionA: Rect2, regionB: Rect2):
 	var path = astar.get_point_path(_id(point_1), _id(point_2))
 	
 	while path.size() > 0:
+		
+		# Carve out the path
 		dungeon_tile_map.set_cellv(path[0], -1)
+		
+		# Also update the cost of this path for astar pathfinding
+		astar.add_point(_id(path[0]), path[0], empty_cost)
+		
 		path.remove(0)
+		
+		
 	
 
 # Takes a region in tilemap coordinates and draws walls in that area
