@@ -37,10 +37,9 @@ func _ready():
 # Generates the nonogram board and solution
 # The World layer of the board is within the world_tilemap itself
 func init_board():
-	dungeon_generator.generate_board()
-	#var data = board_generator.generate_board()
-	#columns = data[0]
-	#rows = data[1]
+	#dungeon_generator.generate_board()
+	
+	var data = board_generator.generate_board()
 	pass
 	
 	

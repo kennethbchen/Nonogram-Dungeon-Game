@@ -36,7 +36,7 @@ onready var enemy_entity = load("res:///Scenes/Enemy.tscn")
 onready var stairs_entity = load("res:///Scenes/Stairs.tscn")
 onready var trap_entity = load("res:///Scenes/Trap.tscn")
 
-
+onready var dungeon_generator = $"../DungeonGenerator"
 
 var rng = RandomNumberGenerator.new()
 
@@ -55,8 +55,8 @@ var hint = []
 # The format of the labels is the same as the hint array
 var hint_labels = []
 
-var columns = Util.board_columns
-var rows = Util.board_rows
+var columns = Util.max_floor_columns
+var rows = Util.max_floor_rows
 
 var tile_size = Util.tile_size
 
@@ -94,9 +94,10 @@ func generate_board():
 	for child in get_tree().get_nodes_in_group("entity"):
 		child.free()
 
-	solution = _generate_nonogram_board(columns, rows)
-	_pickDungeonBoard()
+	solution = _generate_nonogram_board(Util.max_floor_columns, Util.max_floor_rows)
 	
+	var entrypoints = dungeon_generator.generate_board()
+	player.position = world_tile_map.map_to_world(entrypoints[0]) + Util.tile_offset
 	
 	# Generate the hint to display based on the solution of the board
 	hint = _generate_hint(solution)
@@ -315,7 +316,7 @@ func _generate_nonogram_board(columns, rows):
 				row_data.append(0)
 			
 		output.append(row_data)
-		print(row_data)
+		#print(row_data)
 	
 	
 	

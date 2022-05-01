@@ -26,9 +26,7 @@ var max_subdivisions = 5
 var subdivision_data = null
 
 
-# Array of Rect2Ds that represent the regions of rooms in the floor
-# These room bounds include the wall that surrounds the empty space within the room
-
+# Array of MapRegions that contain a room
 var room_regions = []
 
 # Class that represents a region of the map which may or may not contain a room
@@ -60,7 +58,10 @@ class MapRegion:
 		return Rect2(bounds.position * Vector2(Util.room_columns, Util.room_rows), bounds.size * Vector2(Util.room_columns, Util.room_rows))
 	
 	# The inner room bounds is simply the room bounds but shrunk 1 unit on each side
-	func get_inner_room_bounds():
+	func get_room_area():
+		if not has_room():
+			return null
+			
 		return room_bounds.grow(-1)
 	
 	func has_room():
@@ -68,7 +69,15 @@ class MapRegion:
 			return false
 		else:
 			return true
-
+	
+	# Returns a Vector2 representing a random point within the inner room bounds of the room
+	func rand_in_room():
+		
+		if not has_room():
+			return null
+		
+		return Vector2(rng.randi_range(room_bounds.position.x, room_bounds.end.x), rng.randi_range(room_bounds.position.y, room_bounds.end.y))
+		
 	# If this region has a room (room_bound), then return it
 	# Otherwise, go through the children until you get to a room
 	# https://gamedevelopment.tutsplus.com/tutorials/how-to-use-bsp-trees-to-generate-game-maps--gamedev-12268
@@ -123,10 +132,34 @@ func generate_board():
 	subdivide_area(root, max_subdivisions)
 	generate_rooms(root)
 	
-	for i in range(0, room_regions.size()):
-		print(room_regions[i].room_bounds)
+	var entrypoints = place_entities(room_regions)
+
 	
 	subdivision_data = root
+	
+	return entrypoints
+
+# Places entities in the room_regions
+# Returns an array where
+# Index 0 is the player's starting position
+# Index 1 is the exit
+func place_entities(rooms):
+	
+	# Pick a random room to be the starting room
+	var start_room = rooms[rand.randi_range(0, rooms.size() - 1)]
+	
+	# The end room is a randrom room that is not the start room
+	var end_room
+	while end_room == null or end_room == start_room:
+		end_room = rooms[rand.randi_range(0, rooms.size() - 1)]
+		
+	print(start_room.get_room_area())
+	print(start_room.get_room_area().end)
+	
+	
+	var start_position = start_room.rand_in_room()
+	var end_position = end_room.rand_in_room()
+	return [start_position, end_position]
 
 # Recursive Function
 # Takes a root node and connects its children together

@@ -52,6 +52,7 @@ cell_size = Vector2( 16, 16 )
 format = 1
 
 [node name="NonogramTileMap" type="TileMap" parent="Tilemaps"]
+visible = false
 z_index = 2
 tile_set = ExtResource( 9 )
 cell_size = Vector2( 16, 16 )
@@ -64,6 +65,7 @@ cell_size = Vector2( 16, 16 )
 format = 1
 
 [node name="SolutionTileMap" type="TileMap" parent="Tilemaps"]
+visible = false
 tile_set = ExtResource( 9 )
 cell_size = Vector2( 16, 16 )
 format = 1

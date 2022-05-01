@@ -32,7 +32,7 @@ func calculate_paths(rows, columns):
 	_load_connections()
 	
 	astar_visualizer.offset = Vector2(8,8)
-	astar_visualizer.visualize(astar)
+	#astar_visualizer.visualize(astar)
 	
 # Go though all of the entities and compute a list of their positions (tilemap-space)
 func _load_entities():
