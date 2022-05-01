@@ -37,7 +37,6 @@ current = true
 zoom = Vector2( 1.5, 1.5 )
 
 [node name="Player" parent="." instance=ExtResource( 10 )]
-position = Vector2( 40, 40 )
 
 [node name="AStarVisualizer" type="Node2D" parent="."]
 script = ExtResource( 11 )

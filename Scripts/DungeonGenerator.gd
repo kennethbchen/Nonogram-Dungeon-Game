@@ -47,7 +47,11 @@ class MapRegion:
 	# TODO, is there a better way to do this without giving every node a RNG?
 	var rng = RandomNumberGenerator.new()
 	
+	
 	func _init(rect, new_parent = null):
+		
+		rng.randomize()
+		
 		bounds = rect
 		
 		if new_parent != null:
@@ -76,7 +80,12 @@ class MapRegion:
 		if not has_room():
 			return null
 		
-		return Vector2(rng.randi_range(room_bounds.position.x, room_bounds.end.x), rng.randi_range(room_bounds.position.y, room_bounds.end.y))
+		# Rect2.end appears to be one larger in both dimensions than I expect
+		# I think this is because the position is expected to be a top left point and
+		# the end is supposed to be a bottom left point
+		# Adjust for this by subtracting 1 from each end dimension
+		print([get_room_area().position.x, get_room_area().end.x - 1])
+		return Vector2(rng.randi_range(get_room_area().position.x, get_room_area().end.x - 1), rng.randi_range(get_room_area().position.y, get_room_area().end.y - 1))
 		
 	# If this region has a room (room_bound), then return it
 	# Otherwise, go through the children until you get to a room
@@ -113,6 +122,7 @@ func generate_board():
 	rand.randomize()
 	
 	dungeon_tile_map.clear()
+	room_regions = []
 	
 	for col in range(0, max_floor_columns):
 		for row in range(0, max_floor_rows):
@@ -134,7 +144,9 @@ func generate_board():
 	
 	var entrypoints = place_entities(room_regions)
 
-	
+	for i in range(0, room_regions.size()):
+		#print(room_regions[i].get_room_area().position)
+		pass
 	subdivision_data = root
 	
 	return entrypoints
@@ -152,13 +164,11 @@ func place_entities(rooms):
 	var end_room
 	while end_room == null or end_room == start_room:
 		end_room = rooms[rand.randi_range(0, rooms.size() - 1)]
-		
-	print(start_room.get_room_area())
-	print(start_room.get_room_area().end)
 	
 	
 	var start_position = start_room.rand_in_room()
 	var end_position = end_room.rand_in_room()
+	print(start_position)
 	return [start_position, end_position]
 
 # Recursive Function
