@@ -22,6 +22,7 @@ var max_rooms_y = Util.max_rooms_y
 
 var max_subdivisions = 5
 
+# Subdivision Data purely for drawing debug graphics to the screen
 var subdivision_data = null
 
 # Astar pathfinding is used to connect the rooms
@@ -29,10 +30,15 @@ var astar = AStar2D.new()
 
 # AStar costs
 # Heavily discourage going through walls unless absolutely necessary
-var wall_cost = 5.0
+var wall_cost = 20.0
 var empty_cost = 1.0
 
-# Class that represents 
+# Array of Rect2Ds that represent the regions of rooms in the floor
+# These room bounds include the wall that surrounds the empty space within the room
+
+var room_regions = []
+
+# Class that represents a region of the map which may or may not contain a room
 class MapRegion:
 	
 	# The bounds of the region in room coordinates
@@ -107,6 +113,7 @@ func generate_board():
 	dungeon_tile_map.clear()
 	
 	astar.clear()
+	astar.reserve_space(max_floor_columns * max_floor_rows)
 	
 	for col in range(0, max_floor_columns):
 		for row in range(0, max_floor_rows):
@@ -146,8 +153,13 @@ func generate_board():
 	subdivide_area(root, max_subdivisions)
 	generate_rooms(root)
 	
+	for i in range(0, room_regions.size()):
+		print(room_regions[i].room_bounds)
+	
 	subdivision_data = root
 
+# Recursive Function
+# Takes a root node and connects its children together
 func generate_rooms(root: MapRegion):
 	
 	if root.child_a != null or root.child_b != null:
@@ -163,8 +175,13 @@ func generate_rooms(root: MapRegion):
 			create_hall(root.child_a.get_room_in_children(), root.child_b.get_room_in_children())
 	else:
 		create_room(root)
+		
+		# Add this region to the list of all MapRegions with rooms
+		room_regions.append(root)
 
-
+# Takes a Map Region and randomly carves out (creates empty space) a room of random size and position
+# that is within the bounds of that region
+# The room is carved out and its bounds is stored within the given map region
 func create_room(region: MapRegion):
 	
 	# The bounds of the region in tilemap units
@@ -199,10 +216,6 @@ func create_room(region: MapRegion):
 	
 	# The resulting room is also stored in the region's room_bounds variable
 	region.room_bounds = room_bounds
-	
-	
-	
-
 	
 # Takes two regions and connects their rooms together
 func create_hall(regionA: Rect2, regionB: Rect2):
@@ -241,22 +254,6 @@ func draw_rectangle(region: Rect2):
 	for col in range(region.position.x, region.end.x):
 		for row in range(region.position.y, region.end.y):
 			dungeon_tile_map.set_cellv(Vector2(col, row), Util.nono_blank)
-
-# Takes a map region and traverses it recursively
-# For each node at a specified level, the given funciton is called with those nodes as input
-# A negative level input will call the function on each leaf
-func _call_at_level(region_tree: MapRegion, level: int, function: FuncRef):
-	
-	# If level is 0, then this region is the target
-	# If the level is negative and there are no children, this node is a leaf
-	# Call the function
-	if level == 0 or (level < 0 and region_tree.child_a == null and region_tree.child_b == null):
-		
-		function.call_func(region_tree)
-	else:
-		# Traverse a level deeper
-		for i in range(0, region_tree.children.size()):
-			_call_at_level(region_tree.children[i], level - 1, function)
 
 # Takes a MapRegion area and randomly divides it in half horizontally or vertically and returns the subdivided pieces
 # Individual Rect2 units (position or height / width units) represent rooms in the floor
@@ -347,7 +344,7 @@ func _draw_rec(region: MapRegion, offset):
 func _draw():
 	
 	if subdivision_data != null:
-		#_draw_rec(subdivision_data, 0)
+		_draw_rec(subdivision_data, 0)
 		pass
 
 	# Draw the dividing lines between rooms
