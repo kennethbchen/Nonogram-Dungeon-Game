@@ -230,20 +230,27 @@ func create_hall(regionA: Rect2, regionB: Rect2):
 	var point_1 = Vector2(rand.randi_range(inner_a.position.x, inner_a.end.x), rand.randi_range(inner_a.position.y, inner_a.end.y))
 	var point_2 = Vector2(rand.randi_range(inner_b.position.x, inner_b.end.x), rand.randi_range(inner_b.position.y, inner_b.end.y))
 	
-	var width = point_2.x - point_1.x
-	var height = point_2.y - point_1.x
+
 	
-	var path = astar.get_point_path(_id(point_1), _id(point_2))
+	var x = point_1.x
+	var y = point_1.y
 	
-	while path.size() > 0:
+	# https://bfnightly.bracketproductions.com/chapter_25.html
+	# Draw straight hallways with one bend
+	while x != point_2.x or y != point_2.y:
 		
-		# Carve out the path
-		dungeon_tile_map.set_cellv(path[0], -1)
+		if x < point_2.x:
+			x += 1
+		elif x > point_2.x:
+			x -= 1
+		elif y < point_2.y:
+			y += 1
+		elif y > point_2.y:
+			y -= 1
 		
-		# Also update the cost of this path for astar pathfinding
-		astar.add_point(_id(path[0]), path[0], empty_cost)
-		
-		path.remove(0)
+		dungeon_tile_map.set_cellv(Vector2(x,y), -1)
+		pass
+
 		
 		
 	
@@ -344,7 +351,7 @@ func _draw_rec(region: MapRegion, offset):
 func _draw():
 	
 	if subdivision_data != null:
-		_draw_rec(subdivision_data, 0)
+		#_draw_rec(subdivision_data, 0)
 		pass
 
 	# Draw the dividing lines between rooms
