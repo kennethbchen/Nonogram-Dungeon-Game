@@ -15,6 +15,7 @@ export(float) var line_width = 2
 var astar : AStar2D
 
 func visualize(new_astar : AStar2D):
+	return
 	astar = new_astar
 	update()
 

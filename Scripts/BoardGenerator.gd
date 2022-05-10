@@ -41,6 +41,8 @@ var rng = RandomNumberGenerator.new()
 # Use Open Simplex Noise to generate random picross boards
 var noise = OpenSimplexNoise.new()
 
+onready var raycast = $RayCast2D
+
 # The solution to the current nonogram
 # It's assumed that the solution is at least rectangular, if not square
 var solution = []
@@ -130,10 +132,15 @@ func generate_board():
 			solution_tilemap.set_cell(col, row, index)
 			
 	# ------------ Generate Dungeon Board ------------
+	
 	var entrypoints = _generate_dungeon()
 	player.position = dungeon_tilemap.map_to_world(entrypoints[0]) + Util.tile_offset
 	
-
+	# Place stairs
+	var stairs = stairs_entity.instance()
+	stairs.position = dungeon_tilemap.map_to_world(entrypoints[1]) + Util.tile_offset
+	entities_node.add_child(stairs)
+	
 	# Update the pathfinder
 	pathfinder.calculate_paths(max_floor_rows, max_floor_columns)
 	
@@ -327,7 +334,6 @@ func _generate_nonogram_board(max_floor_columns, max_floor_rows):
 				row_data.append(0)
 			
 		output.append(row_data)
-		#print(row_data)
 	
 	
 	
@@ -379,17 +385,19 @@ class MapRegion:
 			return true
 	
 	# Returns a Vector2 representing a random point within the inner room bounds of the room
-	func rand_in_room():
+	func rand_in_room(grow = 0):
 		
 		if not has_room():
 			return null
+		
+		# Modify the room area by growing it the specified amount
+		var m_room = get_room_area().grow(grow)
 		
 		# Rect2.end appears to be one larger in both dimensions than I expect
 		# I think this is because the position is expected to be a top left point and
 		# the end is supposed to be a bottom left point
 		# Adjust for this by subtracting 1 from each end dimension
-		print([get_room_area().position.x, get_room_area().end.x - 1])
-		return Vector2(rng.randi_range(get_room_area().position.x, get_room_area().end.x - 1), rng.randi_range(get_room_area().position.y, get_room_area().end.y - 1))
+		return Vector2(rng.randi_range(m_room.position.x, m_room.end.x - 1), rng.randi_range(m_room.position.y, m_room.end.y - 1))
 		
 	# If this region has a room (room_bound), then return it
 	# Otherwise, go through the children until you get to a room
@@ -458,11 +466,65 @@ func place_entities(rooms):
 	while end_room == null or end_room == start_room:
 		end_room = rooms[rng.randi_range(0, rooms.size() - 1)]
 	
-	
 	var start_position = start_room.rand_in_room()
 	var end_position = end_room.rand_in_room()
-	print(start_position)
+	
+	var used_tiles = [start_position, end_position]
+	
+	# Go through all of the rooms and put things in random places
+	for i in range(0, rooms.size()):
+		
+
+		# Put n things in each rooms
+		for iteration in range(0, 2):
+			
+			var object
+			
+			# Choose between a good or hazardous thing
+			if rng.randf_range(0,1) < 0.6:
+				# Good thing
+				# Choose between health or energy item
+				# TODO: Generalize system with loot tables?
+				
+				# 50 / 50 chance of health or energy
+				if rng.randi_range(0,1) == 0:
+					# Health
+					object = health_entity
+				else:
+					# Energy
+					object = energy_entity
+			else:
+				# Hazardous thing
+				
+				# 60 / 40 chance of trap / enemy
+				# Don't spawn enemies in the starting room
+				if rng.randf_range(0, 1) < 0.6 or rooms[i] == start_room:
+					object = trap_entity
+				else:
+					object = enemy_entity
+			
+			var position = rooms[i].rand_in_room()
+			# Select a random position in the room that doesn't have something already
+			while(used_tiles.has(position)):
+				position = rooms[i].rand_in_room()
+				
+			used_tiles.append(position)
+			
+			var new_obj = object.instance()
+			
+			new_obj.position = dungeon_tilemap.map_to_world(position) + Util.tile_offset
+			
+			if object == enemy_entity:
+				enemies_node.add_child(new_obj)
+			else:
+				entities_node.add_child(new_obj)
+		
+	
+
+	
 	return [start_position, end_position]
+
+
 
 # Recursive Function
 # Takes a root node and connects its children together
@@ -646,3 +708,4 @@ func _draw():
 	for room_row in range(0, max_rooms_y + 1):
 		
 		draw_line(Vector2(0, room_row * room_rows) * Util.tile_size, Vector2(max_floor_columns, room_row * room_rows) * Util.tile_size, Color.aqua)
+		

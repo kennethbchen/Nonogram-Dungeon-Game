@@ -24,6 +24,8 @@ script = ExtResource( 12 )
 [node name="BoardGenerator" type="Node2D" parent="BoardController"]
 script = ExtResource( 5 )
 
+[node name="RayCast2D" type="RayCast2D" parent="BoardController/BoardGenerator"]
+
 [node name="PathfindingController" type="Node" parent="."]
 script = ExtResource( 3 )
 
