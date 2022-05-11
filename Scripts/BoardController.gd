@@ -10,16 +10,16 @@ onready var board_generator = $BoardGenerator
 
 # Tilemap that represents the nonogram board
 # Correctly marked tiles on the board will hide to reveal the WorldTileMap
-onready var nonogram_tile_map = $"/root/Main Scene/Tilemaps/NonogramTileMap"
+export(NodePath) onready var nonogram_tile_map = $"../Tilemaps/NonogramTileMap" as TileMap
 
 # Tilemap that represents the solution of the nonogram board
 # with proper coloring or marking out
-onready var solution_tile_map = $"/root/Main Scene/Tilemaps/SolutionTileMap"
+export(NodePath) onready var solution_tile_map = $"../Tilemaps/SolutionTileMap" as TileMap
 
-onready var world_tile_map = $"/root/Main Scene/Tilemaps/WorldTileMap"
+export(NodePath) onready var world_tile_map = $"../Tilemaps/WorldTileMap" as TileMap
 
-onready var entities_node = $"../Entities"
-onready var enemies_node = $"../Enemies"
+export(NodePath) onready var entities_node = $"../Entities"
+export(NodePath) onready var enemies_node = $"../Enemies"
 
 
 

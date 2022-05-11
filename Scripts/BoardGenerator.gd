@@ -5,28 +5,25 @@ Handles creation of the floors
 """
 # Tilemap that represents the nonogram board
 # Correctly marked tiles on the board will hide to reveal the WorldTileMap
-onready var nonogram_tilemap = $"/root/Main Scene/Tilemaps/NonogramTileMap"
+export(NodePath) onready var nonogram_tilemap = $"../../Tilemaps/NonogramTileMap"
 
 # Tilemap that represents the solution of the nonogram board
 # with proper coloring or marking out
-onready var solution_tilemap = $"/root/Main Scene/Tilemaps/SolutionTileMap"
+export(NodePath) onready var solution_tilemap = $"../../Tilemaps/SolutionTileMap"
 
-onready var dungeon_tilemap = $"/root/Main Scene/Tilemaps/WorldTileMap"
+export(NodePath) onready var dungeon_tilemap = $"../../Tilemaps/WorldTileMap"
 
-onready var pathfinder = $"../../PathfindingController"
+export(NodePath) onready var pathfinder = $"../../PathfindingController"
 
 onready var hint_font = load("res://UI/NonogramHint.tres")
 
-# Tilemap containing all possible dungeon boards
-onready var dungeon_layouts = $"/root/Main Scene/Tilemaps/DungeonBoards"
-
 # Node containing all enemies
-onready var enemies_node = $"/root/Main Scene/Enemies"
+export(NodePath) onready var enemies_node = $"../../Enemies"
 
 # Node containing all entities
-onready var entities_node = $"/root/Main Scene/Entities"
+export(NodePath) onready var entities_node = $"../../Entities"
 
-onready var player = $"/root/Main Scene/Player"
+export(NodePath) onready var player = $"../../Player"
 
 # Entities
 onready var health_entity = load("res:///Scenes/Apple.tscn")
@@ -81,7 +78,6 @@ var room_regions = []
 # Generates the nonogram board and solution based on the input data
 # Generates the dungeon board procedurally
 func generate_board():
-	
 	# ------------ Setup ------------
 	rng.randomize()
 	
@@ -515,6 +511,7 @@ func place_entities(rooms):
 			new_obj.position = dungeon_tilemap.map_to_world(position) + Util.tile_offset
 			
 			if object == enemy_entity:
+				new_obj.init(player)
 				enemies_node.add_child(new_obj)
 			else:
 				entities_node.add_child(new_obj)

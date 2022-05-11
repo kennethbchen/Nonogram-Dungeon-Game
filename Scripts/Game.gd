@@ -8,7 +8,7 @@ onready var effect_tilemap = $Tilemaps/EffectTileMap
 
 onready var enemies_node = $Enemies
 
-onready var death_popup = $"/root/Main Scene/UI/DeathPopup"
+onready var death_popup = $"UI/DeathPopup"
 
 onready var cursor = $Cursor
 

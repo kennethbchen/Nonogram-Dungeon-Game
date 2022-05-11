@@ -19,9 +19,21 @@ script = ExtResource( 2 )
 
 [node name="BoardController" type="Node" parent="."]
 script = ExtResource( 12 )
+nonogram_tile_map = NodePath("../Tilemaps/NonogramTileMap")
+solution_tile_map = NodePath("../Tilemaps/SolutionTileMap")
+world_tile_map = NodePath("../Tilemaps/WorldTileMap")
+entities_node = NodePath("../Entities")
+enemies_node = NodePath("../Enemies")
 
 [node name="BoardGenerator" type="Node2D" parent="BoardController"]
 script = ExtResource( 5 )
+nonogram_tilemap = NodePath("../../Tilemaps/NonogramTileMap")
+solution_tilemap = NodePath("../../Tilemaps/SolutionTileMap")
+dungeon_tilemap = NodePath("../../Tilemaps/WorldTileMap")
+pathfinder = NodePath("../../PathfindingController")
+enemies_node = NodePath("../../Enemies")
+entities_node = NodePath("../../Entities")
+player = NodePath("../../Player")
 
 [node name="RayCast2D" type="RayCast2D" parent="BoardController/BoardGenerator"]
 
