@@ -25,12 +25,9 @@ onready var relative_corner_points = [
 
 func init(player_node):
 	player = player_node
-	print(self)
-	print(player.position)
 	
 
 func _ready():
-	print(player)
 	pass
 
 # Reduces health and fires signal

@@ -8,9 +8,11 @@ onready var effect_tilemap = $Tilemaps/EffectTileMap
 
 onready var enemies_node = $Enemies
 
-onready var death_popup = $"UI/DeathPopup"
+export(NodePath) var death_popup_path; onready var death_popup = get_node(death_popup_path) as Node
 
 onready var cursor = $Cursor
+
+export(NodePath) var camera_path; onready var camera = get_node(camera_path) as Node
 
 var hovered_tile = Vector2(-1, -1)
 
@@ -47,7 +49,6 @@ func _ready():
 	
 func _create_board():
 	board_controller.init_board()
-	
 
 func _input(event):
 	
