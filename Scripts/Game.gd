@@ -1,16 +1,12 @@
 extends Node2D
 
-onready var player = $Player
+export(NodePath) var player_path; onready var player = get_node(player_path) as Node
 
-onready var board_controller = $BoardController
-
-onready var effect_tilemap = $Tilemaps/EffectTileMap
-
-onready var enemies_node = $Enemies
+export(NodePath) var board_path; onready var board_controller = get_node(board_path) as Node
 
 export(NodePath) var death_popup_path; onready var death_popup = get_node(death_popup_path) as Node
 
-onready var cursor = $Cursor
+export(NodePath) var cursor_path; onready var cursor = get_node(cursor_path) as Node
 
 export(NodePath) var camera_path; onready var camera = get_node(camera_path) as Node
 

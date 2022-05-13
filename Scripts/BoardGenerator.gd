@@ -23,7 +23,7 @@ export(NodePath) onready var enemies_node = $"../../Enemies"
 # Node containing all entities
 export(NodePath) onready var entities_node = $"../../Entities"
 
-export(NodePath) onready var player = $"../../Player"
+onready var player = $"../../Player"
 
 # Entities
 onready var health_entity = load("res:///Scenes/Apple.tscn")
