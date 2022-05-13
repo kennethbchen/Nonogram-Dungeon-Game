@@ -40,4 +40,5 @@ func calculate_grid_position():
 
 func jump_to_grid_position():
 	position = Vector2(grid_position * grid_size) - grid_offset
+	print(grid_position)
 	
