@@ -241,6 +241,7 @@ margin_right = -38.6791
 margin_bottom = 28.0388
 text = "0"
 
+[connection signal="floor_changed" from="." to="UI/Node2D/Floor Display" method="_on_value_changed"]
 [connection signal="energy_changed" from="Control/ViewportContainer/Viewport/World/Player" to="UI/Node2D/Energy Display" method="_on_value_changed"]
 [connection signal="health_changed" from="Control/ViewportContainer/Viewport/World/Player" to="UI/Node2D/Health Display" method="_on_value_changed"]
 [connection signal="player_death" from="Control/ViewportContainer/Viewport/World/Player" to="." method="_on_player_death"]
