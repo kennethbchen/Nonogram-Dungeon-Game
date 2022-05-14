@@ -8,6 +8,8 @@ extends Node
 
 onready var board_generator = $BoardGenerator
 
+export(NodePath) var viewport_container_path; onready var viewport_container = get_node(viewport_container_path) as Node
+
 # Tilemap that represents the nonogram board
 # Correctly marked tiles on the board will hide to reveal the WorldTileMap
 export(NodePath) onready var nonogram_tile_map = $"../Tilemaps/NonogramTileMap" as TileMap
@@ -23,7 +25,7 @@ export(NodePath) onready var enemies_node = $"../Enemies"
 
 export(NodePath) var camera_path; onready var camera = get_node(camera_path) as Node
 
-
+var root
 
 var columns = Util.max_floor_columns
 var rows = Util.max_floor_rows
@@ -32,6 +34,7 @@ var tile_size = 0
 
 func _ready():
 	tile_size = board_generator.tile_size
+	root = get_tree().root
 	
 # Generates the nonogram board and solution
 # The World layer of the board is within the world_tilemap itself
@@ -123,9 +126,37 @@ func is_correct_mark(tilemap_coord: Vector2):
 		return false
 
 # Returns the position of the closest tile that the mouse is pointing at
+# This doesn't think about whether or not a tile is visible in the camera and returns it anyways
 func get_selected_tile():
-	var pos = nonogram_tile_map.get_local_mouse_position() / Vector2(1, 1)
 
+	# It appears that getting the mouse position relative to a 
+	# non-root viewport does not work if the root viewport is scaled up or down
+	# These don't work:
+	
+	# 1: get_viewport().get_mouse_position()
+	# (This would have gotten the mouse's x and y position ranging from 0 to the sizes of the window)
+	# For example, if the viewport is 200 x 200 px, the mouse position would be from 0 to 200 in both dimensions
+	
+	# 2: nonogram_tile_map.get_[local/global]_mouse_position() 
+	# (The original solution. Gets the mouse's position as if it was an object in the world relative to nonogram tilemap)
+	
+	# Trying to use both methods and some combination of scaling 
+	# their output based on the scale of the window never appeared to work
+	
+	# What DOES work regardless of scale is the root viewport's get_mouse_position()
+	# which is the equivalent of get_viewport().get_mouse_position() except for the root viewport and also it works
+	
+	# So, use the mouse position relative to the root transform, and transform that coordinate space
+	# so that it is the equivalent of method #2 mentioned above
+	
+	# The selected tile is dependent on where the camera is pointing
+	# pos without the offset value is the position of the mouse relative to the viewport_container's position
+	# offset shifts this position to the correct world position based on the camera
+	
+	var offset = Vector2(camera.get_grid_pos().x * Util.tile_size * Util.room_columns, camera.get_grid_pos().y * Util.tile_size * Util.room_rows)
+	var pos = ((root.get_mouse_position() - viewport_container.rect_position)) + offset
+	
+	# Use the world position and calculate what nonogram tile corresponds to that position in tile space
 	return nonogram_tile_map.world_to_map(pos)
 
 func get_nono_tile(tilemap_coord: Vector2):

@@ -40,28 +40,32 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="InstructionPopup" type="PopupPanel" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="InstructionPopup" type="PopupPanel" parent="CanvasLayer"]
+visible = true
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -248.0
-margin_top = -200.0
-margin_right = 248.0
-margin_bottom = 200.0
+margin_left = 180.0
+margin_top = -196.0
+margin_right = 676.0
+margin_bottom = 204.0
 theme = ExtResource( 3 )
 
-[node name="TabContainer" type="TabContainer" parent="InstructionPopup"]
+[node name="TabContainer" type="TabContainer" parent="CanvasLayer/InstructionPopup"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 10.0
-margin_right = -8.0
-margin_bottom = 2.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = -4.0
+margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 3 )
 
-[node name="Page 1" type="VBoxContainer" parent="InstructionPopup/TabContainer"]
+[node name="Page 1" type="VBoxContainer" parent="CanvasLayer/InstructionPopup/TabContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -70,7 +74,7 @@ margin_right = -4.0
 margin_bottom = -4.0
 theme = ExtResource( 3 )
 
-[node name="Label" type="Label" parent="InstructionPopup/TabContainer/Page 1"]
+[node name="Label" type="Label" parent="CanvasLayer/InstructionPopup/TabContainer/Page 1"]
 margin_right = 480.0
 margin_bottom = 27.0
 theme = ExtResource( 3 )
@@ -78,25 +82,25 @@ text = "Instructions Page 1:
 Two Components"
 align = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="InstructionPopup/TabContainer/Page 1"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/TabContainer/Page 1"]
 margin_top = 31.0
 margin_right = 480.0
 margin_bottom = 336.0
 size_flags_vertical = 3
 theme = ExtResource( 3 )
 
-[node name="VBoxContainer" type="VBoxContainer" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/InstructionPopup/TabContainer/Page 1/HBoxContainer"]
 margin_right = 480.0
 margin_bottom = 305.0
 size_flags_horizontal = 3
 theme = ExtResource( 3 )
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer"]
 margin_right = 480.0
 margin_bottom = 27.0
 theme = ExtResource( 3 )
 
-[node name="NonogramL" type="Label" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/HBoxContainer2"]
+[node name="NonogramL" type="Label" parent="CanvasLayer/InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/HBoxContainer2"]
 margin_right = 238.0
 margin_bottom = 27.0
 size_flags_horizontal = 3
@@ -105,7 +109,7 @@ text = "
 Nonogram (Picross)"
 align = 1
 
-[node name="DCL" type="Label" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/HBoxContainer2"]
+[node name="DCL" type="Label" parent="CanvasLayer/InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/HBoxContainer2"]
 margin_left = 242.0
 margin_right = 480.0
 margin_bottom = 27.0
@@ -115,7 +119,7 @@ text = "
 Dungeon Crawling"
 align = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer"]
 margin_top = 31.0
 margin_right = 480.0
 margin_bottom = 305.0
@@ -123,7 +127,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 3 )
 
-[node name="HBoxContainer" type="HBoxContainer" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/MarginContainer"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 470.0
@@ -131,7 +135,7 @@ margin_bottom = 264.0
 size_flags_vertical = 3
 theme = ExtResource( 3 )
 
-[node name="NonoText" type="RichTextLabel" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="NonoText" type="RichTextLabel" parent="CanvasLayer/InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer"]
 margin_right = 228.0
 margin_bottom = 254.0
 size_flags_horizontal = 3
@@ -149,7 +153,7 @@ The dungeon's layout is hidden:
 
 -Incorrect marks are allowed, but will not reveal the dungeon"
 
-[node name="DungeonText" type="RichTextLabel" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="DungeonText" type="RichTextLabel" parent="CanvasLayer/InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer"]
 margin_left = 232.0
 margin_right = 460.0
 margin_bottom = 254.0
@@ -164,14 +168,14 @@ Solving the picross board allows you to see the dungeon layout
 
 Reach the stairs on each floor to progress to the next"
 
-[node name="ClosePopupButton" type="Button" parent="InstructionPopup/TabContainer/Page 1"]
+[node name="ClosePopupButton" type="Button" parent="CanvasLayer/InstructionPopup/TabContainer/Page 1"]
 margin_top = 340.0
 margin_right = 480.0
 margin_bottom = 358.0
 theme = ExtResource( 3 )
 text = "Close"
 
-[node name="Page 2" type="VBoxContainer" parent="InstructionPopup/TabContainer"]
+[node name="Page 2" type="VBoxContainer" parent="CanvasLayer/InstructionPopup/TabContainer"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -180,21 +184,21 @@ margin_top = 32.0
 margin_right = -4.00006
 margin_bottom = -4.0
 
-[node name="Label" type="Label" parent="InstructionPopup/TabContainer/Page 2"]
+[node name="Label" type="Label" parent="CanvasLayer/InstructionPopup/TabContainer/Page 2"]
 margin_right = 480.0
 margin_bottom = 31.0
 text = "Instructions Page 2:
 Dungeons"
 align = 1
 
-[node name="Panel" type="Panel" parent="InstructionPopup/TabContainer/Page 2"]
+[node name="Panel" type="Panel" parent="CanvasLayer/InstructionPopup/TabContainer/Page 2"]
 margin_top = 35.0
 margin_right = 480.0
 margin_bottom = 332.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TextureRect" type="TextureRect" parent="InstructionPopup/TabContainer/Page 2/Panel"]
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/InstructionPopup/TabContainer/Page 2/Panel"]
 margin_left = 15.1716
 margin_top = 5.96248
 margin_right = 31.1716
@@ -202,7 +206,7 @@ margin_bottom = 98.9625
 rect_scale = Vector2( 3.08708, 3.08708 )
 texture = ExtResource( 5 )
 
-[node name="HBoxContainer" type="HBoxContainer" parent="InstructionPopup/TabContainer/Page 2/Panel"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/TabContainer/Page 2/Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 65.6523
@@ -213,47 +217,47 @@ rect_scale = Vector2( 2.58874, 2.58874 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer"]
 margin_right = 117.0
 margin_bottom = 104.0
 
-[node name="Label" type="Label" parent="InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="CanvasLayer/InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
 margin_right = 117.0
 margin_bottom = 14.0
 theme = ExtResource( 3 )
 text = "Player"
 
-[node name="Label2" type="Label" parent="InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="CanvasLayer/InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
 margin_top = 18.0
 margin_right = 117.0
 margin_bottom = 32.0
 text = "Heals HP"
 
-[node name="Label3" type="Label" parent="InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
+[node name="Label3" type="Label" parent="CanvasLayer/InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
 margin_top = 36.0
 margin_right = 117.0
 margin_bottom = 50.0
 text = "Heals Energy"
 
-[node name="Label4" type="Label" parent="InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
+[node name="Label4" type="Label" parent="CanvasLayer/InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
 margin_top = 54.0
 margin_right = 117.0
 margin_bottom = 68.0
 text = "Stairs to next floor"
 
-[node name="Label5" type="Label" parent="InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
+[node name="Label5" type="Label" parent="CanvasLayer/InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
 margin_top = 72.0
 margin_right = 117.0
 margin_bottom = 86.0
 text = "Enemy"
 
-[node name="Label6" type="Label" parent="InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
+[node name="Label6" type="Label" parent="CanvasLayer/InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
 margin_top = 90.0
 margin_right = 117.0
 margin_bottom = 104.0
 text = "Trap"
 
-[node name="ClosePopupButton2" type="Button" parent="InstructionPopup/TabContainer/Page 2"]
+[node name="ClosePopupButton2" type="Button" parent="CanvasLayer/InstructionPopup/TabContainer/Page 2"]
 margin_top = 336.0
 margin_right = 480.0
 margin_bottom = 356.0
@@ -261,5 +265,5 @@ text = "Close"
 
 [connection signal="pressed" from="Start Button" to="." method="_on_Start_Button_pressed"]
 [connection signal="pressed" from="Instruction Button" to="." method="_on_Instruction_Button_pressed"]
-[connection signal="pressed" from="InstructionPopup/TabContainer/Page 1/ClosePopupButton" to="." method="_on_ClosePopupButton_pressed"]
-[connection signal="pressed" from="InstructionPopup/TabContainer/Page 2/ClosePopupButton2" to="." method="_on_ClosePopupButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/InstructionPopup/TabContainer/Page 1/ClosePopupButton" to="." method="_on_ClosePopupButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/InstructionPopup/TabContainer/Page 2/ClosePopupButton2" to="." method="_on_ClosePopupButton_pressed"]

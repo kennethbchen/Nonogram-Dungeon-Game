@@ -34,7 +34,6 @@ margin_left = -144.0
 margin_top = -60.0
 margin_right = -16.0
 margin_bottom = 68.0
-stretch = true
 
 [node name="Viewport" type="Viewport" parent="ViewportContainer"]
 size = Vector2( 128, 128 )
@@ -45,6 +44,7 @@ render_target_update_mode = 3
 
 [node name="BoardController" type="Node" parent="ViewportContainer/Viewport/World"]
 script = ExtResource( 7 )
+viewport_container_path = NodePath("../../..")
 nonogram_tile_map = NodePath("../Tilemaps/NonogramTileMap")
 solution_tile_map = NodePath("../Tilemaps/SolutionTileMap")
 world_tile_map = NodePath("../Tilemaps/WorldTileMap")

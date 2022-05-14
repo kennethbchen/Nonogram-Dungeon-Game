@@ -12,6 +12,8 @@ export(NodePath) var camera_path; onready var camera = get_node(camera_path) as 
 
 var hovered_tile = Vector2(-1, -1)
 
+onready var world_viewport = $ViewportContainer
+
 # Directions for movement
 const RIGHT = Vector2.RIGHT
 const LEFT = Vector2.LEFT
@@ -45,7 +47,8 @@ func _ready():
 	
 func _create_board():
 	board_controller.init_board()
-
+	
+	
 func _input(event):
 	
 	# Don't accept any inputs if dead
@@ -162,7 +165,6 @@ func _input(event):
 	
 	# Register mouse move
 	if event is InputEventMouseMotion:
-		
 		if not in_board:
 			_reset_mouse_state()
 		
@@ -199,6 +201,7 @@ func _reset_mouse_state():
 	drag = false
 
 func _process(_delta):
+	
 	
 	# Don't accept any inputs if dead
 	if dead:

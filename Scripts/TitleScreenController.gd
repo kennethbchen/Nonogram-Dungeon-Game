@@ -1,6 +1,6 @@
 extends Control
 
-onready var instruction_popup = $InstructionPopup
+onready var instruction_popup = $CanvasLayer/InstructionPopup
 
 func _on_Start_Button_pressed():
 	get_tree().change_scene("res://Game_Main.tscn")
