@@ -13,7 +13,6 @@ func _ready():
 	# its position will not be (0, 0)
 	position = Vector2()
 	grid_size = Vector2(Util.tile_size * Util.room_columns, Util.tile_size * Util.room_rows)
-	print(grid_size)
 	set_as_toplevel(true)
 	update_grid_position()
 
@@ -23,22 +22,22 @@ func _physics_process(delta):
 
 
 func update_grid_position():
-	var new_grid_position = calculate_grid_position()
-	
+	var new_grid_position = get_grid_pos()
+
 	if grid_position == new_grid_position:
 		return
 	grid_position = new_grid_position
 	jump_to_grid_position()
 
 
-func calculate_grid_position():
+func get_grid_pos():
 	var x = round( (parent.position.x + grid_offset.x) / grid_size.x)
 	var y = round( (parent.position.y + grid_offset.y) / grid_size.y)
 	
-	return Vector2(x, y)
+	# Subtract by a 1,1 Vector2 to make the position zero-indexed
+	return Vector2(x, y) - Vector2(1,1)
 
 
 func jump_to_grid_position():
-	position = Vector2(grid_position * grid_size) - grid_offset
-	print(grid_position)
+	position = Vector2((grid_position + Vector2(1,1) ) * grid_size) - grid_offset
 	

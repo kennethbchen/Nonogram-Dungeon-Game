@@ -5,54 +5,58 @@
 [ext_resource path="res://UI/Main_Theme.tres" type="Theme" id=3]
 [ext_resource path="res://Sprites/Tile_Info.png" type="Texture" id=5]
 
-[node name="Title" type="Node2D"]
-position = Vector2( 352, 264 )
+[node name="Title" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
 script = ExtResource( 2 )
 
+[node name="Start Button" type="Button" parent="."]
+anchor_left = 0.34
+anchor_top = 0.455
+anchor_right = 0.66
+anchor_bottom = 0.545
+custom_fonts/font = ExtResource( 1 )
+text = "Start"
+
 [node name="Label" type="Label" parent="."]
-margin_left = -208.0
-margin_top = -200.0
-margin_right = -109.0
-margin_bottom = -186.0
-rect_scale = Vector2( 4.20358, 4.48404 )
+anchor_left = 0.265
+anchor_top = 0.13
+anchor_right = 0.735
+anchor_bottom = 0.19
+margin_bottom = -3.8147e-06
 custom_fonts/font = ExtResource( 1 )
 text = "nonogram dungeon"
 align = 1
 
-[node name="Start Button" type="Button" parent="."]
-margin_left = -88.0
-margin_top = -72.0
-margin_right = -44.0
-margin_bottom = -54.0
-rect_scale = Vector2( 3.9583, 3.9583 )
-custom_fonts/font = ExtResource( 1 )
-text = "Start"
-
 [node name="Instruction Button" type="Button" parent="."]
-margin_left = -160.0
-margin_top = 56.0
-margin_right = -79.0
-margin_bottom = 74.0
-rect_scale = Vector2( 3.9583, 3.9583 )
+anchor_left = 0.3
+anchor_top = 0.627
+anchor_right = 0.7
+anchor_bottom = 0.72
+margin_left = -3.8147e-06
 custom_fonts/font = ExtResource( 1 )
 text = "Instructions"
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="InstructionPopup" type="PopupPanel" parent="."]
-visible = true
-margin_left = 386.0
-margin_top = -250.0
-margin_right = 882.0
-margin_bottom = 150.0
-rect_scale = Vector2( 1.20838, 1.20838 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -248.0
+margin_top = -200.0
+margin_right = 248.0
+margin_bottom = 200.0
 theme = ExtResource( 3 )
 
 [node name="TabContainer" type="TabContainer" parent="InstructionPopup"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 4.0
-margin_right = -4.0
-margin_bottom = -4.0
+margin_top = 10.0
+margin_right = -8.0
+margin_bottom = 2.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 3 )

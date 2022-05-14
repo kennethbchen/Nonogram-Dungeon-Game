@@ -1,4 +1,4 @@
-extends Node2D
+extends Control
 
 export(NodePath) var player_path; onready var player = get_node(player_path) as Node
 

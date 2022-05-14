@@ -21,6 +21,7 @@ export(NodePath) onready var world_tile_map = $"../Tilemaps/WorldTileMap" as Til
 export(NodePath) onready var entities_node = $"../Entities"
 export(NodePath) onready var enemies_node = $"../Enemies"
 
+export(NodePath) var camera_path; onready var camera = get_node(camera_path) as Node
 
 
 
@@ -123,7 +124,9 @@ func is_correct_mark(tilemap_coord: Vector2):
 
 # Returns the position of the closest tile that the mouse is pointing at
 func get_selected_tile():
-	return nonogram_tile_map.world_to_map(nonogram_tile_map.get_local_mouse_position())
+	var pos = nonogram_tile_map.get_local_mouse_position() / Vector2(1, 1)
+
+	return nonogram_tile_map.world_to_map(pos)
 
 func get_nono_tile(tilemap_coord: Vector2):
 	return nonogram_tile_map.get_cellv(tilemap_coord)

@@ -62,9 +62,10 @@ config/icon="res://Sprites/icon.png"
 
 [display]
 
-window/size/width=700
-window/size/height=500
-window/size/resizable=false
+window/size/width=200
+window/size/height=200
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
 
 [editor_plugins]
 
