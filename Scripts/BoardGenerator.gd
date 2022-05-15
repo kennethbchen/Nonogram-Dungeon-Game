@@ -106,7 +106,7 @@ func generate_board():
 	# Generate the hint to display based on the solution of the board
 	hint = _generate_hint(solution)
 
-	hint_labels = create_labels(hint, hint_labels)
+	#hint_labels = create_labels(hint, hint_labels)
 	
 	# Fills the nonogram tilemap and the solution tilemap with appropriate tiles
 	for col in max_floor_columns:
@@ -120,7 +120,7 @@ func generate_board():
 			# index is needed because of a bad translation between solution value (0 = not colored, 1 = colored)
 			# and tilemap id value (1 = not colored, 2 = colored)
 			var index
-			if solution[row][col] == 0:
+			if solution[col][row] == 0:
 				index = Util.nono_color
 			else:
 				index = Util.nono_cross
@@ -274,7 +274,7 @@ func create_labels(hint, label_array):
 		
 		var label = Label.new();
 		
-		# Do some horrible math to generate label for left side of board
+		# Do some horrible math to generate label for top side of board
 		label.set_size(Vector2(16, 64))
 		label.set_position(nonogram_tilemap.get_global_position() - Vector2(-nonogram_tilemap.map_to_world(Vector2(col_id, 0))[0], 64))
 		label.add_font_override("font", hint_font)

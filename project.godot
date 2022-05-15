@@ -78,6 +78,10 @@ enabled=PoolStringArray(  )
 
 camera=false
 
+[gui]
+
+theme/custom_font="res://UI/Font.tres"
+
 [input]
 
 move_up={
