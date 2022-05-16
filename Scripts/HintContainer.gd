@@ -27,7 +27,7 @@ func _create_labels(cols = Util.room_columns, rows = Util.room_rows):
 		
 		label.set_position(Vector2(col_id * Util.tile_size, -Util.tile_size * 4))
 		
-		label.text = "0\n0\n0"
+		label.text = ""
 		
 		add_child(label)
 		line.append(label)
@@ -44,10 +44,9 @@ func _create_labels(cols = Util.room_columns, rows = Util.room_rows):
 		label.align = HALIGN_RIGHT
 		label.valign = VALIGN_CENTER
 		
-		# For some reason, the vertical alignment for the row hints don't work perfectly, so adjust slightly
-		label.set_position(Vector2(-Util.tile_size * 4, row_id * Util.tile_size))
+		label.set_position(Vector2(-Util.tile_size * 4 - 2, row_id * Util.tile_size))
 		
-		label.text = "0 0 0"
+		label.text = ""
 		
 		add_child(label)
 		line.append(label)

@@ -189,7 +189,7 @@ func _generate_hint(room_position: Vector2):
 	var end_col = start_col + Util.room_columns
 	var end_row = start_row + Util.room_rows
 	
-	print( str([start_col, start_row]) + " " + str([end_col, end_row]))
+	#print( str([start_col, start_row]) + " " + str([end_col, end_row]))
 	
 	var output = []
 	
@@ -295,6 +295,6 @@ func _generate_hint(room_position: Vector2):
 	return output
 
 func _on_camera_changed(new_position):
-	var hint = _generate_hint(new_position)
+	var hint = _generate_hint(new_position) 
 	
 	emit_signal("hint_changed", hint)

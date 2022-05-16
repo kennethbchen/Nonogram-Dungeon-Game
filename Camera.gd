@@ -40,7 +40,12 @@ func get_grid_pos():
 	# Subtract by a 1,1 Vector2 to make the position zero-indexed
 	return Vector2(x, y) - Vector2(1,1)
 
-
 func jump_to_grid_position():
 	position = Vector2((grid_position + Vector2(1,1) ) * grid_size) - grid_offset
-	
+
+# If the floor changed, then refresh the hints always to avoid issues
+# Where the character would spawn in the same room area, meaning that the hints wouldn't update for the starting floor
+# The camera needs to be the one that instigates a hint refresh on the event of a floor change
+# Kind of a jank solution because it means that the hints are applied twice during the transition to a new floor
+func _on_floor_changed(dungeon_floor):
+	emit_signal("camera_changed", grid_position)

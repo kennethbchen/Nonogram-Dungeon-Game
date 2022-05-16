@@ -279,6 +279,7 @@ margin_right = 64.0
 margin_bottom = 28.0
 text = "0 / 0"
 
+[connection signal="floor_changed" from="." to="World Elements/World Viewport/Viewport/World/Player/Camera2D" method="_on_floor_changed"]
 [connection signal="floor_changed" from="." to="UI/Stats/VBoxContainer/Floor Display" method="_on_value_changed"]
 [connection signal="hint_changed" from="World Elements/World Viewport/Viewport/World/BoardController" to="World Elements/Hint Container" method="_on_hint_changed"]
 [connection signal="energy_changed" from="World Elements/World Viewport/Viewport/World/Player" to="UI/Stats/VBoxContainer3/Energy Display" method="_on_value_changed"]
