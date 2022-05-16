@@ -8,6 +8,8 @@ var grid_offset = Vector2(Util.room_columns / 2 * Util.tile_size, Util.room_rows
 
 onready var parent = get_parent()
 
+signal camera_changed(new_position)
+
 func _ready():
 	# If you drag the camera from the OffsetPivot node,
 	# its position will not be (0, 0)
@@ -27,6 +29,7 @@ func update_grid_position():
 	if grid_position == new_grid_position:
 		return
 	grid_position = new_grid_position
+	emit_signal("camera_changed", grid_position)
 	jump_to_grid_position()
 
 

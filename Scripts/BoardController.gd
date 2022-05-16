@@ -32,6 +32,8 @@ var rows = Util.max_floor_rows
 
 var tile_size = 0
 
+signal hint_changed(new_hint)
+
 func _ready():
 	tile_size = board_generator.tile_size
 	root = get_tree().root
@@ -171,3 +173,128 @@ func world_to_board(pos: Vector2):
 	
 func board_to_world(pos: Vector2):
 	return nonogram_tile_map.map_to_world(pos)
+
+# Takes a room position and generates an array that contains the nonogram hints for that room
+# Room coordinates are 0-indexed and start from the top left room as (0,0)
+# The returned array is an array[2][x] of strings where:
+# In array[0], x is the hints of the columns (top of board) and
+# In array[1], x is the hints of the rows (left of board)
+# Each individual cell (array[a][b]) is the full hint as a string that should be displayed
+func _generate_hint(room_position: Vector2):
+	
+	# Starting positions in tilemap space
+	var start_col = room_position.x * Util.room_columns
+	var start_row = room_position.y * Util.room_rows
+	
+	var end_col = start_col + Util.room_columns
+	var end_row = start_row + Util.room_rows
+	
+	print( str([start_col, start_row]) + " " + str([end_col, end_row]))
+	
+	var output = []
+	
+	# The solution line holds the column / row solutions before it is put into output
+	var solution_line = []
+	
+	# The size of the current continuous line of squares
+	var line_count = 0
+	
+	# The text that is displayed as the actual hint for each given continuous line of squares
+	var line_text = ""
+	
+	# Generate the hints for the columns (top)
+	# Go column by column
+	solution_line = []
+	for col in range(start_col, end_col):
+		
+		
+		# Reset vars for new column
+		line_count = 0
+		line_text = ""
+		
+		for row in range(start_row, end_row):
+			
+			var position = Vector2(col, row)
+			
+			if solution_tile_map.get_cellv(position) == Util.nono_color:
+				# If a 1 is found, record it
+				line_count += 1
+			elif solution_tile_map.get_cellv(position) == Util.nono_cross and line_count > 0:
+				# If a 0 is found and we were already counting a sequence of 1's,
+				# record and terminate that sequence
+			
+				if line_text != "":
+					# Don't add a leading new line for the first number
+					line_text += "\n"
+					
+				# Record and terminate sequence
+				line_text += str(line_count) 
+				line_count = 0
+		
+		# Process the value of line_count at the end of a column
+		if line_count > 0:
+			# If there is a line count left over, then add it to the row text
+			
+			if line_text != "":
+				# Only add a leading newline if there was already something in the row text
+				line_text += "\n"
+			
+			line_text += str(line_count)
+			
+		elif line_count == 0 and line_text == "":
+			# if there was no 1's in that entire row, add a zero to the row text
+			line_text += "0"
+		
+		solution_line.append(line_text)
+	
+	output.append(solution_line)
+	
+	solution_line = []
+	# Generate the hints for the rows (left side)
+	# Go row by row
+	for row in range(start_row, end_row):
+		# Reset vars for new row
+		line_count = 0
+		line_text = ""
+		for col in range(start_col, end_col):
+			
+			var position = Vector2(col, row)
+			
+			
+			if solution_tile_map.get_cellv(position) == Util.nono_color:
+				# If a 1 is found
+				line_count += 1
+			elif solution_tile_map.get_cellv(position) == Util.nono_cross and line_count > 0:
+				# If a 0 is found and we were already counting a sequence of 1's,
+				# terminate and record that sequence
+			
+				if line_text != "":
+					# Don't add a leading space for the first number
+					line_text += "   "
+					
+				# Add the current sequence to the row and reset count
+				line_text += str(line_count) 
+				line_count = 0
+		
+		
+		# Process the end of a column
+		if line_count > 0:
+			# At the end of a row, if there is a line count left over, then add it to the row text
+			if line_text != "":
+				# Only add a leading space if there was already something in the row text
+				line_text += "   "
+			line_text += str(line_count)
+		elif line_count == 0 and line_text == "":
+			# if there was no 1's in that row, add a zero to the row text
+			line_text += "0"
+		
+		solution_line.append(line_text)
+		
+	output.append(solution_line)
+	
+	return output
+
+func _on_camera_changed(new_position):
+	var hint = _generate_hint(new_position)
+	
+	emit_signal("hint_changed", hint)

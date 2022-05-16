@@ -42,9 +42,9 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -136.0
+margin_left = -160.0
 margin_top = -68.0
-margin_right = -8.0
+margin_right = -32.0
 margin_bottom = 60.0
 
 [node name="Viewport" type="Viewport" parent="World Elements/World Viewport"]
@@ -100,7 +100,6 @@ cell_size = Vector2( 16, 16 )
 format = 1
 
 [node name="NonogramTileMap" type="TileMap" parent="World Elements/World Viewport/Viewport/World/Tilemaps"]
-visible = false
 z_index = 2
 tile_set = ExtResource( 9 )
 cell_size = Vector2( 16, 16 )
@@ -171,9 +170,9 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -136.0
+margin_left = -160.0
 margin_top = -68.0
-margin_right = -8.0
+margin_right = -32.0
 margin_bottom = 60.0
 script = ExtResource( 15 )
 
@@ -281,9 +280,11 @@ margin_bottom = 28.0
 text = "0 / 0"
 
 [connection signal="floor_changed" from="." to="UI/Stats/VBoxContainer/Floor Display" method="_on_value_changed"]
+[connection signal="hint_changed" from="World Elements/World Viewport/Viewport/World/BoardController" to="World Elements/Hint Container" method="_on_hint_changed"]
 [connection signal="energy_changed" from="World Elements/World Viewport/Viewport/World/Player" to="UI/Stats/VBoxContainer3/Energy Display" method="_on_value_changed"]
 [connection signal="health_changed" from="World Elements/World Viewport/Viewport/World/Player" to="UI/Stats/VBoxContainer2/Health Display" method="_on_value_changed"]
 [connection signal="player_death" from="World Elements/World Viewport/Viewport/World/Player" to="." method="_on_player_death"]
 [connection signal="player_turn_over" from="World Elements/World Viewport/Viewport/World/Player" to="." method="_on_player_turn_over"]
 [connection signal="stairs_found" from="World Elements/World Viewport/Viewport/World/Player" to="." method="_on_stairs_found"]
+[connection signal="camera_changed" from="World Elements/World Viewport/Viewport/World/Player/Camera2D" to="World Elements/World Viewport/Viewport/World/BoardController" method="_on_camera_changed"]
 [connection signal="pressed" from="UI/DeathPopup/VBoxContainer/Button" to="." method="_on_retry_button"]

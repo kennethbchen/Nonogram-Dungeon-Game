@@ -15,8 +15,6 @@ export(NodePath) onready var dungeon_tilemap = $"../../Tilemaps/WorldTileMap"
 
 export(NodePath) onready var pathfinder = $"../../PathfindingController"
 
-onready var hint_font = load("res://UI/NonogramHint.tres")
-
 # Node containing all enemies
 export(NodePath) onready var enemies_node = $"../../Enemies"
 
@@ -43,13 +41,6 @@ onready var raycast = $RayCast2D
 # The solution to the current nonogram
 # It's assumed that the solution is at least rectangular, if not square
 var solution = []
-
-# The hints of the current board that are displayed
-var hint = []
-
-# Array of label nodes that display the hints
-# The format of the labels is the same as the hint array
-var hint_labels = []
 
 # The max size of a dungeon floor measured in individual tiles
 var max_floor_columns = Util.max_floor_columns
@@ -103,11 +94,6 @@ func generate_board():
 	# ------------ Generate Nonogram Board ------------
 	solution = _generate_nonogram_board(Util.max_floor_columns, Util.max_floor_rows)
 	
-	# Generate the hint to display based on the solution of the board
-	hint = _generate_hint(solution)
-
-	#hint_labels = create_labels(hint, hint_labels)
-	
 	# Fills the nonogram tilemap and the solution tilemap with appropriate tiles
 	for col in max_floor_columns:
 		
@@ -141,173 +127,6 @@ func generate_board():
 	pathfinder.calculate_paths(max_floor_rows, max_floor_columns)
 	
 	return entrypoints
-			
-# Takes a board solution and generates an array that contains the hints for that board
-# The returned array is an array[2][x] of strings where:
-# In array[0], x is the hints of the columns (top of board) and
-# In array[1], x is the hints of the rows (left of board)
-# Each individual cell (array[a][b]) is the full hint as a string that should be displayed
-func _generate_hint(solution):
-	
-	var output = []
-	
-	# The solution line holds the column / row solutions before it is put into output
-	var solution_line = []
-	
-	# The size of the current continuous line of squares
-	var line_count = 0
-	
-	# The text that is displayed as the actual hint for each given continuous line of squares
-	var line_text = ""
-	
-	# Generate the hints for the columns (top)
-	# Go column by column
-	solution_line = []
-	for col in range(0, solution[0].size()):
-		
-		# Reset vars for new column
-		line_count = 0
-		line_text = ""
-		
-		for row in range(0, solution.size()):
-			if solution[row][col] == 1:
-				# If a 1 is found, record it
-				line_count += 1
-			elif solution[row][col] == 0 and line_count > 0:
-				# If a 0 is found and we were already counting a sequence of 1's,
-				# record and terminate that sequence
-			
-				if line_text != "":
-					# Don't add a leading new line for the first number
-					line_text += "\n"
-					
-				# Record and terminate sequence
-				line_text += str(line_count) 
-				line_count = 0
-		
-		# Process the value of line_count at the end of a column
-		if line_count > 0:
-			# If there is a line count left over, then add it to the row text
-			
-			if line_text != "":
-				# Only add a leading newline if there was already something in the row text
-				line_text += "\n"
-			
-			line_text += str(line_count)
-			
-		elif line_count == 0 and line_text == "":
-			# if there was no 1's in that entire row, add a zero to the row text
-			line_text += "0"
-		
-		solution_line.append(line_text)
-	
-	output.append(solution_line)
-	
-	solution_line = []
-	# Generate the hints for the rows (left side)
-	# Go row by row
-	for row in solution.size():
-		# Reset vars for new row
-		line_count = 0
-		line_text = ""
-		for col in solution[row].size():
-			
-			
-			if solution[row][col] == 1:
-				# If a 1 is found
-				line_count += 1
-			elif solution[row][col] == 0 and line_count > 0:
-				# If a 0 is found and we were already counting a sequence of 1's,
-				# terminate and record that sequence
-			
-				if line_text != "":
-					# Don't add a leading space for the first number
-					line_text += " "
-					
-				# Add the current sequence to the row and reset count
-				line_text += str(line_count) 
-				line_count = 0
-		
-		
-		# Process the end of a column
-		if line_count > 0:
-			# At the end of a row, if there is a line count left over, then add it to the row text
-			if line_text != "":
-				# Only add a leading space if there was already something in the row text
-				line_text += " "
-			line_text += str(line_count)
-		elif line_count == 0 and line_text == "":
-			# if there was no 1's in that row, add a zero to the row text
-			line_text += "0"
-		
-		solution_line.append(line_text)
-		
-	output.append(solution_line)
-	
-	return output
-
-# Takes the nonogram board hints and displays that as labels
-# The resulting labels are stored in an array in the same format as the hints
-# The label_array is the array of labels, if they exist already
-# They are used to determine if the labels can be reused or not
-# However, it's assumed that in the case of a reuse, the size of the board did not change
-func create_labels(hint, label_array):
-	
-	var output = []
-	
-	# Stores the entire row / column of labels before they are put in the output array
-	var line = []
-	
-	# If the labels can be reused, don't create new ones
-	if label_array.size() != 0:
-		for col_id in range (0, hint[0].size()):
-			
-			label_array[0][col_id].text = hint[0][col_id]
-			
-		for row_id in range(0, hint[1].size()):
-			label_array[1][row_id].text = hint[1][row_id]
-
-		return label_array
-	
-	# Generate hint for the columns (top side of board)
-	for col_id in range(0, hint[0].size()):
-		
-		var label = Label.new();
-		
-		# Do some horrible math to generate label for top side of board
-		label.set_size(Vector2(16, 64))
-		label.set_position(nonogram_tilemap.get_global_position() - Vector2(-nonogram_tilemap.map_to_world(Vector2(col_id, 0))[0], 64))
-		label.add_font_override("font", hint_font)
-		label.align = HALIGN_CENTER
-		label.valign = VALIGN_BOTTOM
-		
-		label.text = str(hint[0][col_id])
-		add_child(label)
-		
-		line.append(label)
-	
-	output.append(line)
-	line = []
-	# Generate hint for the rows (left side of board)
-	for row_id in range(0, hint[1].size()):
-		
-		var label = Label.new();
-				
-		# Do some horrible math to generate label for left side of board
-		label.set_size(Vector2(64, 0))
-		label.set_position(nonogram_tilemap.get_global_position() - Vector2(66, -nonogram_tilemap.map_to_world(Vector2(0,row_id))[1]))
-		label.add_font_override("font", hint_font)
-		label.align = HALIGN_RIGHT
-		label.valign = VALIGN_BOTTOM
-		
-		# hint[1] is the hints for the left side
-		label.text = str(hint[1][row_id])
-		add_child(label)
-		
-		line.append(label)
-	output.append(line)
-	
-	return output
 
 # Generates a random nonogram board using a noise texture
 func _generate_nonogram_board(max_floor_columns, max_floor_rows):
@@ -694,15 +513,15 @@ func _draw_rec(region: MapRegion, offset):
 
 func _draw():
 	
-	if subdivision_data != null:
-		#_draw_rec(subdivision_data, 0)
-		pass
-
-	# Draw the dividing lines between rooms
-	for room_col in range(0, max_rooms_x + 1):
-		draw_line(Vector2(room_col * room_columns, 0 ) * Util.tile_size, Vector2(room_col * room_columns, max_floor_rows) * Util.tile_size, Color.aqua)
-
-	for room_row in range(0, max_rooms_y + 1):
-		
-		draw_line(Vector2(0, room_row * room_rows) * Util.tile_size, Vector2(max_floor_columns, room_row * room_rows) * Util.tile_size, Color.aqua)
-		
+#	if subdivision_data != null:
+#		#_draw_rec(subdivision_data, 0)
+#		pass
+#
+#	# Draw the dividing lines between rooms
+#	for room_col in range(0, max_rooms_x + 1):
+#		draw_line(Vector2(room_col * room_columns, 0 ) * Util.tile_size, Vector2(room_col * room_columns, max_floor_rows) * Util.tile_size, Color.aqua)
+#
+#	for room_row in range(0, max_rooms_y + 1):
+#
+#		draw_line(Vector2(0, room_row * room_rows) * Util.tile_size, Vector2(max_floor_columns, room_row * room_rows) * Util.tile_size, Color.aqua)
+	pass
