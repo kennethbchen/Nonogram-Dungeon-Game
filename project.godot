@@ -62,9 +62,11 @@ config/icon="res://Sprites/icon.png"
 
 [display]
 
-window/size/width=700
-window/size/height=500
-window/size/resizable=false
+window/size/width=900
+window/size/height=900
+window/size/always_on_top=true
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
 
 [editor_plugins]
 
@@ -73,6 +75,10 @@ enabled=PoolStringArray(  )
 [global]
 
 camera=false
+
+[gui]
+
+theme/custom_font="res://UI/FontSmall.tres"
 
 [input]
 

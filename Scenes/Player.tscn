@@ -19,8 +19,10 @@
 
 [node name="Player" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
+max_health = 12
 attack_sounds = [ ExtResource( 11 ), ExtResource( 8 ), ExtResource( 5 ), ExtResource( 7 ), ExtResource( 9 ) ]
 hurt_sounds = [ ExtResource( 14 ), ExtResource( 15 ), ExtResource( 16 ) ]
+max_energy = 280
 footstep_sounds = [ ExtResource( 4 ), ExtResource( 10 ), ExtResource( 3 ), ExtResource( 12 ), ExtResource( 6 ) ]
 death_sound = ExtResource( 13 )
 

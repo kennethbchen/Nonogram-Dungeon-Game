@@ -1,18 +1,18 @@
-extends Node2D
+extends Control
 
-onready var player = $Player
+export(NodePath) var player_path; onready var player = get_node(player_path) as Node
 
-onready var board_controller = $BoardController
+export(NodePath) var board_path; onready var board_controller = get_node(board_path) as Node
 
-onready var effect_tilemap = $Tilemaps/EffectTileMap
+export(NodePath) var death_popup_path; onready var death_popup = get_node(death_popup_path) as Node
 
-onready var enemies_node = $Enemies
+export(NodePath) var cursor_path; onready var cursor = get_node(cursor_path) as Node
 
-onready var death_popup = $"/root/Main Scene/UI/DeathPopup"
-
-onready var cursor = $Cursor
+export(NodePath) var camera_path; onready var camera = get_node(camera_path) as Node
 
 var hovered_tile = Vector2(-1, -1)
+
+onready var world_viewport = $ViewportContainer
 
 # Directions for movement
 const RIGHT = Vector2.RIGHT
@@ -48,7 +48,7 @@ func _ready():
 func _create_board():
 	board_controller.init_board()
 	
-
+	
 func _input(event):
 	
 	# Don't accept any inputs if dead
@@ -57,15 +57,23 @@ func _input(event):
 	
 	# Get the selected tile in nonogram_tile_map space based on mouse position
 	var selected_tile = board_controller.get_selected_tile()
-	var in_board = board_controller.is_in_board(selected_tile)
+	
+	# Whether or not the selected tile is a valid selection.
+	# A valid selection is both
+	# Within the dimensions of the floor
+	# Within the view of the camera
+	var valid_selection = board_controller.is_in_camera(selected_tile)
 	
 	# Register click press
 	if event is InputEventMouseButton and event.pressed:
 		
 		# Don't do anything for clicks outside the board
-		if not in_board:
+		if not valid_selection:
 			return
 		
+		# Ignore any input that is not left or right click
+		if event.button_index > 2:
+			return
 		
 		if click_button == -1:
 			click_origin = selected_tile
@@ -74,7 +82,7 @@ func _input(event):
 			# If click button isn't -1, then another mouse button is being held down
 			# so reset mouse state and cancel action
 			cursor.enable_cursor()
-			cursor.set_position(board_controller.get_selected_tile())
+			cursor.set_position(selected_tile)
 			_reset_mouse_state()
 		
 	
@@ -82,8 +90,9 @@ func _input(event):
 	if event is InputEventMouseButton and not event.pressed:
 		
 		# Don't do anything for clicks outside the board
-		if not in_board:
+		if not valid_selection:
 			return
+		
 		
 		# If the mouse was released in the same place it was clicked
 		if selected_tile == click_origin:
@@ -165,8 +174,7 @@ func _input(event):
 	
 	# Register mouse move
 	if event is InputEventMouseMotion:
-		
-		if not in_board:
+		if not valid_selection:
 			_reset_mouse_state()
 		
 			# If the mouse was clicked (and not released yet) and moved to a different tile, that is a drag
@@ -179,12 +187,12 @@ func _input(event):
 	# Handle mouse hovering visual
 	if event is InputEventMouseMotion:
 		
-		if in_board:
+		if valid_selection:
 			
 			if not drag:
 				# Not dragging, normal cursor state
 				cursor.enable_cursor()
-				cursor.set_position(board_controller.get_selected_tile())
+				cursor.set_position(selected_tile)
 			else:
 				# Dragging, multi select state
 				cursor.disable_cursor()
@@ -203,6 +211,7 @@ func _reset_mouse_state():
 
 func _process(_delta):
 	
+	
 	# Don't accept any inputs if dead
 	if dead:
 		return
@@ -219,7 +228,7 @@ func _process(_delta):
 		move_dir = LEFT
 	
 	if Input.is_action_just_pressed("ui_accept"):
-		_on_stairs_found()
+		#_on_stairs_found()
 		#_on_player_death()
 		pass
 	

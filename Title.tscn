@@ -1,261 +1,559 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=22 format=2]
 
-[ext_resource path="res://UI/Font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://UI/FontBig.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Scripts/TitleScreenController.gd" type="Script" id=2]
 [ext_resource path="res://UI/Main_Theme.tres" type="Theme" id=3]
-[ext_resource path="res://Sprites/Tile_Info.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/Player.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/Potion.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/Stairs.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/Apple.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/Enemy.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/Trap.png" type="Texture" id=9]
+[ext_resource path="res://Sprites/Wall.png" type="Texture" id=10]
+[ext_resource path="res://UI/Kenney Pixel Square.ttf" type="DynamicFontData" id=11]
+[ext_resource path="res://Sprites/Nonagram Tiles.png" type="Texture" id=12]
 
-[node name="Title" type="Node2D"]
-position = Vector2( 352, 264 )
+[sub_resource type="DynamicFont" id=4]
+size = 14
+font_data = ExtResource( 11 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 8
+font_data = ExtResource( 11 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 10 )
+region = Rect2( 16, 16, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = ExtResource( 12 )
+region = Rect2( 0, 0, 16, 16 )
+
+[sub_resource type="DynamicFont" id=7]
+size = 8
+font_data = ExtResource( 11 )
+
+[sub_resource type="AtlasTexture" id=8]
+atlas = ExtResource( 12 )
+region = Rect2( 0, 16, 16, 16 )
+
+[sub_resource type="DynamicFont" id=9]
+size = 8
+font_data = ExtResource( 11 )
+
+[sub_resource type="AtlasTexture" id=10]
+atlas = ExtResource( 12 )
+region = Rect2( 16, 0, 16, 16 )
+
+[sub_resource type="DynamicFont" id=11]
+size = 8
+font_data = ExtResource( 11 )
+
+[node name="Title" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
 script = ExtResource( 2 )
 
+[node name="Start Button" type="Button" parent="."]
+anchor_left = 0.34
+anchor_top = 0.455
+anchor_right = 0.66
+anchor_bottom = 0.545
+theme = ExtResource( 3 )
+custom_fonts/font = ExtResource( 1 )
+text = "Start"
+
 [node name="Label" type="Label" parent="."]
-margin_left = -208.0
-margin_top = -200.0
-margin_right = -109.0
-margin_bottom = -186.0
-rect_scale = Vector2( 4.20358, 4.48404 )
+anchor_left = 0.265
+anchor_top = 0.13
+anchor_right = 0.735
+anchor_bottom = 0.19
+margin_bottom = -3.8147e-06
+theme = ExtResource( 3 )
 custom_fonts/font = ExtResource( 1 )
 text = "nonogram dungeon"
 align = 1
 
-[node name="Start Button" type="Button" parent="."]
-margin_left = -88.0
-margin_top = -72.0
-margin_right = -44.0
-margin_bottom = -54.0
-rect_scale = Vector2( 3.9583, 3.9583 )
-custom_fonts/font = ExtResource( 1 )
-text = "Start"
-
 [node name="Instruction Button" type="Button" parent="."]
-margin_left = -160.0
-margin_top = 56.0
-margin_right = -79.0
-margin_bottom = 74.0
-rect_scale = Vector2( 3.9583, 3.9583 )
+anchor_left = 0.3
+anchor_top = 0.627
+anchor_right = 0.7
+anchor_bottom = 0.72
+margin_left = -3.8147e-06
+theme = ExtResource( 3 )
 custom_fonts/font = ExtResource( 1 )
-text = "Instructions"
+text = "How To Play"
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
-[node name="InstructionPopup" type="PopupPanel" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="InstructionPopup" type="PopupPanel" parent="CanvasLayer"]
 visible = true
-margin_left = 386.0
-margin_top = -250.0
-margin_right = 882.0
-margin_bottom = 150.0
-rect_scale = Vector2( 1.20838, 1.20838 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -406.0
+margin_top = -426.0
+margin_right = 406.0
+margin_bottom = 414.0
 theme = ExtResource( 3 )
 
-[node name="TabContainer" type="TabContainer" parent="InstructionPopup"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/InstructionPopup"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
 margin_top = 4.0
 margin_right = -4.0
 margin_bottom = -4.0
+
+[node name="TabContainer" type="TabContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer"]
+margin_right = 804.0
+margin_bottom = 798.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 3 )
 
-[node name="Page 1" type="VBoxContainer" parent="InstructionPopup/TabContainer"]
+[node name="Intro" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 30.0
+margin_top = 42.0
+margin_right = -4.0
+margin_bottom = -4.0
+text = "Make sure to read all of the pages of the instructions using the tabs on the top of this menu"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="Page 1 - Dungeon" type="VBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 42.0
 margin_right = -4.0
 margin_bottom = -4.0
 theme = ExtResource( 3 )
 
-[node name="Label" type="Label" parent="InstructionPopup/TabContainer/Page 1"]
-margin_right = 480.0
-margin_bottom = 27.0
+[node name="Label" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon"]
+margin_right = 796.0
+margin_bottom = 24.0
 theme = ExtResource( 3 )
-text = "Instructions Page 1:
-Two Components"
 align = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="InstructionPopup/TabContainer/Page 1"]
-margin_top = 31.0
-margin_right = 480.0
-margin_bottom = 336.0
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon"]
+margin_top = 28.0
+margin_right = 796.0
+margin_bottom = 752.0
 size_flags_vertical = 3
 theme = ExtResource( 3 )
 
-[node name="VBoxContainer" type="VBoxContainer" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer"]
-margin_right = 480.0
-margin_bottom = 305.0
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer"]
+margin_right = 796.0
+margin_bottom = 724.0
 size_flags_horizontal = 3
 theme = ExtResource( 3 )
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer"]
-margin_right = 480.0
-margin_bottom = 27.0
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer"]
+margin_right = 796.0
+margin_bottom = 51.0
 theme = ExtResource( 3 )
 
-[node name="NonogramL" type="Label" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/HBoxContainer2"]
-margin_right = 238.0
-margin_bottom = 27.0
-size_flags_horizontal = 3
-theme = ExtResource( 3 )
-text = "
-Nonogram (Picross)"
-align = 1
-
-[node name="DCL" type="Label" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/HBoxContainer2"]
-margin_left = 242.0
-margin_right = 480.0
-margin_bottom = 27.0
+[node name="NonogramL" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_right = 396.0
+margin_bottom = 51.0
 size_flags_horizontal = 3
 theme = ExtResource( 3 )
 text = "
-Dungeon Crawling"
+Dungeon Controls"
 align = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer"]
-margin_top = 31.0
-margin_right = 480.0
-margin_bottom = 305.0
+[node name="DCL" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 400.0
+margin_right = 796.0
+margin_bottom = 51.0
+size_flags_horizontal = 3
+theme = ExtResource( 3 )
+text = "
+Tiles"
+align = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer"]
+margin_top = 55.0
+margin_right = 796.0
+margin_bottom = 724.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 3 )
 
-[node name="HBoxContainer" type="HBoxContainer" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 470.0
-margin_bottom = 264.0
+margin_right = 786.0
+margin_bottom = 659.0
+size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 3 )
 
-[node name="NonoText" type="RichTextLabel" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer"]
-margin_right = 228.0
-margin_bottom = 254.0
+[node name="NonoText" type="RichTextLabel" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+margin_right = 386.0
+margin_bottom = 649.0
 size_flags_horizontal = 3
-theme = ExtResource( 3 )
-text = "Normal Nonogram Rules
+custom_fonts/normal_font = SubResource( 4 )
+text = "You are in a dungeon trying to get through as many floors as you can
 
-Left click - Color in square
-Right click - Cross out square
+Reach the stairs on each floor to progress to the next
 
-Marking the board costs 1 ENERGY
-
-The dungeon's layout is hidden:
-
--Correct marks will reveal the dungeon for that square
-
--Incorrect marks are allowed, but will not reveal the dungeon"
-
-[node name="DungeonText" type="RichTextLabel" parent="InstructionPopup/TabContainer/Page 1/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer"]
-margin_left = 232.0
-margin_right = 460.0
-margin_bottom = 254.0
-size_flags_horizontal = 3
-text = "WASD - Move
-
-Shift - Hide Dungeon
+WASD - Move
 
 Move into things to interact or attack enemies
 
-Solving the picross board allows you to see the dungeon layout
+Enemies will move after you do
 
-Reach the stairs on each floor to progress to the next"
+Each floor contains multiple rooms 
 
-[node name="ClosePopupButton" type="Button" parent="InstructionPopup/TabContainer/Page 1"]
-margin_top = 340.0
-margin_right = 480.0
-margin_bottom = 358.0
+You can only see the current room that you are in
+
+You can move to another room by moving outside of the current one
+
+If your health reaches zero, the game is lost
+
+Advancing to the next floor restores some energy
+"
+
+[node name="Panel" type="Panel" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+self_modulate = Color( 1, 1, 1, 0 )
+margin_left = 390.0
+margin_right = 776.0
+margin_bottom = 649.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Dungeon Tiles" type="VBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel"]
+margin_right = 106.0
+margin_bottom = 136.0
+rect_scale = Vector2( 3, 3 )
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles"]
+margin_right = 106.0
+margin_bottom = 16.0
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles/HBoxContainer"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 4 )
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles/HBoxContainer"]
+margin_left = 20.0
+margin_top = 2.0
+margin_right = 55.0
+margin_bottom = 14.0
 theme = ExtResource( 3 )
-text = "Close"
+custom_fonts/font = SubResource( 5 )
+text = "Player"
 
-[node name="Page 2" type="VBoxContainer" parent="InstructionPopup/TabContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles"]
+margin_top = 20.0
+margin_right = 106.0
+margin_bottom = 36.0
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles/HBoxContainer2"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 7 )
+stretch_mode = 6
+
+[node name="Label6" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles/HBoxContainer2"]
+margin_left = 20.0
+margin_top = 2.0
+margin_right = 63.0
+margin_bottom = 14.0
+theme = ExtResource( 3 )
+custom_fonts/font = SubResource( 5 )
+text = "Heals HP"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles"]
+margin_top = 40.0
+margin_right = 106.0
+margin_bottom = 56.0
+
+[node name="TextureRect3" type="TextureRect" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles/HBoxContainer3"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 5 )
+stretch_mode = 6
+
+[node name="Label5" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles/HBoxContainer3"]
+margin_left = 20.0
+margin_top = 2.0
+margin_right = 106.0
+margin_bottom = 14.0
+theme = ExtResource( 3 )
+custom_fonts/font = SubResource( 5 )
+text = "Restores Energy"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles"]
+margin_top = 60.0
+margin_right = 106.0
+margin_bottom = 76.0
+
+[node name="TextureRect4" type="TextureRect" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles/HBoxContainer4"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 6 )
+stretch_mode = 6
+
+[node name="Label4" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles/HBoxContainer4"]
+margin_left = 20.0
+margin_top = 2.0
+margin_right = 54.0
+margin_bottom = 14.0
+theme = ExtResource( 3 )
+custom_fonts/font = SubResource( 5 )
+text = "Stairs"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles"]
+margin_top = 80.0
+margin_right = 106.0
+margin_bottom = 96.0
+
+[node name="TextureRect5" type="TextureRect" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles/HBoxContainer5"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 8 )
+stretch_mode = 6
+
+[node name="Label3" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles/HBoxContainer5"]
+margin_left = 20.0
+margin_top = 2.0
+margin_right = 52.0
+margin_bottom = 14.0
+theme = ExtResource( 3 )
+custom_fonts/font = SubResource( 5 )
+text = "Enemy"
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles"]
+margin_top = 100.0
+margin_right = 106.0
+margin_bottom = 116.0
+
+[node name="TextureRect6" type="TextureRect" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles/HBoxContainer6"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 9 )
+stretch_mode = 6
+
+[node name="Label2" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles/HBoxContainer6"]
+margin_left = 20.0
+margin_top = 2.0
+margin_right = 44.0
+margin_bottom = 14.0
+theme = ExtResource( 3 )
+custom_fonts/font = SubResource( 5 )
+text = "Trap"
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles"]
+margin_top = 120.0
+margin_right = 106.0
+margin_bottom = 136.0
+
+[node name="TextureRect6" type="TextureRect" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles/HBoxContainer7"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = SubResource( 3 )
+stretch_mode = 6
+
+[node name="Label2" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 1 - Dungeon/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/Dungeon Tiles/HBoxContainer7"]
+margin_left = 20.0
+margin_top = 2.0
+margin_right = 44.0
+margin_bottom = 14.0
+theme = ExtResource( 3 )
+custom_fonts/font = SubResource( 5 )
+text = "Wall"
+
+[node name="Page 2 - Nonogram" type="VBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 3.99994
-margin_top = 32.0
-margin_right = -4.00006
+margin_left = 4.0
+margin_top = 42.0
+margin_right = -4.0
 margin_bottom = -4.0
+theme = ExtResource( 3 )
 
-[node name="Label" type="Label" parent="InstructionPopup/TabContainer/Page 2"]
-margin_right = 480.0
-margin_bottom = 31.0
-text = "Instructions Page 2:
-Dungeons"
+[node name="Label" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram"]
+margin_right = 796.0
+margin_bottom = 24.0
+theme = ExtResource( 3 )
 align = 1
 
-[node name="Panel" type="Panel" parent="InstructionPopup/TabContainer/Page 2"]
-margin_top = 35.0
-margin_right = 480.0
-margin_bottom = 332.0
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram"]
+margin_top = 28.0
+margin_right = 796.0
+margin_bottom = 79.0
+theme = ExtResource( 3 )
+
+[node name="NonogramL" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer2"]
+margin_right = 475.0
+margin_bottom = 51.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+theme = ExtResource( 3 )
+text = "
+Nonogram Controls"
+align = 1
+
+[node name="DCL" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer2"]
+margin_left = 479.0
+margin_right = 796.0
+margin_bottom = 51.0
+size_flags_horizontal = 3
+theme = ExtResource( 3 )
+text = "
+Tiles"
+align = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram"]
+margin_top = 83.0
+margin_right = 796.0
+margin_bottom = 752.0
+size_flags_vertical = 3
+theme = ExtResource( 3 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer"]
+margin_right = 796.0
+margin_bottom = 669.0
+size_flags_horizontal = 3
+theme = ExtResource( 3 )
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer/VBoxContainer"]
+margin_right = 796.0
+margin_bottom = 669.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 3 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer/VBoxContainer/MarginContainer"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 786.0
+margin_bottom = 659.0
+size_flags_vertical = 3
+theme = ExtResource( 3 )
+
+[node name="NonoText" type="RichTextLabel" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+margin_right = 463.0
+margin_bottom = 649.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+custom_fonts/normal_font = SubResource( 4 )
+text = "The layout and contents of the dungeon are obscured
+
+However, the dungeon is also a Nonogram (Picross) board
+
+Solving the Nonogram board reveals the dungeon's contents
+Normal Nonogram rules apply
+
+You mark the board by coloring in a tile or crossing out a tile
+ 
+Correct marks (coloring in / crossing out) will reveal that tile
+
+Incorrect marks are allowed, but beware: they do not reveal the contents of that that tile
+
+Marking one tile costs one energy!
+
+Left Click - Color in a tile
+Right click - Cross out a tile
+Left/Right clicks can be dragged to mark multiple tiles at once
+
+Shift - Hide Dungeon and only view nonogram
+
+"
+
+[node name="Panel" type="Panel" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+self_modulate = Color( 1, 1, 1, 0 )
+margin_left = 467.0
+margin_right = 776.0
+margin_bottom = 649.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TextureRect" type="TextureRect" parent="InstructionPopup/TabContainer/Page 2/Panel"]
-margin_left = 15.1716
-margin_top = 5.96248
-margin_right = 31.1716
-margin_bottom = 98.9625
-rect_scale = Vector2( 3.08708, 3.08708 )
-texture = ExtResource( 5 )
-
-[node name="HBoxContainer" type="HBoxContainer" parent="InstructionPopup/TabContainer/Page 2/Panel"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 65.6523
-margin_top = 17.5482
-margin_right = -327.348
-margin_bottom = -175.452
-rect_scale = Vector2( 2.58874, 2.58874 )
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel"]
+margin_right = 245.0
+margin_bottom = 613.0
+rect_scale = Vector2( 3, 3 )
 size_flags_horizontal = 3
-size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer"]
-margin_right = 117.0
-margin_bottom = 104.0
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/VBoxContainer"]
+margin_right = 245.0
+margin_bottom = 16.0
 
-[node name="Label" type="Label" parent="InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
-margin_right = 117.0
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/VBoxContainer/HBoxContainer"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = SubResource( 6 )
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/VBoxContainer/HBoxContainer"]
+margin_left = 20.0
+margin_top = 2.0
+margin_right = 93.0
+margin_bottom = 14.0
+custom_fonts/font = SubResource( 7 )
+text = "Unmarked Tile"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/VBoxContainer"]
+margin_top = 20.0
+margin_right = 245.0
+margin_bottom = 36.0
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/VBoxContainer/HBoxContainer2"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = SubResource( 8 )
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/VBoxContainer/HBoxContainer2"]
+margin_left = 20.0
+margin_top = 2.0
+margin_right = 96.0
 margin_bottom = 14.0
 theme = ExtResource( 3 )
-text = "Player"
+custom_fonts/font = SubResource( 9 )
+text = "Colored In Tile"
 
-[node name="Label2" type="Label" parent="InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
-margin_top = 18.0
-margin_right = 117.0
-margin_bottom = 32.0
-text = "Heals HP"
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/VBoxContainer"]
+margin_top = 40.0
+margin_right = 245.0
+margin_bottom = 56.0
 
-[node name="Label3" type="Label" parent="InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
-margin_top = 36.0
-margin_right = 117.0
-margin_bottom = 50.0
-text = "Heals Energy"
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/VBoxContainer/HBoxContainer3"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = SubResource( 10 )
 
-[node name="Label4" type="Label" parent="InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
-margin_top = 54.0
-margin_right = 117.0
-margin_bottom = 68.0
-text = "Stairs to next floor"
+[node name="Label" type="Label" parent="CanvasLayer/InstructionPopup/VBoxContainer/TabContainer/Page 2 - Nonogram/HBoxContainer/VBoxContainer/MarginContainer/HBoxContainer/Panel/VBoxContainer/HBoxContainer3"]
+margin_left = 20.0
+margin_top = 2.0
+margin_right = 105.0
+margin_bottom = 14.0
+theme = ExtResource( 3 )
+custom_fonts/font = SubResource( 11 )
+text = "Crossed Out Tile"
 
-[node name="Label5" type="Label" parent="InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
-margin_top = 72.0
-margin_right = 117.0
-margin_bottom = 86.0
-text = "Enemy"
-
-[node name="Label6" type="Label" parent="InstructionPopup/TabContainer/Page 2/Panel/HBoxContainer/VBoxContainer"]
-margin_top = 90.0
-margin_right = 117.0
-margin_bottom = 104.0
-text = "Trap"
-
-[node name="ClosePopupButton2" type="Button" parent="InstructionPopup/TabContainer/Page 2"]
-margin_top = 336.0
-margin_right = 480.0
-margin_bottom = 356.0
+[node name="ClosePopupButton" type="Button" parent="CanvasLayer/InstructionPopup/VBoxContainer"]
+margin_top = 802.0
+margin_right = 804.0
+margin_bottom = 832.0
+theme = ExtResource( 3 )
 text = "Close"
 
 [connection signal="pressed" from="Start Button" to="." method="_on_Start_Button_pressed"]
 [connection signal="pressed" from="Instruction Button" to="." method="_on_Instruction_Button_pressed"]
-[connection signal="pressed" from="InstructionPopup/TabContainer/Page 1/ClosePopupButton" to="." method="_on_ClosePopupButton_pressed"]
-[connection signal="pressed" from="InstructionPopup/TabContainer/Page 2/ClosePopupButton2" to="." method="_on_ClosePopupButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/InstructionPopup/VBoxContainer/ClosePopupButton" to="." method="_on_ClosePopupButton_pressed"]

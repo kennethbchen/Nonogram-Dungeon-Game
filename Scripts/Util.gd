@@ -8,8 +8,8 @@ const board_rows = 8
 const room_columns = 8
 const room_rows = 8
 
-const max_rooms_x = 5
-const max_rooms_y = 5
+const max_rooms_x = 3
+const max_rooms_y = 3
 
 const max_floor_columns = room_columns * max_rooms_x
 const max_floor_rows = room_rows * max_rooms_y

@@ -1,8 +1,8 @@
 extends Character
 
-onready var player = $"/root/Main Scene/Player"
+var player = null
 
-onready var pathfinder = $"/root/Main Scene/PathfindingController"
+onready var pathfinder = $"../../PathfindingController"
 
 var move_path = []
 
@@ -17,11 +17,15 @@ signal enemy_died(enemy_object)
 
 # Top left, top right, bottom left, bottom right points
 onready var relative_corner_points = [
-	Vector2(-board_controller.tile_size/2,-board_controller.tile_size/2),
-	Vector2(board_controller.tile_size/2,-board_controller.tile_size/2),
-	Vector2(-board_controller.tile_size/2,board_controller.tile_size/2),
-	Vector2(board_controller.tile_size/2,board_controller.tile_size/2)
+	Vector2(-Util.tile_size/2,-Util.tile_size/2),
+	Vector2(Util.tile_size/2,-Util.tile_size/2),
+	Vector2(-Util.tile_size/2,Util.tile_size/2),
+	Vector2(Util.tile_size/2,Util.tile_size/2)
 ]
+
+func init(player_node):
+	player = player_node
+	
 
 func _ready():
 	pass
@@ -42,7 +46,8 @@ func act():
 	for point in relative_corner_points:
 		
 		ray.position = point
-		ray.cast_to = (player.position - (position + ray.position)) * board_controller.tile_size * 10
+		
+		ray.cast_to = (player.position - (position + ray.position)) * Util.tile_size * 10
 		ray.force_raycast_update()
 		
 		if(ray.is_colliding() and ray.get_collider() is Player):

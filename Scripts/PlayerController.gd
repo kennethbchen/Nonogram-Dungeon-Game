@@ -7,7 +7,7 @@ Represents the player character and contains functionality for the player
 class_name Player
 
 # Energy is used when the nonogram board is being modified by the player
-var max_energy = 160
+export var max_energy = 160
 var energy = max_energy
 
 var found_stairs = false
@@ -27,7 +27,6 @@ signal player_death()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	max_health = 10
 	init()
 	
 	# The player does not need a health bar
