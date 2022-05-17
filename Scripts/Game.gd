@@ -66,6 +66,9 @@ func _input(event):
 		if not in_board:
 			return
 		
+		# Ignore any input that is not left or right click
+		if event.button_index > 2:
+			return
 		
 		if click_button == -1:
 			click_origin = selected_tile
@@ -84,6 +87,7 @@ func _input(event):
 		# Don't do anything for clicks outside the board
 		if not in_board:
 			return
+		
 		
 		# If the mouse was released in the same place it was clicked
 		if selected_tile == click_origin:
