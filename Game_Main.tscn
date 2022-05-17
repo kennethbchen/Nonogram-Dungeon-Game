@@ -103,6 +103,7 @@ cell_size = Vector2( 16, 16 )
 format = 1
 
 [node name="NonogramTileMap" type="TileMap" parent="World Elements/World Viewport/Viewport/World/Tilemaps"]
+visible = false
 z_index = 2
 tile_set = ExtResource( 9 )
 cell_size = Vector2( 16, 16 )

@@ -57,13 +57,18 @@ func _input(event):
 	
 	# Get the selected tile in nonogram_tile_map space based on mouse position
 	var selected_tile = board_controller.get_selected_tile()
-	var in_board = board_controller.is_in_board(selected_tile)
+	
+	# Whether or not the selected tile is a valid selection.
+	# A valid selection is both
+	# Within the dimensions of the floor
+	# Within the view of the camera
+	var valid_selection = board_controller.is_in_camera(selected_tile)
 	
 	# Register click press
 	if event is InputEventMouseButton and event.pressed:
 		
 		# Don't do anything for clicks outside the board
-		if not in_board:
+		if not valid_selection:
 			return
 		
 		# Ignore any input that is not left or right click
@@ -77,7 +82,7 @@ func _input(event):
 			# If click button isn't -1, then another mouse button is being held down
 			# so reset mouse state and cancel action
 			cursor.enable_cursor()
-			cursor.set_position(board_controller.get_selected_tile())
+			cursor.set_position(selected_tile)
 			_reset_mouse_state()
 		
 	
@@ -85,7 +90,7 @@ func _input(event):
 	if event is InputEventMouseButton and not event.pressed:
 		
 		# Don't do anything for clicks outside the board
-		if not in_board:
+		if not valid_selection:
 			return
 		
 		
@@ -169,7 +174,7 @@ func _input(event):
 	
 	# Register mouse move
 	if event is InputEventMouseMotion:
-		if not in_board:
+		if not valid_selection:
 			_reset_mouse_state()
 		
 			# If the mouse was clicked (and not released yet) and moved to a different tile, that is a drag
@@ -182,12 +187,12 @@ func _input(event):
 	# Handle mouse hovering visual
 	if event is InputEventMouseMotion:
 		
-		if in_board:
+		if valid_selection:
 			
 			if not drag:
 				# Not dragging, normal cursor state
 				cursor.enable_cursor()
-				cursor.set_position(board_controller.get_selected_tile())
+				cursor.set_position(selected_tile)
 			else:
 				# Dragging, multi select state
 				cursor.disable_cursor()

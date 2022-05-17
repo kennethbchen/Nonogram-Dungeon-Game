@@ -109,6 +109,27 @@ func is_in_board(tilemap_coord):
 			return true
 	return false
 
+# Gets a nonogram_tilemap coordinate and returns whether or not that tile is in the view of the camera
+func is_in_camera(tilemap_coord):
+	
+	if not is_in_board(tilemap_coord):
+		return false
+	
+	var room_position = camera.get_grid_pos()
+	# Starting positions in tilemap space
+	var start_col = room_position.x * Util.room_columns
+	var start_row = room_position.y * Util.room_rows
+	
+	var end_col = start_col + Util.room_columns
+	var end_row = start_row + Util.room_rows
+	
+	if tilemap_coord.x in range(start_col, end_col) and \
+		tilemap_coord.y in range(start_row, end_row):
+		return true
+	else:
+		return false
+
+
 # Takes in a tilemap coordinate and returns if it is a valid more or not
 func is_valid_move(tilemap_coord: Vector2):
 	if world_tile_map.get_cellv(tilemap_coord) >= 0:
