@@ -40,7 +40,7 @@ func _create_labels(cols = Util.room_columns, rows = Util.room_rows):
 		
 		var label = Label.new()
 		label.set_size(Vector2(Util.tile_size * 4, Util.tile_size))
-		label.add_font_override("font", hint_font)
+		label.add_font_override("fontss", hint_font)
 		label.align = HALIGN_RIGHT
 		label.valign = VALIGN_CENTER
 		

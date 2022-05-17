@@ -154,9 +154,10 @@ func get_selected_tile():
 	# The selected tile is dependent on where the camera is pointing
 	# pos without the offset value is the position of the mouse relative to the viewport_container's position
 	# offset shifts this position to the correct world position based on the camera
-	
+	# We can scale the position based on the camera's scale value by dividing it by the scale factor
+	# In this case it is / 5
 	var offset = Vector2(camera.get_grid_pos().x * Util.tile_size * Util.room_columns, camera.get_grid_pos().y * Util.tile_size * Util.room_rows)
-	var pos = ((root.get_mouse_position() - viewport_container.rect_position)) + offset
+	var pos = ((root.get_mouse_position() - viewport_container.rect_position) / 5) + offset
 	
 	# Use the world position and calculate what nonogram tile corresponds to that position in tile space
 	return nonogram_tile_map.world_to_map(pos)
